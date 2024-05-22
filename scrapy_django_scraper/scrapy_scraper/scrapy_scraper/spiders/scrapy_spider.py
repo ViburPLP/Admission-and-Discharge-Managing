@@ -83,9 +83,16 @@ class MemberScrapSpider(scrapy.Spider):
             item['cover_starting'] = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(2)::text').get()
             item['cover_ending'] = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(3)::text').get()
             item['relationship_name'] = response.css('.cp-breadcrumb__current::text').get()
+            relationship_name = response.css('.cp-breadcrumb__current::text').get()
+            if relationship_name:
+             relationship, name = map(str.strip, relationship_name.split(' - '))    
+            else:
+                relationship = name = None
 
-            
-
+            print (relationship, 
+                   '\n' * 1 + name)
+            print ('******')
+          
             yield item
 
             # payer = response.css('div.col-4 p.body.ng-star-inserted::text').get()
