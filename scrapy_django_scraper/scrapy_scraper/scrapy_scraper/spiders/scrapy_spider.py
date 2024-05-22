@@ -2,7 +2,7 @@ import os
 import glob
 import scrapy
 from scrapy.http import Request, TextResponse
-from urllib.parse import urljoin
+from urllib.parse import unquote
 
 class MemberScrapSpider(scrapy.Spider):
         name = 'memberScrap'
@@ -10,7 +10,7 @@ class MemberScrapSpider(scrapy.Spider):
 
         def start_requests(self):
             folder_path = "C:/Users/Victor/Downloads/"
-            html_files = glob.glob(os.path.join(folder_path, '*.html'))
+            html_files = glob.glob(os.path.join(folder_path, '**/*.html'), recursive=True)
 
             if not html_files:
                 self.logger.error('No HTML files found in the specified folder')
@@ -23,36 +23,38 @@ class MemberScrapSpider(scrapy.Spider):
                 self.logger.info(f'Processing file: {file_url}')
                 yield Request(url=file_url, callback=self.parse_local_html, dont_filter=True)
 
+        
         def parse_local_html(self, response):
             self.logger.info(f'Parsing file: {response.url}')
+            file_path = unquote(response.url.replace('file:///', '', 1))
+            try:
+                with open(file_path, 'r', encoding='UTF-8') as f:
+                    html_content = f.read()
+                self.logger.info(f'Successfully read file: {file_path}')
+            except FileNotFoundError:
+                self.logger.error(f'File not found: {file_path}')
+                return
+            except Exception as e:
+                self.logger.error(f'Error reading file {file_path}: {e}')
+                return
+
+            local_response = TextResponse(
+                url=response.url,
+                body=html_content,
+                encoding='UTF-8',
+                request=response.request
+            )
+
+            # Directly call the parse method
+            return self.parse(local_response)
+
+        def parse(self, response):
+            self.logger.info(f'Parsing content from: {response.url}')
+            # Debug statement to print the HTML content
             print(response.body.decode('utf-8'))
 
-    # def start_requests(self):
-    #     folder_path = "C:/Users/Victor/Downloads/"
-    #     # html_files = 
-    #    Print (glob.glob(os.path.join(folder_path, '*.html')))
 
-    #     if not html_files:
-    #         self.logger.error('No HTML files found in the specified folder')
-    #         return
-
-    #     for html_file in html_files:
-    #         file_url = urljoin('file:', os.path.abspath(html_file))
-    #         yield Request(url=file_url, callback=self.parse_local_html, dont_filter=True)
-
-    # def parse_local_html(self, response):
-    #     file_path = response.url.replace('file:///', '', 1)
-    #     with open(file_path, 'r', encoding='UTF-8') as f:
-    #         html_content = f.read()
-
-    #     local_response = TextResponse(
-    #         url=response.url,
-    #         body=html_content,
-    #         encoding='UTF-8',
-    #         request=response.request
-    #     )
-
-    #     self.parse(local_response)
+        # Here you can add your actual parsing logic
 
     # def parse(self, response):
     #     print(response.body.decode('utf-8'))
