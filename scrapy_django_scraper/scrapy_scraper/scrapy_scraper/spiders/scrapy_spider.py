@@ -3,6 +3,7 @@ import glob
 import scrapy
 from scrapy.http import Request, TextResponse
 from urllib.parse import unquote
+from scrapy_scraper.items import member_details, insurance_details
 
 class MemberScrapSpider(scrapy.Spider):
         name = 'memberScrap'
@@ -62,27 +63,48 @@ class MemberScrapSpider(scrapy.Spider):
                 cover_value = div.css('div > p::text').re_first(r'Cover: (.+)')
                 cover_balance = div.css('p.label::text').get()
 
-                print ('\n'* 2 + cover_type, 
-                       '\n'* 1 + cover_value, 
-                       '\n'* 1 + cover_balance)
+                cover_item = insurance_details()
+                cover_item['cover_type'] = cover_type
+                cover_item['cover_value'] = cover_value
+                cover_item['cover_balance'] = cover_balance
                 
+                yield cover_item
 
+                # print ('\n'* 2 + cover_type, 
+                #        '\n'* 1 + cover_value, 
+                #        '\n'* 1 + cover_balance)
 
-            payer = response.css('div.col-4 p.body.ng-star-inserted::text').get()
-            membership_number = response.css('div.col-4 span.name::text')[3].get()
-            beneficiary_account_status = response.css('div.col-4 span.name::text')[4].get()
-            member_scheme = response.css('div.col-4 span.name::text').getall()[-1]
-            cover_starting = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(2)::text').get()
-            cover_ending = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(3)::text').get()
+            item = member_details()
+            
+            item['payer'] = response.css('div.col-4 p.body.ng-star-inserted::text').get()
+            item['membership_number'] = response.css('div.col-4 span.name::text')[3].get()
+            item['beneficiary_account_status'] = response.css('div.col-4 span.name::text')[4].get()
+            item['member_scheme'] = response.css('p.body:nth-child(1)::text').get()
+            item['cover_starting'] = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(2)::text').get()
+            item['cover_ending'] = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(3)::text').get()
+            item['relationship_name'] = response.css('.cp-breadcrumb__current::text').get()
 
-           
-            print('\n' * 2 + 'Payer:', payer, 
-                  '\n' * 2 + 'Membership Number:', membership_number, 
-                  '\n' * 2 + 'Beneficiary Account Status:', beneficiary_account_status, 
-                  '\n' * 2 + 'Member Scheme:', member_scheme,
-                  '\n' * 2 + 'Cover Starting:', cover_starting,
-                  '\n' * 2 + 'Cover Ending:', cover_ending 
-            )
+            
+
+            yield item
+
+            # payer = response.css('div.col-4 p.body.ng-star-inserted::text').get()
+            # membership_number = response.css('div.col-4 span.name::text')[3].get()
+            # beneficiary_account_status = response.css('div.col-4 span.name::text')[4].get()
+            # member_scheme = response.css('p.body:nth-child(1)::text').get()
+            # cover_starting = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(2)::text').get()
+            # cover_ending = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(3)::text').get()
+            # relationship_name = response.css('.cp-breadcrumb__current::text').get()
+
+            # print('\n' * 2 + 'Payer:', payer, 
+            #       '\n' * 2 + 'Membership Number:', membership_number, 
+            #       '\n' * 2 + 'Beneficiary Account Status:', beneficiary_account_status, 
+            #       '\n' * 2 + 'Member Scheme:', member_scheme,
+            #       '\n' * 2 + 'Cover Starting:', cover_starting,
+            #       '\n' * 2 + 'Cover Ending:', cover_ending,
+            #       '\n' * 2 + 'Relationship Name:', relationship_name 
+            # )
+            
             
 
 
