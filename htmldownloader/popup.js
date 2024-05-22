@@ -8,7 +8,7 @@ document.getElementById('downloadHtml').addEventListener('click', async () => {
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    func: getHTML,
+    func: getHTMLAndTitle,
   }, (results) => {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
@@ -16,19 +16,23 @@ document.getElementById('downloadHtml').addEventListener('click', async () => {
     }
 
     if (results && results[0] && results[0].result) {
-      const html = results[0].result;
+      const { html, title } = results[0].result;
       const blob = new Blob([html], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
+      const filename = title ? `${title}.html` : 'page.html';
       chrome.downloads.download({
         url: url,
-        filename: 'page.html'
+        filename: filename,
       });
     } else {
-      console.error('No result returned from content script');
+      console.error('No result from content script');
     }
   });
 });
 
-function getHTML() {
-  return document.documentElement.outerHTML;
+function getHTMLAndTitle() {
+  return {
+    html: document.documentElement.outerHTML,
+    title: document.title.replace(/[^a-zA-Z0-9]/g, '_'),
+  };
 }
