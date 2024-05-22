@@ -49,33 +49,53 @@ class MemberScrapSpider(scrapy.Spider):
             return self.parse(local_response)
 
         def parse(self, response):
+            if "Payer" not in response.url:
+                self.logger.info(f'Skipping file: {response.url}')
+                return
+
             self.logger.info(f'Parsing content from: {response.url}')
-            # Debug statement to print the HTML content
-            print(response.body.decode('utf-8'))
+
+            account_details = response.css('div.col-4 p.header::text').get()
+            payer = response.css('div.col-4 p.body.ng-star-inserted::text').get()
+            membership_number = response.css('div.col-4 span.name::text')[3].get()
+            beneficiary_account_status = response.css('div.col-4 span.name::text')[4].get()
+            member_scheme = response.css('div.col-4 span.name::text').getall()[-1]
+            headers = response.css('div.insurance p.header::text').getall()
+            covers = response.css('div.insurance p::text').getall()
+            balances = response.css('div.insurance p.label span + ::text').getall()
+
+            cover_info = []
+
+            i = 0
+            while i < len(covers):
+                if covers[i].strip().endswith(':'):
+                    cover_name = covers[i].strip()
+                    cover_value = covers[i + 1].strip()
+                    cover_balance = covers[i + 2].strip()
+                    cover_info.append((cover_name, cover_value, cover_balance))
+                else:
+                    i += 1
+
+            for cover in cover_info:
+                print(f"Cover Name: {cover[0]}, Cover Value: {cover[1]}, Cover Balance: {cover[2]}")
+
+            print('Account Details:', account_details, 
+                  '\n' * 2 + 'Payer:', payer, 
+                  '\n' * 2 + 'Membership Number:', membership_number, 
+                  '\n' * 2 + 'Beneficiary Account Status:', beneficiary_account_status, 
+                  '\n' * 2 + 'Member Scheme:', member_scheme, 
+                  '\n' * 2 + 'Cover:', covers,
+                  '\n' * 2 + 'Balance:', balances)
+            
 
 
-        # Here you can add your actual parsing logic
-
-    # def parse(self, response):
-    #     print(response.body.decode('utf-8'))
-
-    #     account_details = response.css('div.col-4 p.header::text').get()
-    #     payer = response.css('div.col-4 p.body.ng-star-inserted::text').get()
-    #     membership_number = response.css('div.col-4 span.name::text')[3].get()
-    #     beneficiary_account_status = response.css('div.col-4 span.name::text')[4].get()
-    #     member_scheme = response.css('div.col-4 span.name::text').getall()[-1]
-    #     headers = response.css('div.insurance p.header::text').getall()
-    #     covers = response.css('div.insurance p::text').getall()
-    #     balances = response.css('div.insurance p.label span + ::text').getall()
-
-    #     for i in range(len(headers)):
-    #         if headers[i] == 'OUT-PATIENT':
-    #             cover = covers[i]
-    #             balance = balances[i]
-    #             print('Cover:', cover)
-    #             print('Balance:', balance)
-    #             break
-
+            # for i in range(len(headers)):
+            #     if covers[i] == 'OUT-PATIENT':
+            #         cover = covers[i]
+            #         balance = balances[i]
+            #         print('Cover:', cover)
+            #         print('Balance:', balance)
+            #         break
 
 
 
