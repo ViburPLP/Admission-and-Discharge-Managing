@@ -1,7 +1,6 @@
 document.getElementById('downloadHtml').addEventListener('click', async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-  // Ensure the tab URL is not a chrome:// URL
   if (tab.url.startsWith('chrome://')) {
     alert('Cannot access a chrome:// URL');
     return;
