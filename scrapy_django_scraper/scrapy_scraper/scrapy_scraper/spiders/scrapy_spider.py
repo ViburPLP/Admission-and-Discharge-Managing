@@ -64,21 +64,7 @@ class MemberScrapSpider(scrapy.Spider):
             covers = response.css('div.insurance p::text').getall()
             balances = response.css('div.insurance p.label span + ::text').getall()
 
-            cover_info = []
-
-            i = 0
-            while i < len(covers):
-                if covers[i].strip().endswith(':'):
-                    cover_name = covers[i].strip()
-                    cover_value = covers[i + 1].strip()
-                    cover_balance = covers[i + 2].strip()
-                    cover_info.append((cover_name, cover_value, cover_balance))
-                else:
-                    i += 1
-
-            for cover in cover_info:
-                print(f"Cover Name: {cover[0]}, Cover Value: {cover[1]}, Cover Balance: {cover[2]}")
-
+           
             print('Account Details:', account_details, 
                   '\n' * 2 + 'Payer:', payer, 
                   '\n' * 2 + 'Membership Number:', membership_number, 
