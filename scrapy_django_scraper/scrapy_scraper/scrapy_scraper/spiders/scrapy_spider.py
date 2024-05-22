@@ -55,45 +55,35 @@ class MemberScrapSpider(scrapy.Spider):
 
             self.logger.info(f'Parsing content from: {response.url}')
 
-            account_details = response.css('div.col-4 p.header::text').get()
+            insurance_divs= response.css('div.insurance.ng-star-inserted')
+
+            for div in insurance_divs: 
+                cover_type = div.css('p.header::text').get()
+                cover_value = div.css('div > p::text').re_first(r'Cover: (.+)')
+                cover_balance = div.css('p.label::text').get()
+
+                print ('\n'* 2 + cover_type, 
+                       '\n'* 1 + cover_value, 
+                       '\n'* 1 + cover_balance)
+                
+
+
             payer = response.css('div.col-4 p.body.ng-star-inserted::text').get()
             membership_number = response.css('div.col-4 span.name::text')[3].get()
             beneficiary_account_status = response.css('div.col-4 span.name::text')[4].get()
             member_scheme = response.css('div.col-4 span.name::text').getall()[-1]
-            headers = response.css('div.insurance p.header::text').getall()
-            covers = response.css('div.insurance p::text').getall()
-            balances = response.css('div.insurance p.label span + ::text').getall()
+            cover_starting = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(2)::text').get()
+            cover_ending = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(3)::text').get()
 
            
-            print('Account Details:', account_details, 
-                  '\n' * 2 + 'Payer:', payer, 
+            print('\n' * 2 + 'Payer:', payer, 
                   '\n' * 2 + 'Membership Number:', membership_number, 
                   '\n' * 2 + 'Beneficiary Account Status:', beneficiary_account_status, 
-                  '\n' * 2 + 'Member Scheme:', member_scheme, 
-                  '\n' * 2 + 'Cover:', covers,
-                  '\n' * 2 + 'Balance:', balances)
+                  '\n' * 2 + 'Member Scheme:', member_scheme,
+                  '\n' * 2 + 'Cover Starting:', cover_starting,
+                  '\n' * 2 + 'Cover Ending:', cover_ending 
+            )
             
 
 
-            # for i in range(len(headers)):
-            #     if covers[i] == 'OUT-PATIENT':
-            #         cover = covers[i]
-            #         balance = balances[i]
-            #         print('Cover:', cover)
-            #         print('Balance:', balance)
-            #         break
-
-
-
-
-    #     member_info = response.css #(I will add the specific part to scrape)
-
-    #     member_name = member_info.css #specific location.('p::text').extract_first()
-
-        # start_urls = ['file:///C:/Users/Victor/Desktop/Payer%20Portal_files/Payer%20Portal.html']
-
-       
-
-
-
-    #     # yield ScrapedDataItem()
+            
