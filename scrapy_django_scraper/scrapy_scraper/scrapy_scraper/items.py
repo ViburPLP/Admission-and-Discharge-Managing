@@ -14,11 +14,12 @@ class ScrapyScraperItem(scrapy.Item):
 class member_details(scrapy.Item):
     payer = scrapy.Field()
     membership_number = scrapy.Field()
-    beneficiary_account_status = scrapy.Field()
-    member_scheme = scrapy.Field()
-    cover_starting = scrapy.Field()
-    cover_ending = scrapy.Field()
-    relationship_name = scrapy.Field()
+    relationship = scrapy.Field()
+    name = scrapy.Field()
+    validity = scrapy.Field()
+    status = scrapy.Field()
+    scheme = scrapy.Field()
+
 
 class insurance_details(scrapy.Item):    
     cover_type = scrapy.Field()

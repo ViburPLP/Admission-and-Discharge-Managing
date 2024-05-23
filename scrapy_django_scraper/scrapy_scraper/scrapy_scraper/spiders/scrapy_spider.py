@@ -46,7 +46,6 @@ class MemberScrapSpider(scrapy.Spider):
                 request=response.request
             )
 
-            # Directly call the parse method
             return self.parse(local_response)
 
         def parse(self, response):
@@ -60,30 +59,20 @@ class MemberScrapSpider(scrapy.Spider):
 
             for div in insurance_divs: 
                 cover_type = div.css('p.header::text').get()
-                cover_value = div.css('div > p::text').re_first(r'Cover: (.+)')
-                cover_balance = div.css('p.label::text').get()
+                cover_value = div.css('div > p::text').re_first(r'KSh ([\d,]+\.00)')
+                cover_balance = div.css('p.label::text').re_first(r'KSh ([\d,]+\.00)')
 
                 cover_item = insurance_details()
-                cover_item['cover_type'] = cover_type
-                cover_item['cover_value'] = cover_value
-                cover_item['cover_balance'] = cover_balance
+                cover_item['cover_type'] = cover_type.strip()
+                cover_item['cover_value'] = cover_value.strip()
+                cover_item['cover_balance'] = cover_balance.strip()
                 
                 yield cover_item
 
                 # print ('\n'* 2 + cover_type, 
                 #        '\n'* 1 + cover_value, 
                 #        '\n'* 1 + cover_balance)
-
-            item = member_details()
-            
-            item['payer'] = response.css('div.col-4 p.body.ng-star-inserted::text').get()
-            item['membership_number'] = response.css('div.col-4 span.name::text')[3].get()
-            item['beneficiary_account_status'] = response.css('div.col-4 span.name::text')[4].get()
-            item['member_scheme'] = response.css('p.body:nth-child(1)::text').get()
-            item['cover_starting'] = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(2)::text').get()
-            item['cover_ending'] = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(3)::text').get()
-            item['relationship_name'] = response.css('.cp-breadcrumb__current::text').get()
-
+         
             relationship_name = response.css('.cp-breadcrumb__current::text').get()
             if relationship_name:
              relationship, name = map(str.strip, relationship_name.split(' - '))    
@@ -98,16 +87,38 @@ class MemberScrapSpider(scrapy.Spider):
             if payer:
                 payer = payer.replace('Payer: ', '')
 
+            scheme = response.css('p.body:nth-child(1)::text').get()
+            
+            status = response.css('div.col-4 span.name::text')[4].get()
+            if status:
+                status = status.replace('Status: ', '')
 
-            print (relationship, 
-                   '\n' * 1 + name,
-                   '\n' * 1 + membership_number,
-                   '\n' * 1 + payer
-                    )
-            print ('******')
-          
+            cover_starting = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(2)::text').get()
+            cover_ending = response.css('div.col-4:nth-child(1) > div:nth-child(9) > p:nth-child(3)::text').get()
+            if cover_starting and cover_ending:
+                validity = f"{cover_starting} - {cover_ending}"
+
+            item = member_details()
+            item['relationship'] = relationship
+            item['name'] = name
+            item['membership_number'] = membership_number
+            item['payer'] = payer
+            item['scheme'] = scheme
+            item['status'] = status
+            item['validity'] = validity
+
             yield item
 
+            # print (relationship, 
+            #        '\n' * 1 + name,
+            #        '\n' * 1 + membership_number,
+            #        '\n' * 1 + payer,
+            #        '\n' * 1 + scheme,
+            #        '\n' * 1 + status,
+            #        '\n' * 1 + validity
+            #         )
+            # print ('******')
+          
             # payer = response.css('div.col-4 p.body.ng-star-inserted::text').get()
             # membership_number = response.css('div.col-4 span.name::text')[3].get()
             # beneficiary_account_status = response.css('div.col-4 span.name::text')[4].get()
