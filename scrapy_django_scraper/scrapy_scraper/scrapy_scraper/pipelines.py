@@ -28,7 +28,6 @@ class ScrapySaverPipeline:
         ## creating table if non exists.
         self.cur.execute("""
             CREATE TABLE IF NOT EXISTS member_details (
-                id INT AUTO_INCREMENT PRIMARY KEY,
                 payer VARCHAR(255),
                 membership_number VARCHAR(255),
                 relationship VARCHAR(255),
@@ -43,59 +42,40 @@ class ScrapySaverPipeline:
             )
         """)
 
-        # self.cur.execute("""
-        #     CREATE TABLE IF NOT EXISTS insurance_details (
-        #         cover_type VARCHAR(255),
-        #         cover_value VARCHAR(255),
-        #         cover_balance VARCHAR(255)
-        #     )
-        # """)
-
-        def process_item(self, item, spider):
-            self.cur.execute(
-                """INSERT INTO member_details (
-                    payer, 
-                    membership_number, 
-                    relationship, 
-                    name, 
-                    validity, 
-                    status, 
-                    scheme) 
-                    VALUES (
-                        %s, %s, %s, %s, %s, %s, %s
-                        )""",(
-                    item['payer'],
-                    item['membership_number'],
-                    item['relationship'],
-                    item['name'],
-                    item['validity'],
-                    item['status'],
-                    item['scheme']
-                )
+        self.cur.execute("""
+            CREATE TABLE IF NOT EXISTS insurance_details (
+                cover_type VARCHAR(255),
+                cover_value VARCHAR(255),
+                cover_balance VARCHAR(255),
+                FOREIGN KEY (membership_number) REFERENCES member_details(membership_number)
             )
+        """)
 
-            member_id = self.cur.lastrowid
+    def process_item(self, item, spider):
+        self.cur.execute(
+            """INSERT INTO member_details (
+                payer, 
+                membership_number, 
+                relationship, 
+                name, 
+                validity, 
+                status, 
+                scheme) 
+                VALUES (
+                    %s, %s, %s, %s, %s, %s, %s
+                    )""",(
+                item['payer'],
+                item['membership_number'],
+                item['relationship'],
+                item['name'],
+                item['validity'],
+                item['status'],
+                item['scheme']
+            )
+        )
 
-            for cover in item['covers']:
-                self.cur.execute(
-                    """INSERT INTO member_insurance_details (
-                        id,
-                        cover_type,
-                        cover_value,
-                        cover_balance) 
-                        VALUES (
-                            %s, %s, %s, %s
-                            )""",
-                    (
-                        member_id,
-                        cover['cover_type'],
-                        cover['cover_value'],
-                        cover['cover_balance']
-                    )
-                )
-
-            self.conn.commit()
-            return item
+        self.conn.commit()
+        return item
 
     def close_spider(self, spider):
         self.cur.close()
