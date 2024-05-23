@@ -6,8 +6,64 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
+import mysql.connector
 
 
 class ScrapyScraperPipeline:
     def process_item(self, item, spider):
         return item
+    
+class ScrapySaverPipeline: 
+    def __init__(self):
+        self.conn = mysql.connector.connect(
+            host="localhost",
+            user="plp",
+            password="",
+            database="scrapy_scraper"
+        )
+
+        self.cur = self.conn.cursor()
+
+        ## creating table if non exists.
+        self.cur.execute("""
+            CREATE TABLE IF NOT EXISTS member_details (
+                payer VARCHAR(255),
+                membership_number VARCHAR(255),
+                relationship VARCHAR(255),
+                name VARCHAR(255),
+                validity VARCHAR(255),
+                status VARCHAR(255),
+                scheme VARCHAR(255)
+            )
+        """)
+
+        def process_item(self, item, spider):
+            self.cur.execute(
+                """INSERT INTO member_details (
+                    payer, 
+                    membership_number, 
+                    relationship, 
+                    name, 
+                    validity, 
+                    status, 
+                    scheme) 
+                    VALUES (
+                        %s, %s, %s, %s, %s, %s, %s
+                        )""",(
+                    item['payer'],
+                    item['membership_number'],
+                    item['relationship'],
+                    item['name'],
+                    item['validity'],
+                    item['status'],
+                    item['scheme']
+                )
+            )
+
+            self.conn.commit()
+            return item
+
+        def close_spider(self, spider):
+            self.cur.close()
+            self.conn.close()
+

@@ -12,6 +12,11 @@ BOT_NAME = "scrapy_scraper"
 SPIDER_MODULES = ["scrapy_scraper.spiders"]
 NEWSPIDER_MODULE = "scrapy_scraper.spiders"
 
+FEEDS = {
+    'member_details.csv': {
+        'format': 'csv'}
+}
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "scrapy_scraper (+http://www.yourdomain.com)"
@@ -62,9 +67,10 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
+# ITEM_PIPELINES = {
 #    "scrapy_scraper.pipelines.ScrapyScraperPipeline": 300,
-#}
+#    "scrapy_scraper.pipelines.ScrapyScraperPipeline" : 400
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
