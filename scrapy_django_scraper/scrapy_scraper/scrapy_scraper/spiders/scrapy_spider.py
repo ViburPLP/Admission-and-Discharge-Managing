@@ -3,10 +3,16 @@ import glob
 import scrapy
 from scrapy.http import Request, TextResponse
 from urllib.parse import unquote
-from scrapy_scraper.items import member_details
+from scrapy_scraper.items import member_details, insurance_details
 
 class MemberScrapSpider(scrapy.Spider):
         name = 'memberScrap'
+
+        custom_settings = {
+            'FEEDS': {
+                'member_details.json': {'format': 'json', 'overwrite': True},
+            }
+        }
 
 
         def start_requests(self):
@@ -57,24 +63,18 @@ class MemberScrapSpider(scrapy.Spider):
 
             insurance_divs= response.css('div.insurance.ng-star-inserted')
 
-            covers = []
-
             for div in insurance_divs: 
                 cover_type = div.css('p.header::text').get()
                 cover_value = div.css('div > p::text').re_first(r'KSh ([\d,]+\.00)')
                 cover_balance = div.css('p.label::text').re_first(r'KSh ([\d,]+\.00)')
 
-                # cover_item = insurance_details()
-                # cover_item['cover_type'] = cover_type.strip()
-                # cover_item['cover_value'] = cover_value.strip()
-                # cover_item['cover_balance'] = cover_balance.strip()
+                cover_item = insurance_details()
+                cover_item['cover_type'] = cover_type.strip()
+                cover_item['cover_value'] = cover_value.strip()
+                cover_item['cover_balance'] = cover_balance.strip()
                 
-                covers.append({
+                yield cover_item
 
-                    'cover_type': cover_type.strip(),
-                    'cover_value': cover_value.strip(),
-                    'cover_balance': cover_balance.strip()
-                })
                 # print ('\n'* 2 + cover_type, 
                 #        '\n'* 1 + cover_value, 
                 #        '\n'* 1 + cover_balance)
@@ -112,7 +112,6 @@ class MemberScrapSpider(scrapy.Spider):
             item['scheme'] = scheme
             item['status'] = status
             item['validity'] = validity
-            item['covers'] = covers
 
             yield item
 

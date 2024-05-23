@@ -13,8 +13,7 @@ SPIDER_MODULES = ["scrapy_scraper.spiders"]
 NEWSPIDER_MODULE = "scrapy_scraper.spiders"
 
 FEEDS = {
-    'member_details.csv': {
-        'format': 'csv'}
+    'member_details.json': {'format': 'json'},
 }
 
 
