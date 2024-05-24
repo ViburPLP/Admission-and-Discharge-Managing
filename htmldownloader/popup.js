@@ -23,6 +23,8 @@ document.getElementById('downloadHtml').addEventListener('click', async () => {
       chrome.downloads.download({
         url: url,
         filename: filename,
+      }, () => {
+        fetch('http://localhost:5000/trigger_scrapy', { method: 'POST' });
       });
     } else {
       console.error('No result from content script');
