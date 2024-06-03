@@ -17,10 +17,7 @@ class ScrapyScraperPipeline:
 class ScrapySaverPipeline: 
     def __init__(self):
         self.conn = mysql.connector.connect(
-            host="localhost",
-            user="plp",
-            password="",
-            database="scrapy_scraper"
+           
         )
 
         self.cur = self.conn.cursor()
