@@ -1,0 +1,14 @@
+mads_main/admission/__init__.py
+mads_main/admission/__pycache__/__init__.cpython-311.pyc
+mads_main/admission/__pycache__/admin.cpython-311.pyc
+mads_main/admission/__pycache__/apps.cpython-311.pyc
+mads_main/admission/__pycache__/models.cpython-311.pyc
+mads_main/mads/asgi.py
+mads_main/admission/migrations/__pycache__/__init__.cpython-311.pyc
+mads_main/mads/__pycache__/__init__.cpython-311.pyc
+mads_main/mads/__pycache__/settings.cpython-311.pyc
+mads_main/mads/__pycache__/urls.cpython-311.pyc
+mads_main/mads/__pycache__/wsgi.cpython-311.pyc
+scrapy_django_scraper/scrapy_scraper/scrapy_scraper/__pycache__/items.cpython-311.pyc
+scrapy_django_scraper/scrapy_scraper/scrapy_scraper/__pycache__/pipelines.cpython-311.pyc
+scrapy_django_scraper/scrapy_scraper/scrapy_scraper/spiders/__pycache__/scrapy_spider.cpython-311.pyc
