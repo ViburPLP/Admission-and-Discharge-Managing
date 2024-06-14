@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Admit Patient</h2>
+<p>Payer: {{ member.payer }}</p>
+<p>Membership Number: {{ member.membership_number }}</p>
+<p>Relationship: {{ member.relationship }}</p>
+<p>Name: {{ member.name }}</p>
+<p>Validity: {{ member.validity }}</p>
+<p>Status: {{ member.status }}</p>
+<p>Scheme: {{ member.scheme }}</p>
+
+<h3>Insurance Details</h3>
+<table>
+    <tr>
+        <th>Cover Type</th>
+        <th>Cover Value</th>
+        <th>Cover Balance</th>
+    </tr>
+    {% for detail in insurance_details %}
+    <tr>
+        <td>{{ detail.cover_type }}</td>
+        <td>{{ detail.cover_value }}</td>
+        <td>{{ detail.cover_balance }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
