@@ -1,5 +1,5 @@
 """
-URL configuration for mads project.
+URL configuration for dash project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -15,10 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.urls.conf import include
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('admission/', include('admission.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', include('dashed.urls')),
+
 ]

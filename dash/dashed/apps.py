@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AdmissionConfig(AppConfig):
+class DashedConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'admission'
+    name = 'dashed'
