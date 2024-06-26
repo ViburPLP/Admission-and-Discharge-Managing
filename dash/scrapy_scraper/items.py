@@ -19,6 +19,7 @@ class member_details(scrapy.Item):
     validity = scrapy.Field()
     status = scrapy.Field()
     scheme = scrapy.Field()
+    insurance_details = scrapy.Field()
 
 
 class insurance_details(scrapy.Item):    
