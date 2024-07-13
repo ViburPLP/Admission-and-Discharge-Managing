@@ -52,7 +52,17 @@ class MemberScrapSpider(scrapy.Spider):
                 request=response.request
             )
 
-            return self.parse(local_response)
+            # return self.parse(local_response)
+
+            # Deleting the file after scraping
+        
+            for item in self.parse(local_response):
+                yield item            
+            try:
+                os.remove(file_path)
+                self.logger.info(f'Successfully deleted file: {file_path}')
+            except Exception as e:
+                self.logger.error(f'Error deleting file {file_path}: {e}')
 
         def parse(self, response):
             if "Payer" not in response.url:

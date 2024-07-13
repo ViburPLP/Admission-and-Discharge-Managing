@@ -1,7 +1,13 @@
 from flask import Flask, request
 import subprocess
-from spiders import scrapy_spider
+# from scrapy_scraper.spiders import scrapy_spider
 import os
+import sys
+
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from scrapy_scraper.spiders import scrapy_spider
 
 app = Flask(__name__)
 
@@ -14,7 +20,7 @@ def trigger_scrapy():
     print(f"Spider file path: {spider_file}")
 
     try:
-        subprocess.Popen(['scrapy', 'runspider', 'scrapy_spider.py'])
+        subprocess.Popen(['scrapy', 'runspider', spider_file])
     except Exception as e:
         print(f"Error running spider: {e}")
         return f"Error running spider: {e}", 500
