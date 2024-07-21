@@ -8,11 +8,11 @@ from scrapy_scraper.items import member_details, insurance_details
 class MemberScrapSpider(scrapy.Spider):
         name = 'memberScrap'
 
-        custom_settings = {
-            'FEEDS': {
-                'member_details.json': {'format': 'json', 'overwrite': True},
-            }
-        }
+        # custom_settings = {
+        #     'FEEDS': {
+        #         'member_details.json': {'format': 'json', 'overwrite': True},
+        #     }
+        # }
 
 
         def start_requests(self):

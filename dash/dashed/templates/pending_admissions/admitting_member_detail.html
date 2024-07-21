@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admitting</title>
+    <style>
+        @font-face {
+            font-family: 'Nexa';
+            src: url('Nexa-Regular.woff2') format('woff2'),
+                 url('Nexa-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'Nexa', sans-serif;
+            background-color: white;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: auto;
+        }
+        
+        .sidebar {
+            width: 10%;
+            padding: 2em 2em 2em 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #CCCCCC;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: fixed;
+        }
+
+        .sidebar .logo {
+            font-size: 24px;
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .sidebar .menu a {
+            padding: 10px 20px;
+            color: black;
+            border-radius: 7.5px;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .sidebar .menu a:hover {
+            color: white;
+            background: #808080;
+        }
+
+        .container {
+            width: 90%;
+            margin-left: 10%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4em;
+            border-bottom: 1px solid #ddd;
+            background-color: white;
+            padding: 0 2em;
+            position: fixed;
+            top: 0;
+        }
+
+        .navbar .greeting {
+            font-size: 14px;
+        }
+
+        .navbar .page_heading {
+            font-size: 18px;
+            text-transform: capitalize;
+        }
+
+        .content {
+            margin-top: 4em;
+            display: flex;
+            flex-direction: column;
+            padding: 2em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-left: 10%;
+            width: 90%;
+            box-sizing: border-box;
+        }
+
+        .top_section {
+            display: flex;
+            gap: 45px;
+        }
+
+        .member_details {
+            border: 1px solid #ddd;
+            border-radius: 7.5px;
+            padding: 20px;
+            background-color: #fff;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 35%;
+        }
+
+        .member_details h2 {
+            font-size: 24px;
+            color: black;
+            grid-column: span 2;
+        }
+
+        .member_details .item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .label {
+            font-size: 14px;
+            color: black;
+        }
+
+        .value {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .admission-summary {
+            padding: 20px;
+            border-radius: 15px;
+            width: 55%;
+        }
+
+        .section-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-content select,
+        .section-content input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 500px;
+        }
+
+        .admission-summary2 {
+            padding: 20px;
+            background-color: #fff;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .admission-summary2 h2 {
+            grid-column: span 3;
+            font-size: 24px;
+            color: black;
+        }
+
+        .covers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .cover-item {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 7.5px;
+        }
+
+        .cover-item .label {
+            font-size: 14px;
+            color: black;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cover-item .value {
+            font-size: 12px;
+            color: #666666;
+            margin-left: 20px;
+            align-self: flex-start;
+            margin-top: 5px;
+        }
+
+        .cover-item .label input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .admissions {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .admissions h3 {
+            margin-top: 0;
+        }
+
+        .details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .details .section {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 7.5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f8f8;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+
+    <script>
+        function updateCoverDetails() {
+            const dropdown = document.getElementById('cover_type_dropdown');
+            const selectedOption = dropdown.options[dropdown.selectedIndex];
+            const coverValue = selectedOption.getAttribute('data-cover-value') || 'Ksh 0.00';
+            const coverBalance = selectedOption.getAttribute('data-cover-balance') || 'Ksh 0.00';
+
+            document.getElementById('cover_value').textContent = `Ksh ${coverValue}`;
+            document.getElementById('cover_balance').textContent = `Ksh ${coverBalance}`; 
+        }
+        
+        function addDiagnosis() {
+            const diagnosisInput = document.getElementById('reason_for_admission_input');
+            const diagnosisList = document.getElementById('diagnosis_list');
+            const diagnosis = diagnosisInput.value.trim();
+
+            if (diagnosis !== "") {
+                const diagnosisItem = document.createElement('div');
+                diagnosisItem.textContent = diagnosis;
+                diagnosisList.appendChild(diagnosisItem);
+                diagnosisInput.value = "";
+
+                const diagnosisText = document.createElement('span');
+                diagnosisText.textContent = diagnosis;
+                diagnosisItem.appendChild(diagnosisText);
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove diagnosis';
+                removeButton.onclick = () => diagnosisItem.remove();
+                diagnosisItem.appendChild(removeButton);
+
+                diagnosisList.appendChild(diagnosisItem);
+                diagnosisInput.value = "";
+            }
+        }    
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                addDiagnosis();
+            }
+        }
+
+        function setToday() {
+        const today = new Date();
+        const todayDate = today.toISOString().split('T')[0];
+        document.getElementById('admission_date').value = todayDate;
+        }
+
+        // Set the default date to today when the page loads
+        window.onload = function() {
+            setToday();
+        };
+    </script>
+
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">_Dash</div>
+        <div class="menu">
+            <a href="#">Alerts</a>
+            <a href="#">Settings</a>
+            <a href="#">Discharged</a>
+            <a href="#">Pending</a>
+            <a href="#">Admitted</a>
+            <a href="#">Analytics</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="navbar">
+            <div class="page_heading">Pending Admissions</div>
+            <div class="greeting">Good Morning Victor</div>
+        </div>
+
+        <div class="content">
+            <div class="top_section">
+                <div class="member_details">
+                    <h2>{{ member.name }}</h2>
+                    <div class="item">
+                        <span class="label">Member number</span>
+                        <span class="value">{{ member.membership_number }}</span>
+                    </div>
+                    <div class="item">
+                        <span class="label">Primary</span>
+                        <span class="value">{{ member.payer }}</span>
+                    </div>
+                    <div class="item">
+                        <span class="label">Insurance</span>
+                        <span class="value">{{ member.scheme }}</span>
+                    </div>
+                    <div class="item">
+                        <span class="label">Validity</span>
+                        <span class="value">{{ member.status }}</span>
+                        <span class="value">{{ member.validity }}</span>
+                    </div>
+                </div>
+
+                <div class="admission-summary">
+                    <h2>Admission Summary</h2>
+                    <div class="section-content">
+                        <div>
+                            <label for="service_provider">Select Service Provider:</label>
+                            <select id="service_provider">
+                                <option value="">Select</option>
+                                <option value="Provider 1">Provider 1</option>
+                                <option value="Provider 2">Provider 2</option>
+                                <option value="Provider 3">Provider 3</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="admission_date">Date:</label>
+                            <input type="date" id="admission_date">
+                            <button type="button" onclick="setToday()">Today</button>
+                        </div>
+                        
+                        <div>
+                            <label for="reason_for_admission">Diagnosis at admission:</label>
+                            <input type="text" id="reason_for_admission_input" onkeypress="handleKeyPress(event)">
+                            <button type="button" onclick="addDiagnosis()">Add</button>
+                        </div>
+                        <div id="diagnosis_list"></div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="admission-summary2">
+                <h2>Covers</h2>
+                <div class="covers-grid">
+                    <div class="cover-item">
+                        <span class="label">
+                            <select id="cover_type_dropdown" onchange="updateCoverDetails()">
+                                <option value="" disabled selected>Select cover</option>
+                                {% for detail in insurance_details%}
+                                    <option value="{{ detail.id}}"
+                                            data-cover-value="{{detail.cover_value}}"
+                                            data-cover-balance="{{detail.cover_balance}}">
+                                        {{detail.cover_type}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </span>
+                        <label>Innitial Cover Value</label>
+                        <span class="value" id="cover_value"> Ksh. 0.00</span>
+                        <label>Current Cover Balance :</label>
+                        <span class="value" id="cover_balance"> Ksh. 0.00</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="admissions">
+                <h3>Previous Admissions</h3>
+                <div class="details">
+                    <div class="section">
+                        <h4>Admission Date: <span>10/03/2022</span></h4>
+                        <p>Reason for Admission: Flu</p>
+                        <p>Duration: 3 Days</p>
+                        <p>Remarks: Recovery was quick</p>
+                    </div>
+                    <div class="section">
+                        <h4>Admission Date: <span>14/06/2021</span></h4>
+                        <p>Reason for Admission: Fever</p>
+                        <p>Duration: 2 Days</p>
+                        <p>Remarks: No complications</p>
+                    </div>
+                    <a href="{% url 'pending_admissions' %}">Back to List</a>
+            <form action="{% url 'admit_member' member.pk %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit">Admit</button>
+            </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2024 Dashboard. All rights reserved.
+    </div>
+</body>
+</html>

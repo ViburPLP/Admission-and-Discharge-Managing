@@ -72,6 +72,16 @@ class Command(BaseCommand):
       
         self.stdout.write(self.style.SUCCESS('Successfully imported all data'))
 
+        try:
+            os.remove(json_file)
+            self.stdout.write(self.style.SUCCESS(f'Successfully deleted file: {json_file}'))
+        except OSError as e:
+            self.stdout.write(self.style.ERROR(f'Error deleting file: {json_file}. Error: {e}'))
+
+        self.stdout.write(self.style.SUCCESS('Successfully imported all data'))
+
+
+    #Notes:
         # The handle method processes the JSON file in two separate loops:
         # 1. The first loop processes member details.
         # 2. The second loop processes insurance details.

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Member Details</title>
+    <title>Discharged Member Details</title>
     <style>
         body {
             display: flex;
@@ -28,26 +28,35 @@
         th {
             background-color: #f2f2f2;
         }
-        a {
-            text-decoration: none;
-            color: black;
+        tr:hover {
+            background-color: #d3d3d3;
         }
-        a:hover {
-            text-decoration: underline;
+        .clickable-row {
+            cursor: pointer;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.clickable-row');
+            rows.forEach(row => {
+                row.addEventListener('click', function() {
+                    window.location = row.dataset.href;
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="sidebar">
         <h2>Navigation</h2>
         <ul>
-            <li><a href="{% url 'index' %}">Index Page</a></li>
-            <li><a href="{% url 'discharge_list' %}">Discharge Page</a></li>
-            <li><a href="{% url 'discharged_list' %}">Discharged Page</a></li>
+            <li><a href="{% url 'index' %}">Pending Admissions</a></li>
+            <li><a href="{% url 'discharge_list' %}">Admitted Members</a></li>
+            <li><a href="{% url 'discharged_list' %}">Discharged Members</a></li>
         </ul>
     </div>
     <div class="content">
-        <h1>List of discharged Members</h1>
+        <h1>List of Discharged Members</h1>
         <form method="GET" action="">
             <input type="text" name="q" value="{{ query|default_if_none:'' }}" placeholder="Search...">
             <button type="submit">Search</button>
@@ -68,16 +77,16 @@
             </thead>
             <tbody>
                 {% for member in discharged_member %}
-                <tr>
-                    <td><a href="{% url 'dis' member.pk %}">{{ member.first_name }}</a></td>
-                    <td><a href="{% url 'dis' member.pk %}">{{ member.last_name }}</a></td>
-                    <td><a href="{% url 'dis' member.pk %}">{{ member.payer }}</a></td>
-                    <td><a href="{% url 'dis' member.pk %}">{{ member.membership_number }}</a></td>
-                    <td><a href="{% url 'dis' member.pk %}">{{ member.relationship }}</a></td>
-                    <td><a href="{% url 'dis' member.pk %}">{{ member.name }}</a></td>
-                    <td><a href="{% url 'dis' member.pk %}">{{ member.validity }}</a></td>
-                    <td><a href="{% url 'dis' member.pk %}">{{ member.status }}</a></td>
-                    <td><a href="{% url 'dis' member.pk %}">{{ member.scheme }}</a></td>
+                <tr class="clickable-row" data-href="{% url 'dis' member.pk %}">
+                    <td>{{ member.first_name }}</td>
+                    <td>{{ member.last_name }}</td>
+                    <td>{{ member.payer }}</td>
+                    <td>{{ member.membership_number }}</td>
+                    <td>{{ member.relationship }}</td>
+                    <td>{{ member.name }}</td>
+                    <td>{{ member.validity }}</td>
+                    <td>{{ member.status }}</td>
+                    <td>{{ member.scheme }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

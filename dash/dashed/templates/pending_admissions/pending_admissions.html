@@ -64,8 +64,8 @@
             <input type="date" name="date_from" value="{{ date_from|default_if_none:'' }}" placeholder="Date from...">
             <input type="date" name="date_to" value="{{ date_to|default_if_none:'' }}" placeholder="Date to...">
             <select name="order">
-                <option value="added_at">Time</option>
-                <option value="membership_number">Membership Number</option>
+                <option value="added_at" {% if order == 'added_at' %}selected{% endif %}>Time</option>
+                <option value="membership_number" {% if order == 'membership_number' %}selected{% endif %}>Membership Number</option>
                 <!-- Add other options as needed -->
             </select>
             <button type="submit">Search</button>
@@ -81,10 +81,10 @@
                 </tr>
             </thead>
             <tbody>
-                {% for member in members %}
-                <tr class="clickable-row" data-href="{% url 'member_detail' member.pk %}">
+                {% for member in pending_members %}
+                <tr class="clickable-row" data-href="{% url 'admitting_member_detail' member.pk %}">
                     <td>{{ member.added_at }}</td>
-                    <td>{{ member.first_name }} {{ member.last_name }} {{ member.third_name }}</td>
+                    <td>{{ member.name }}</td>
                     <td>{{ member.membership_number }}</td>
                     <td>{{ member.payer }}</td>
                     <td>{{ member.scheme }}</td>

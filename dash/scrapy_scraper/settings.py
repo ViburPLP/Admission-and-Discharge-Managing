@@ -12,9 +12,28 @@ BOT_NAME = "scrapy_scraper"
 SPIDER_MODULES = ["scrapy_scraper.spiders"]
 NEWSPIDER_MODULE = "scrapy_scraper.spiders"
 
+
 FEEDS = {
-    'member_details.json': {'format': 'json'},
+    'file:///C:/Users/Victor/Documents/Scraper/Localscraper/dash/scrapy_scraper/spiders/member_details.json': {
+        'format': 'json',
+        'overwrite': True,
+    },
 }
+
+FEED_STORAGES = {
+    'file': 'scrapy_scraper.custom_feed_exporter.CustomFileFeedStorage',
+}
+
+# FEEDS = {
+#     'member_details.json': {'format': 'json'},
+# }
+
+# FEED_URI = 'file:///C:/Users/Victor/Documents/Scraper/Localscraper/dash/scrapy_scraper/spiders/member_details.json'
+# FEED_FORMAT = 'json'
+# FEED_STORAGES = {
+#     'file': 'scrapy_scraper.custom_feed_exporter.CustomFileFeedStorage',
+# }
+
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -69,7 +88,7 @@ ROBOTSTXT_OBEY = True
 ITEM_PIPELINES = {
    "scrapy_scraper.pipelines.ScrapyScraperPipeline": 300,
    "scrapy_scraper.pipelines.ScrapyScraperPipeline" : 400,
-   "scrapy_scraper.pipelines.MyPipeline": 500,
+#    "scrapy_scraper.pipelines.MyPipeline": 500,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

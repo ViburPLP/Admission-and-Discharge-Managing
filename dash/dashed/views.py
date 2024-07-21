@@ -1,10 +1,14 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Discharge, MemberDetail, Discharged
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.utils.dateparse import parse_date
+from .models import (
+    Discharge, 
+    MemberDetail, 
+    Discharged, 
+    Member_Detail, 
+    InsuranceDetail)
+
 
 
 
@@ -100,36 +104,67 @@ def discharged_member_detail(request, pk):
 @login_required
 def index(request):
     query = request.GET.get('q')
+    payer_filter = request.GET.get('payer')
+    scheme_filter = request.GET.get('scheme')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    order = request.GET.get('order', 'added_at')
+
+    members = MemberDetail.objects.all()
+
     if query:
-        members = MemberDetail.objects.filter(
+        members = members.filter(
             Q(first_name__icontains=query) |
             Q(last_name__icontains=query) |
-            Q(payer__icontains=query) |
-            Q(membership_number__icontains=query) |
-            Q(relationship__icontains=query) |
-            Q(validity__icontains=query) |
-            Q(scheme__icontains=query)
+            Q(membership_number__icontains=query)
         )
-    else:
-        members = MemberDetail.objects.all()
-    return render(request, 'index.html', {'members': members, 'query': query})
+    if payer_filter:
+        members = members.filter(payer__icontains=payer_filter)
+    if scheme_filter:
+        members = members.filter(scheme__icontains=scheme_filter)
+    if date_from:
+        members = members.filter(added_at__gte=parse_date(date_from))
+    if date_to:
+        members = members.filter(added_at__lte=parse_date(date_to))
+
+    members = members.order_by(order)
+    
+    return render(request, 'index.html', {'members': members, 'query': query, 'payer_filter': payer_filter, 'scheme_filter': scheme_filter, 'date_from': date_from, 'date_to': date_to, 'order': order})
+
 
 @login_required
 def discharge_list(request):
     query = request.GET.get('q')
+    payer_filter = request.GET.get('payer')
+    scheme_filter = request.GET.get('scheme')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    order = request.GET.get('order', 'added_at')
+
+    discharges = Discharge.objects.all()
+
     if query:
-        discharges = Discharge.objects.filter(
+        discharges = discharges.filter(
             Q(first_name__icontains=query) |
             Q(last_name__icontains=query) |
-            Q(payer__icontains=query) |
             Q(membership_number__icontains=query) |
+            Q(payer__icontains=query) |
             Q(relationship__icontains=query) |
             Q(validity__icontains=query) |
             Q(scheme__icontains=query)
         )
-    else:
-        discharges = Discharge.objects.all()
-    return render(request, 'discharge.html', {'discharges': discharges, 'query': query})
+    if payer_filter:
+        discharges = discharges.filter(payer__icontains=payer_filter)
+    if scheme_filter:
+        discharges = discharges.filter(scheme__icontains=scheme_filter)
+    if date_from:
+        discharges = discharges.filter(added_at__gte=parse_date(date_from))
+    if date_to:
+        discharges = discharges.filter(added_at__lte=parse_date(date_to))
+
+    discharges = discharges.order_by(order)
+
+    return render(request, 'discharge.html', {'discharges': discharges, 'query': query, 'payer_filter': payer_filter, 'scheme_filter': scheme_filter, 'date_from': date_from, 'date_to': date_to, 'order': order})
 
 @login_required
 def discharged_list(request):
@@ -162,3 +197,58 @@ def readmit(request, pk):
     )
     discharged.delete()
     return redirect('index')
+ 
+ #**************************************************************************************************************************************************
+def pending_admissions(request):
+    query = request.GET.get('q')
+    payer_filter = request.GET.get('payer')
+    scheme_filter = request.GET.get('scheme')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    order = request.GET.get('order', 'added_at')
+
+    pending_members = Member_Detail.objects.all()
+
+    if query:
+        pending_members = pending_members.filter(
+            Q(name__icontains=query) |
+            Q(membership_number__icontains=query)
+        )
+    if payer_filter:
+        pending_members = pending_members.filter(payer__icontains=payer_filter)
+    if scheme_filter:
+        pending_members = pending_members.filter(scheme__icontains=scheme_filter)
+    if date_from:
+        pending_members = pending_members.filter(added_at__gte=parse_date(date_from))
+    if date_to:
+        pending_members = pending_members.filter(added_at__lte=parse_date(date_to))
+
+    pending_members = pending_members.order_by(order)
+    
+    return render(request, 'pending_admissions/pending_admissions.html', 
+                  {'pending_members': pending_members, 
+                    'query': query, 'payer_filter': payer_filter, 
+                    'scheme_filter': scheme_filter, 
+                    'date_from': date_from, 'date_to': date_to, 
+                    'order': order})
+
+def admit_pending_member(request, pk):
+    admission = get_object_or_404(Member_Detail, pk=pk)
+
+    discharge = Discharge.objects.create(
+        first_name=admission.name,
+        payer=admission.payer,
+        membership_number=admission.membership_number,
+        relationship=admission.relationship,
+        validity=admission.validity,
+        scheme=admission.scheme,
+    )
+    admission.delete()
+
+    return redirect("discharge_member_detail", pk=discharge.pk)
+
+def admitting_member_detail(request, pk):
+    member = get_object_or_404(Member_Detail, pk=pk)
+    insurance_details = InsuranceDetail.objects.filter(member=member)
+    return render(request, 'pending_admissions/admitting_member_detail.html', {'member': member, 'insurance_details': insurance_details})
+

@@ -11,5 +11,5 @@
 {"cover_type": "FUNERAL", "cover_value": "20,000.00", "cover_balance": "20,000.00"},
 {"cover_type": "OUT-PATIENT", "cover_value": "50,000.00", "cover_balance": "50,000.00"},
 {"cover_type": "ACCIDENT", "cover_value": "200,000.00", "cover_balance": "200,000.00"},
-{"relationship": "Primary", "name": "VICTOR MBURU", "membership_number": "AK20196600", "payer": " AAR INSURANCE KENYA ", "scheme": " CAREPAY MICRO ", "status": "ENABLED", "validity": " 22-04-2024 3:00 (22-04-2024 0:00 UTC)  -  22-04-2025 2:59 (21-04-2025 23:59 UTC) "}
+{"relationship": "Primary", "name": "John Doe", "membership_number": "CIK123456", "payer": "CERTAIN INSURANCE ", "scheme": "CERTAIN SCHEME", "status": "ENABLED", "validity": " 22-04-2024 3:00 (22-04-2024 0:00 UTC)  -  22-04-2025 2:59 (21-04-2025 23:59 UTC) "}
 ]

@@ -8,6 +8,7 @@ class MemberDetail(models.Model):
     relationship = models.CharField(max_length=255)
     validity = models.CharField(max_length=255)
     scheme = models.CharField(max_length=255)
+    added_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.membership_number})"
@@ -20,6 +21,7 @@ class Discharge(models.Model):
     relationship = models.CharField(max_length=255)
     validity = models.CharField(max_length=255)
     scheme = models.CharField(max_length=255)
+    added_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.membership_number})"
@@ -32,11 +34,12 @@ class Discharged(models.Model):
     relationship = models.CharField(max_length=255)
     validity = models.CharField(max_length=255)
     scheme = models.CharField(max_length=255)
+    added_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.membership_number})"
     
-
+#********************************************************************************
 class Member_Detail(models.Model):
     relationship = models.CharField(max_length=100)
     name = models.CharField(max_length=200)
@@ -45,6 +48,7 @@ class Member_Detail(models.Model):
     scheme = models.CharField(max_length=100)
     status = models.CharField(max_length=100)
     validity = models.CharField(max_length=100)
+    added_at = models.DateTimeField(auto_now_add=True, null=True)
     
     def __str__(self):
         return f"{self.name} - {self.membership_number}"
