@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import HttpResponse
 from django.db.models import Q
 from django.utils.dateparse import parse_date
 from .models import (
@@ -7,7 +9,11 @@ from .models import (
     MemberDetail, 
     Discharged, 
     Member_Detail, 
-    InsuranceDetail)
+    InsuranceDetail,
+    Scheme,
+    Provider,
+    Admission_details
+    )
 
 
 
@@ -207,7 +213,7 @@ def pending_admissions(request):
     date_to = request.GET.get('date_to')
     order = request.GET.get('order', 'added_at')
 
-    pending_members = Member_Detail.objects.all()
+    pending_members = Member_Detail.objects.filter(admission_status= 'pending')
 
     if query:
         pending_members = pending_members.filter(
@@ -250,5 +256,63 @@ def admit_pending_member(request, pk):
 def admitting_member_detail(request, pk):
     member = get_object_or_404(Member_Detail, pk=pk)
     insurance_details = InsuranceDetail.objects.filter(member=member)
-    return render(request, 'pending_admissions/admitting_member_detail.html', {'member': member, 'insurance_details': insurance_details})
+    try:
+        scheme = Scheme.objects.get(name=member.scheme)
+        providers = scheme.providers.all()
+    except Scheme.DoesNotExist:
+        # Scheme is not registered
+        scheme = None
+        providers = []
+
+    return render(request, 'pending_admissions/admitting_member_detail.html', 
+                  {'member': member, 
+                   'insurance_details': insurance_details,
+                   'scheme': scheme,
+                   'providers': providers
+                   })
+
+def admit_member(request, pk):
+    member = get_object_or_404(Member_Detail, pk=pk)
+    providers = Provider.objects.all()
+    insurance_details = member.insurance_details.all()
+
+    if request.method == 'POST':
+        service_provider_id = request.POST.get('service_provider')
+        admission_date = request.POST.get('admission_date')
+        admission_diagnosis = request.POST.get('admission_diagnosis')
+        cover_used_id = request.POST.get('cover_used')
+        initial_cover_value = request.POST.get('initial_cover_value')
+        initial_cover_balance = request.POST.get('initial_cover_balance')
+        requested_amount = request.POST.get('requested_amount')
+        lou_issued = request.POST.get('lou_issued')
+
+        # Get the selected provider and cover
+        provider = get_object_or_404(Provider, pk=service_provider_id)
+        cover_used = get_object_or_404(insurance_details, pk=cover_used_id)
+
+        # Save the admission details
+        admission_detail = Admission_details(
+            member=member,
+            Provider=provider,
+            admission_date=admission_date,
+            admission_diagnosis=admission_diagnosis,
+            cover_used=cover_used.cover_type,
+            initial_cover_value=initial_cover_value,
+            initial_cover_balance=initial_cover_balance,
+            requested_amount=requested_amount,
+            lou_issued=lou_issued,
+            admited_by=request.user.username  # Assuming you have the user authenticated
+        )
+        member.admission_status = 'admitted'
+        member.save()
+        admission_detail.save()
+
+        # messages.success(request, 'Admission details saved successfully.')
+        return redirect('pending_admissions')  # Redirect to a success page or admission summary
+
+    return render(request, 'pending_admissions/pending_admissions.html', {
+        'member': member,
+        'providers': providers,
+        'insurance_details': insurance_details,
+    })
 

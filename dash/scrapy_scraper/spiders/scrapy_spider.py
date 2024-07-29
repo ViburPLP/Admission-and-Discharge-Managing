@@ -104,6 +104,8 @@ class MemberScrapSpider(scrapy.Spider):
                 payer = payer.replace('Payer: ', '')
 
             scheme = response.css('p.body:nth-child(1)::text').get()
+            if scheme:
+                scheme = scheme.strip()
             
             status = response.css('div.col-4 span.name::text')[4].get()
             if status:

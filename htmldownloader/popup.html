@@ -3,58 +3,114 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Download HTML</title>
+  <title>Dash_</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
+      font-family: 'Poppins', sans-serif;
+      background-color: transparent;
       margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+    	
     }
+
     .container {
-      text-align: center;
+      
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       background-color: #ffffff;
       padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease-in-out;
+      width: 85vh;
+      text-align: center;
     }
+
     .container:hover {
-      transform: translateY(-5px);
+      transform: translateY(-10px);
     }
+
     h1 {
-      font-size: 24px;
+      font-size: 28px;
       color: #333333;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      font-weight: 600;
     }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
     button {
-      background-color: #007bff;
+      background-color: #0288d1;
       color: white;
       border: none;
-      border-radius: 5px;
-      padding: 15px 30px;
+      border-radius: 30px;
+      padding: 15px 25px;
       font-size: 16px;
+      font-weight: 500;
       cursor: pointer;
       transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      margin: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(2, 136, 209, 0.3);
+      text-align: center;
     }
+
     button:hover {
-      background-color: #0056b3;
-      box-shadow: 0 4px 8px rgba(0, 91, 187, 0.3);
+      background-color: #0277bd;
+      box-shadow: 0 6px 12px rgba(2, 119, 189, 0.4);
     }
+
     button:active {
-      background-color: #003f8a;
+      background-color: #01579b;
+    }
+
+    button .icon {
+      margin-right: 8px;
+      display: inline-block;
+    }
+
+    .icon-download {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    /* Ensuring the icon is vertically aligned with the text */
+    .icon svg {
+      width: 18px;
+      height: 18px;
+      vertical-align: middle;
+    }
+
+    .icon {
+      display: inline-block;
+      vertical-align: middle;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Download Page HTML</h1>
-    <button id="downloadHtml">Download HTML</button>
+    <h1>Import Member Details</h1>
+    <div class="button-container">
+      <button id="downloadHtml" class="download-button">
+        <span class="icon icon-download">⬇️</span>
+        Import Member
+      </button>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>
 </html>
-

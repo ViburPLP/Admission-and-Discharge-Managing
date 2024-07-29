@@ -251,56 +251,70 @@
     </style>
 
     <script>
-        function updateCoverDetails() {
-            const dropdown = document.getElementById('cover_type_dropdown');
-            const selectedOption = dropdown.options[dropdown.selectedIndex];
-            const coverValue = selectedOption.getAttribute('data-cover-value') || 'Ksh 0.00';
-            const coverBalance = selectedOption.getAttribute('data-cover-balance') || 'Ksh 0.00';
-
-            document.getElementById('cover_value').textContent = `Ksh ${coverValue}`;
-            document.getElementById('cover_balance').textContent = `Ksh ${coverBalance}`; 
-        }
-        
-        function addDiagnosis() {
-            const diagnosisInput = document.getElementById('reason_for_admission_input');
-            const diagnosisList = document.getElementById('diagnosis_list');
-            const diagnosis = diagnosisInput.value.trim();
-
-            if (diagnosis !== "") {
-                const diagnosisItem = document.createElement('div');
-                diagnosisItem.textContent = diagnosis;
-                diagnosisList.appendChild(diagnosisItem);
-                diagnosisInput.value = "";
-
-                const diagnosisText = document.createElement('span');
-                diagnosisText.textContent = diagnosis;
-                diagnosisItem.appendChild(diagnosisText);
-
-                const removeButton = document.createElement('button');
-                removeButton.textContent = 'Remove diagnosis';
-                removeButton.onclick = () => diagnosisItem.remove();
-                diagnosisItem.appendChild(removeButton);
-
-                diagnosisList.appendChild(diagnosisItem);
-                diagnosisInput.value = "";
-            }
-        }    
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                addDiagnosis();
-            }
-        }
-
         function setToday() {
-        const today = new Date();
-        const todayDate = today.toISOString().split('T')[0];
-        document.getElementById('admission_date').value = todayDate;
-        }
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('admission_date').value = today;
+    }
 
-        // Set the default date to today when the page loads
-        window.onload = function() {
-            setToday();
-        };
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            addDiagnosis();
+            event.preventDefault();
+        }
+    }
+
+    function addDiagnosis() {
+        const diagnosisInput = document.getElementById('reason_for_admission_input');
+        const diagnosisList = document.getElementById('diagnosis_list');
+        const diagnosisDescriptionInput = document.getElementById('admission_diagnosis_description');
+
+        if (diagnosisInput.value.trim() !== '') {
+            const diagnosisText = diagnosisInput.value.trim();
+
+            // Add diagnosis to the list
+            const diagnosisDiv = document.createElement('div');
+            diagnosisDiv.classList.add('diagnosis-item');
+            diagnosisDiv.innerHTML = `
+                <span>${diagnosisText}</span>
+                <button type="button" onclick="removeDiagnosis(this)">Remove</button>
+            `;
+            diagnosisList.appendChild(diagnosisDiv);
+
+            // Update hidden input for diagnosis description
+            const currentDescription = diagnosisDescriptionInput.value;
+            diagnosisDescriptionInput.value = currentDescription ? currentDescription + ', ' + diagnosisText : diagnosisText;
+
+            // Clear the input
+            diagnosisInput.value = '';
+        }
+    }
+
+    function removeDiagnosis(button) {
+        const diagnosisDiv = button.parentNode;
+        const diagnosisText = diagnosisDiv.querySelector('span').textContent;
+        const diagnosisDescriptionInput = document.getElementById('admission_diagnosis_description');
+
+        // Remove the diagnosis from the list
+        diagnosisDiv.remove();
+
+        // // Update hidden input for diagnosis description
+        // let currentDescription = diagnosisDescriptionInput.value.split(', ').filter(text => text !== diagnosisText);
+        // diagnosisDescriptionInput.value = currentDescription.join(', ');
+    }
+
+    function updateCoverDetails() {
+        const dropdown = document.getElementById('cover_type_dropdown');
+        const selectedOption = dropdown.options[dropdown.selectedIndex];
+
+        const coverValue = selectedOption.getAttribute('data-cover-value');
+        const coverBalance = selectedOption.getAttribute('data-cover-balance');
+
+        document.getElementById('cover_value').textContent = 'Ksh. ' + coverValue;
+        document.getElementById('cover_balance').textContent = 'Ksh. ' + coverBalance;
+
+        document.getElementById('initial_cover_value').value = coverValue;
+        document.getElementById('initial_cover_balance').value = coverBalance;
+    }
     </script>
 
 </head>
@@ -345,59 +359,76 @@
                     </div>
                 </div>
 
-                <div class="admission-summary">
-                    <h2>Admission Summary</h2>
-                    <div class="section-content">
-                        <div>
-                            <label for="service_provider">Select Service Provider:</label>
-                            <select id="service_provider">
-                                <option value="">Select</option>
-                                <option value="Provider 1">Provider 1</option>
-                                <option value="Provider 2">Provider 2</option>
-                                <option value="Provider 3">Provider 3</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="admission_date">Date:</label>
-                            <input type="date" id="admission_date">
-                            <button type="button" onclick="setToday()">Today</button>
-                        </div>
-                        
-                        <div>
-                            <label for="reason_for_admission">Diagnosis at admission:</label>
-                            <input type="text" id="reason_for_admission_input" onkeypress="handleKeyPress(event)">
-                            <button type="button" onclick="addDiagnosis()">Add</button>
-                        </div>
-                        <div id="diagnosis_list"></div>
-                        
-                    </div>
-                </div>
-            </div>
+                <form method="POST" action="{% url 'admit_member' member.pk %}">
+                    {% csrf_token %}
+                    <div class="admission-summary">
+                        <h2>Admission Summary</h2>
+                        <div class="section-content">
+                            <div>
+                                <label for="service_provider">Select Service Provider:</label>
+                                <select id="service_provider" name="service_provider" required>
+                                    <option value="">Select</option>
+                                    {% for provider in providers %}
+                                        <option value="{{ provider.id }}">{{ provider.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="admission_date">Date:</label>
+                                <input type="date" id="admission_date" name="admission_date" required>
+                                <button type="button" onclick="setToday()">Today</button>
+                            </div>
 
-            <div class="admission-summary2">
-                <h2>Covers</h2>
-                <div class="covers-grid">
-                    <div class="cover-item">
-                        <span class="label">
-                            <select id="cover_type_dropdown" onchange="updateCoverDetails()">
-                                <option value="" disabled selected>Select cover</option>
-                                {% for detail in insurance_details%}
-                                    <option value="{{ detail.id}}"
-                                            data-cover-value="{{detail.cover_value}}"
-                                            data-cover-balance="{{detail.cover_balance}}">
-                                        {{detail.cover_type}}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </span>
-                        <label>Innitial Cover Value</label>
-                        <span class="value" id="cover_value"> Ksh. 0.00</span>
-                        <label>Current Cover Balance :</label>
-                        <span class="value" id="cover_balance"> Ksh. 0.00</span>
+                            <div>
+                                <label for="reason_for_admission">Diagnosis at Admission:</label>
+                                <input type="text" id="reason_for_admission_input" name="admission_diagnosis" onkeypress="handleKeyPress(event)" required>
+                                <button type="button" onclick="addDiagnosis()">Add</button>
+                            </div>
+                            <div id="diagnosis_list"></div>
+                            <input type="hidden" id="admission_diagnosis_description" name="admission_diagnosis_description">
+                        </div>
                     </div>
-                </div>
 
-            </div>
+                    <div class="admission-summary2">
+                        <h2>Covers</h2>
+                        <div class="covers-grid">
+                            <div class="cover-item">
+                                <span class="label">
+                                    <select id="cover_type_dropdown" name="cover_used" onchange="updateCoverDetails()" required>
+                                        <option value="" disabled selected>Select cover</option>
+                                        {% for detail in insurance_details %}
+                                            <option value="{{ detail.id }}"
+                                                    data-cover-value="{{ detail.cover_value }}"
+                                                    data-cover-balance="{{ detail.cover_balance }}">
+                                                {{ detail.cover_type }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </span>
+                                <label>Initial Cover Value:</label>
+                                <span class="value" id="cover_value">Ksh. 0.00</span>
+                                <input type="hidden" id="initial_cover_value" name="initial_cover_value">
+                                <label>Current Cover Balance:</label>
+                                <span class="value" id="cover_balance">Ksh. 0.00</span>
+                                <input type="hidden" id="initial_cover_balance" name="initial_cover_balance">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="requested_amount">Requested Amount:</label>
+                            <input type="number" id="requested_amount_input" name="requested_amount" required>
+                        </div>
+                        <div>
+                            <label for="lou_amount">LOU Amount:</label>
+                            <input type="number" id="lou_amount_input" name="lou_issued" required>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <button type="submit">Submit Admission</button>
+                    </div>
+                </form>
 
             <div class="admissions">
                 <h3>Previous Admissions</h3>

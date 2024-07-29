@@ -30,5 +30,6 @@ urlpatterns = [
     path('discharged/', discharged_list, name='discharged_list'),
     path('discharged/<int:pk>/', discharged_member_detail, name='dis'),
     path('readmit/<int:pk>/', views.readmit, name='readmit'),
+    path('admit_member/<int:pk>/', views.admit_member, name='admit_member'),
     path('', index, name='index'),
 ]
