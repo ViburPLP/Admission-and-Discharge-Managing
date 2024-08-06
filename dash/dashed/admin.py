@@ -7,7 +7,9 @@ from .models import (
     InsuranceDetail, 
     Scheme, 
     Provider,
-    Admission_details
+    Admission_details,
+    Discharge_details,
+    Daily_update
     )
 
 class ProviderInline(admin.TabularInline):
@@ -31,5 +33,7 @@ admin.site.register(InsuranceDetail)
 admin.site.register(Scheme, SchemeAdmin)
 admin.site.register(Provider, ProviderAdmin)
 admin.site.register(Admission_details)
+admin.site.register(Discharge_details)
+admin.site.register(Daily_update)
 
 # Register your models here.

@@ -39,7 +39,7 @@ class Command(BaseCommand):
                 }
 
                 member_instance, created = Member_Detail.objects.update_or_create(
-                    membership_number=membership_number, defaults=defaults)
+                    name=membership_number, defaults=defaults)
 
                 member_instances[membership_number] = member_instance
                 if created:

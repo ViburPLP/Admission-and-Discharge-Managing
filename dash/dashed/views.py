@@ -4,6 +4,10 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.db.models import Q
 from django.utils.dateparse import parse_date
+from datetime import datetime
+from django.utils.timezone import now
+from django.utils import timezone
+from .forms import UpdateForm
 from .models import (
     Discharge, 
     MemberDetail, 
@@ -12,7 +16,9 @@ from .models import (
     InsuranceDetail,
     Scheme,
     Provider,
-    Admission_details
+    Admission_details,
+    Discharge_details,
+    Daily_update
     )
 
 
@@ -54,7 +60,7 @@ def discharge_member_detail(request, pk):
     discharge_member = get_object_or_404(Discharge, pk=pk)
     return render(request, 'Discharge_member.html', {'member': discharge_member})
 
-def discharge_member(request, pk):
+def discharge_member1(request, pk):
     discharges = Discharge.objects.get(pk=pk)
     discharged = Discharged.objects.create(
         first_name=discharges.first_name,
@@ -205,7 +211,7 @@ def readmit(request, pk):
     return redirect('index')
  
  #**************************************************************************************************************************************************
-def pending_admissions(request):
+def pending_admissions(request): #members waiting to be admitted- recently imported members
     query = request.GET.get('q')
     payer_filter = request.GET.get('payer')
     scheme_filter = request.GET.get('scheme')
@@ -238,29 +244,14 @@ def pending_admissions(request):
                     'date_from': date_from, 'date_to': date_to, 
                     'order': order})
 
-def admit_pending_member(request, pk):
-    admission = get_object_or_404(Member_Detail, pk=pk)
 
-    discharge = Discharge.objects.create(
-        first_name=admission.name,
-        payer=admission.payer,
-        membership_number=admission.membership_number,
-        relationship=admission.relationship,
-        validity=admission.validity,
-        scheme=admission.scheme,
-    )
-    admission.delete()
-
-    return redirect("discharge_member_detail", pk=discharge.pk)
-
-def admitting_member_detail(request, pk):
+def admitting_member_detail(request, pk): #page displaying details of the member to be admited.
     member = get_object_or_404(Member_Detail, pk=pk)
     insurance_details = InsuranceDetail.objects.filter(member=member)
     try:
         scheme = Scheme.objects.get(name=member.scheme)
         providers = scheme.providers.all()
-    except Scheme.DoesNotExist:
-        # Scheme is not registered
+    except Scheme.DoesNotExist: # if the scheme is not registered then shown an empty list of the providers----
         scheme = None
         providers = []
 
@@ -271,7 +262,7 @@ def admitting_member_detail(request, pk):
                    'providers': providers
                    })
 
-def admit_member(request, pk):
+def admit_member(request, pk): # Updated The button to admit a member
     member = get_object_or_404(Member_Detail, pk=pk)
     providers = Provider.objects.all()
     insurance_details = member.insurance_details.all()
@@ -279,7 +270,7 @@ def admit_member(request, pk):
     if request.method == 'POST':
         service_provider_id = request.POST.get('service_provider')
         admission_date = request.POST.get('admission_date')
-        admission_diagnosis = request.POST.get('admission_diagnosis')
+        admission_diagnosis = request.POST.get('admission_diagnosis_description')
         cover_used_id = request.POST.get('cover_used')
         initial_cover_value = request.POST.get('initial_cover_value')
         initial_cover_balance = request.POST.get('initial_cover_balance')
@@ -290,7 +281,7 @@ def admit_member(request, pk):
         provider = get_object_or_404(Provider, pk=service_provider_id)
         cover_used = get_object_or_404(insurance_details, pk=cover_used_id)
 
-        # Save the admission details
+        # Save the admission details to a different table. 
         admission_detail = Admission_details(
             member=member,
             Provider=provider,
@@ -308,11 +299,141 @@ def admit_member(request, pk):
         admission_detail.save()
 
         # messages.success(request, 'Admission details saved successfully.')
-        return redirect('pending_admissions')  # Redirect to a success page or admission summary
+        return redirect('current_admissions')  # Redirect to a success page or admission summary
 
-    return render(request, 'pending_admissions/pending_admissions.html', {
+    return render(request, 'currently_admitted/currently_admitted.html', {
         'member': member,
         'providers': providers,
         'insurance_details': insurance_details,
     })
+
+def current_admissions(request): # list of members already admitted or awaiting discharge. 
+    query = request.GET.get('q')
+    payer_filter = request.GET.get('payer')
+    scheme_filter = request.GET.get('scheme')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    order = request.GET.get('order', 'added_at')
+
+    admitted_members = Member_Detail.objects.filter(admission_status= 'admitted')
+
+
+    if query:
+        admitted_members = admitted_members.filter(
+            Q(name__icontains=query) |
+            Q(membership_number__icontains=query)
+        )
+    if payer_filter:
+        admitted_members = admitted_members.filter(payer__icontains=payer_filter)
+    if scheme_filter:
+        admitted_members = admitted_members.filter(scheme__icontains=scheme_filter)
+    if date_from:
+        admitted_members = admitted_members.filter(admission_details__admission_date__gte=parse_date(date_from))
+    if date_to:
+        admitted_members = admitted_members.filter(admission_details__admission_date__lte=parse_date(date_to))
+
+    admitted_members = admitted_members.order_by(order)
+    
+    return render(request, 'currently_admitted/currently_admitted.html', 
+                  {'admitted_members': admitted_members, 
+                    'query': query, 'payer_filter': payer_filter, 
+                    'scheme_filter': scheme_filter, 
+                    'date_from': date_from, 'date_to': date_to, 
+                    'order': order})
+
+def discharging_member_detail(request, pk): #page displaying details of the member to be discharged.
+    member = get_object_or_404(Member_Detail, pk=pk)
+    admission_details = Admission_details.objects.filter(member=member).first()
+
+     # Calculating the number of days since admission
+    days_since_admission = None
+    if admission_details and admission_details.admission_date:
+        current_date = now().date() 
+        admission_date = admission_details.admission_date
+        days_since_admission = (current_date - admission_date).days
+
+    context = {
+        'member': member,
+        'admission_details': admission_details,
+        'days_since_admission': days_since_admission,
+        }
+
+    return render(request, 'currently_admitted/discharge_member.html', context)
+
+from .forms import UpdateForm
+
+@login_required
+def discharge_member(request, pk):  #discharge a member button
+    member = get_object_or_404(Member_Detail, pk=pk)
+    admission_details = Admission_details.objects.filter(member=member).first()
+
+    # Handle form submissions for daily updates
+    if request.method == 'POST':
+        if 'add_update' in request.POST:
+            # Handle daily update form submission
+            update_form = UpdateForm(request.POST)
+            
+            if update_form.is_valid():
+                # Create and save the update
+                update = update_form.save(commit=False)
+                update.admission = admission_details
+                update.save()
+
+                # Redirect to the same page to show the new update
+                return redirect('discharge_member', pk=pk)
+        
+        elif 'discharge_member' in request.POST:
+            # Saving to Discharge_details object
+            discharge_details = Discharge_details(
+                member=member,
+                provider=admission_details.Provider,
+                admission_date=admission_details.admission_date,
+                admission_diagnosis=admission_details.admission_diagnosis,
+                cover_used=admission_details.cover_used,
+                initial_cover_value=admission_details.initial_cover_value,
+                initial_cover_balance=admission_details.initial_cover_balance,
+                requested_amount=admission_details.requested_amount,
+                lou_issued=admission_details.lou_issued,
+                admitted_by=admission_details.admited_by,
+                relationship=member.relationship,
+                name=member.name,
+                membership_number=member.membership_number,
+                payer=member.payer,
+                scheme=member.scheme,
+                status=member.status,
+                validity=member.validity,
+                discharge_date=request.POST.get('discharge_date', timezone.now()),
+                discharge_summary=request.POST.get('discharge_summary', ''),
+                final_cover_balance=request.POST.get('final_cover_balance', ''),
+                discharge_notes=request.POST.get('discharge_notes', ''),
+                discharged_by=request.POST.get('discharged_by', request.user.username)
+            )
+            
+            discharge_details.save()
+
+            # Update member status to discharged
+            member.admission_status = 'discharged'
+            member.save()
+
+            return redirect('current_admissions')  # Redirect to a success page or the member list
+
+    else:
+        update_form = UpdateForm()
+
+    # Retrieve existing daily updates for this admission
+    updates = Daily_update.objects.filter(admission=admission_details).order_by('-date')
+
+    # Get available providers for display in form
+    providers = Provider.objects.all()
+
+    context = {
+        'member': member,
+        'admission_details': admission_details,
+        'providers': providers,
+        'updates': updates,
+        'update_form': update_form,
+        'current_date': timezone.now().date(),
+    }
+
+    return render(request, 'currently_admitted/discharge_member.html', context)
 

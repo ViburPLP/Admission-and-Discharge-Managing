@@ -45,3 +45,43 @@ Command to run the Django management script
     python C:/Users/Victor/Documents/Scraper/Localscraper/dash/manage.py import_member C:/Users/Victor/Documents/Scraper/Localscraper/dash/scrapy_scraper/spiders/member_details.json
 Command to run flask
     Navigate to the command's folder and run : python trigger_scrapy.py(flask app)
+
+
+Admit member view - logic flow. 
++-----------------------------+
+|  Incoming HTTP Request      |
+|  (with member's primary key)|
++-----------------------------+
+             |
+             v
++-----------------------------+
+|  Fetch Member Detail        |
+|  (using primary key)        |
++-----------------------------+
+             |
+             v
++-----------------------------+
+|  Retrieve Insurance Details |
+|  (linked to the member)     |
++-----------------------------+
+             |
+             v
++-----------------------------+
+|  Try to Fetch Scheme        |
+|  If Exists:                 |
+|     - Fetch Providers       |
+|  If Not:                    |
+|     - Set Scheme as None    |
+|     - Set Providers as []   |
++-----------------------------+
+             |
+             v
++-----------------------------+
+|  Render Template with Data  |
++-----------------------------+
+             |
+             v
++-----------------------------+
+|  Return HTTP Response       |
+|  (Display Member Details)   |
++-----------------------------+

@@ -3,13 +3,15 @@ from .views import (
     admit_member, 
     index, member_detail, 
     discharge_list, 
-    discharge_member, 
+    discharge_member,
+    discharge_member1, 
     discharge_member_detail, 
     undo_admit_member, 
     undo_discharge_member, 
     discharged_list, 
     discharged_member_detail, 
-    pending_admissions
+    pending_admissions,
+    discharging_member_detail
     )
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views
@@ -17,15 +19,18 @@ from . import views
 
 urlpatterns = [
     path('member/<int:pk>/', member_detail, name='member_detail'),
+    path('currently_admitted/', views.current_admissions, name='current_admissions'),
     path('member/<int:pk>/admit/', admit_member, name='admit_member'),
     path('discharge/', discharge_list, name='discharge_list'),
     path('discharge/<int:pk>/', discharge_member_detail, name='discharge_member_detail'),
-    path('discharge/<int:pk>/discharge/', discharge_member, name='discharge_member'),
+    path('discharge/<int:pk>/discharge/', discharge_member1, name='discharge_member1'),
     path('undo_admit_member/<int:pk>/', undo_admit_member, name='undo_admit_member'),
     path('undo_discharge_member/<int:pk>/', undo_discharge_member, name='undo_discharge_member'),
     path('accounts/login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('pending_admissions/', views.pending_admissions, name='pending_admissions'),
     path('admitting_member_detail/<int:pk>/', views.admitting_member_detail, name='admitting_member_detail'),
+    path('discharging_member_detail/<int:pk>/', views.discharging_member_detail, name='discharging_member_detail'),
+    path('discharge_member<int:pk>/', views.discharge_member, name='discharge_member'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('discharged/', discharged_list, name='discharged_list'),
     path('discharged/<int:pk>/', discharged_member_detail, name='dis'),

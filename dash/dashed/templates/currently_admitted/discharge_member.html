@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discharge Member Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group input[readonly] {
+            background-color: #e9ecef;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .add-btn,
+        .save-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-btn:hover,
+        .save-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Discharge Member Detail</h1>
+
+        <!-- Member Details Summary -->
+        <div class="section">
+            <h2>Member Details Summary</h2>
+            <div class="form-group">
+                <label>Name:</label>
+                <input type="text" value="{{ member.name }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Scheme:</label>
+                <input type="text" value="{{ member.scheme }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Insurance Validity:</label>
+                <input type="text" value="{{ member.validity }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Member Number:</label>
+                <input type="text" value="{{ member.membership_number }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Relationship:</label>
+                <input type="text" value="{{ member.relationship }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Payer:</label>
+                <input type="text" value="{{ member.payer }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Status:</label>
+                <input type="text" value="{{ member.status }}" readonly>
+            </div>
+        </div>
+
+        <!-- Admission Details Summary -->
+        <div class="section">
+            <h2>Admission Details Summary</h2>
+            <div class="form-group">
+                <label>Admitting Facility:</label>
+                <input type="text" value="{{ admission_details.Provider.name }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Insurance Benefit Used:</label>
+                <input type="text" value="{{ admission_details.cover_used }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Initial LOU Issued:</label>
+                <input type="text" value="{{ admission_details.lou_issued }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Date of Admission:</label>
+                <input type="text" value="{{ admission_details.admission_date }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Admitted by:</label>
+                <input type="text" value="{{ admission_details.admited_by }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Days Since Admission:</label>
+                <input type="text" value="{{ days_since_admission }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Admission Diagnosis:</label>
+                <input type="text" value="{{ admission_details.admission_diagnosis }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Final Bill:</label>
+                <input type="text" id="final_bill" value="{{ total_interim_bill }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Requested Amount:</label>
+                <input type="text" value="{{ admission_details.requested_amount }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Initial Cover Value:</label>
+                <input type="text" value="{{ admission_details.initial_cover_value }}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Initial Cover Balance:</label>
+                <input type="text" value="{{ admission_details.initial_cover_balance }}" readonly>
+            </div>
+        </div>
+
+        <!-- Progress Notes & Interim Bill Section -->
+        <div class="section">
+            <h2>Progress Notes & Interim Bill</h2>
+            <div class="form-group">
+                <label for="progress_notes">Progress Notes:</label>
+                <textarea id="progress_notes" rows="4" placeholder="Enter progress notes here..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="interim_bill">Interim Bill:</label>
+                <input type="number" id="interim_bill" placeholder="Enter interim bill amount...">
+                <div id="interim_bill_error" class="error"></div>
+            </div>
+            <button class="add-btn" onclick="addProgressUpdate()">Add Update</button>
+        </div>
+
+        <!-- Discharge Details Section -->
+        <div class="section">
+            <h2>Discharge Details</h2>
+            <form action="{% url 'discharge_member' member.pk %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="discharge_date">Discharge Date:</label>
+                    <input type="date" id="discharge_date" name="discharge_date" value="{{ current_date }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="final_cover_balance">Final Cover Balance:</label>
+                    <input type="text" id="final_cover_balance" name="final_cover_balance" required>
+                </div>
+                <div class="form-group">
+                    <label for="discharge_summary">Discharge Summary:</label>
+                    <textarea id="discharge_summary" name="discharge_summary" rows="4" placeholder="Enter discharge summary..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="discharge_notes">Discharge Notes:</label>
+                    <textarea id="discharge_notes" name="discharge_notes" rows="4" placeholder="Enter any additional notes..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="discharged_by">Discharged By:</label>
+                    <input type="text" id="discharged_by" name="discharged_by" value="{{ user.username }}" readonly>
+                </div>
+                <button class="save-btn" type="submit">Discharge Member</button>
+            </form>
+        </div>
+
+        <!-- Updates Table -->
+        <div class="section">
+            <h2>Updates Summary</h2>
+            <div class="table-container">
+                <table id="updates_table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Progress Notes</th>
+                            <th>Interim Bill</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for update in updates %}
+                        <tr>
+                            <td>{{ update.date }}</td>
+                            <td>{{ update.progress_notes }}</td>
+                            <td>{{ update.interim_bill }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle adding progress updates and interim bills
+        const updatesTableBody = document.getElementById('updates_table').getElementsByTagName('tbody')[0];
+
+        function addProgressUpdate() {
+            const progressNotes = document.getElementById('progress_notes').value;
+            const interimBill = parseFloat(document.getElementById('interim_bill').value);
+            const interimBillError = document.getElementById('interim_bill_error');
+
+            if (!progressNotes.trim()) {
+                alert('Please enter progress notes.');
+                return;
+            }
+
+            if (isNaN(interimBill) || interimBill < 0) {
+                interimBillError.textContent = 'Please enter a valid interim bill amount.';
+                return;
+            } else {
+                interimBillError.textContent = '';
+            }
+
+            // Add to table
+            const row = updatesTableBody.insertRow();
+            const cellDate = row.insertCell(0);
+            const cellNotes = row.insertCell(1);
+            const cellBill = row.insertCell(2);
+
+            const currentDateTime = new Date().toLocaleString();
+            cellDate.textContent = currentDateTime;
+            cellNotes.textContent = progressNotes;
+            cellBill.textContent = interimBill.toFixed(2);
+
+            // Update final bill
+            updateFinalBill(interimBill);
+
+            // Clear fields
+            document.getElementById('progress_notes').value = '';
+            document.getElementById('interim_bill').value = '';
+        }
+
+        function updateFinalBill(interimBill) {
+            const finalBillInput = document.getElementById('final_bill');
+            let currentFinalBill = parseFloat(finalBillInput.value) || 0;
+            currentFinalBill += interimBill;
+            finalBillInput.value = currentFinalBill.toFixed(2);
+        }
+    </script>
+</body>
+
+</html>

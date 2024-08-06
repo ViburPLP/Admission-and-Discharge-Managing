@@ -381,11 +381,11 @@
 
                             <div>
                                 <label for="reason_for_admission">Diagnosis at Admission:</label>
-                                <input type="text" id="reason_for_admission_input" name="admission_diagnosis" onkeypress="handleKeyPress(event)" required>
+                                <input type="text" id="reason_for_admission_input" name="admission_diagnosis" onkeypress="handleKeyPress(event)">
                                 <button type="button" onclick="addDiagnosis()">Add</button>
                             </div>
                             <div id="diagnosis_list"></div>
-                            <input type="hidden" id="admission_diagnosis_description" name="admission_diagnosis_description">
+                            <input type="hidden" id="admission_diagnosis_description" name="admission_diagnosis_description" required>
                         </div>
                     </div>
 
