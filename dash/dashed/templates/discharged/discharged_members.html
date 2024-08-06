@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Currently Admitted Members</title>
+    <title>Discharged Members</title>
     <style>
         body {
             display: flex;
@@ -130,7 +130,7 @@
         </ul>
     </div>
     <div class="content">
-        <h1>Current Admissions</h1>
+        <h1>Discharged Members</h1>
         <form method="GET" action="">
             <input type="text" name="q" value="{{ query|default_if_none:'' }}" placeholder="Search...">
             <input type="text" name="payer" value="{{ payer_filter|default_if_none:'' }}" placeholder="Payer...">
@@ -138,16 +138,20 @@
             <input type="date" name="date_from" value="{{ date_from|default_if_none:'' }}" placeholder="Date from...">
             <input type="date" name="date_to" value="{{ date_to|default_if_none:'' }}" placeholder="Date to...">
             <select name="order">
-                <option value="added_at" {% if order == 'added_at' %}selected{% endif %}>Time</option>
+                <option value=" " disabled>Select ordering</option>
+                <option value="-discharge_date" {% if order == '-discharge_date' %}selected{% endif %}>Discharge Date (recent first)</option>
+                <option value="discharge_date" {% if order == 'discharge_date' %}selected{% endif %}>Discharge Date (oldest first)</option>
                 <option value="membership_number" {% if order == 'membership_number' %}selected{% endif %}>Membership Number</option>
-                <!-- other options as may be needed -->
+                <option value="name" {% if order == 'name' %}selected{% endif %}>Name</option>
+                <option value="payer" {% if order == 'payer' %}selected{% endif %}>Payer</option>
+                <option value="scheme" {% if order == 'scheme' %}selected{% endif %}>Scheme</option>
             </select>
             <button type="submit">Search</button>
         </form>
         <table>
             <thead>
                 <tr>
-                    <th>Time</th>
+                    <th>Discharge Date</th>
                     <th>Name</th>
                     <th>Membership Number</th>
                     <th>Payer</th>
@@ -155,21 +159,17 @@
                 </tr>
             </thead>
             <tbody>
-                {% for member in admitted_members %}
-                <tr class="clickable-row" data-href="{% url 'discharging_member_detail' member.pk %}">
-                    <td>
-                        {% for admission in member.admission_details.all %}
-                            {{ admission.admission_date }}<br>
-                        {% endfor %}
-                    </td>
-                    <td>{{ member.name }}</td>
-                    <td>{{ member.membership_number }}</td>
-                    <td>{{ member.payer }}</td>
-                    <td>{{ member.scheme }}</td>
+                {% for discharge in discharged_entries %}
+                <tr class="clickable-row" data-href="{% url 'admission_history' discharge.pk %}">
+                    <td>{{ discharge.discharge_date }}</td>
+                    <td>{{ discharge.name }}</td>
+                    <td>{{ discharge.membership_number }}</td>
+                    <td>{{ discharge.payer }}</td>
+                    <td>{{ discharge.scheme }}</td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" style="text-align:center; padding: 20px;">No currently admitted members found.</td>
+                    <td colspan="5" style="text-align:center; padding: 20px;">No discharged members found.</td>
                 </tr>
                 {% endfor %}
             </tbody>

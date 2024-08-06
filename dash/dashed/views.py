@@ -405,7 +405,7 @@ def discharge_member(request, pk):  #discharge a member button
                 validity=member.validity,
                 discharge_date=request.POST.get('discharge_date', timezone.now()),
                 discharge_summary=request.POST.get('discharge_summary', ''),
-                final_cover_balance=request.POST.get('final_cover_balance', ''),
+                final_approved_amount=request.POST.get('final_approved_amount', ''),
                 discharge_notes=request.POST.get('discharge_notes', ''),
                 discharged_by=request.POST.get('discharged_by', request.user.username)
             )
@@ -436,5 +436,120 @@ def discharge_member(request, pk):  #discharge a member button
         'current_date': timezone.now().date(),
     }
 
-    return render(request, 'currently_admitted/discharge_member.html', context)
+    return render(request, 'discharged/discharge_member.html', context)
 
+# def discharged_members(request): # list of members already discharged. 
+#     query = request.GET.get('q')
+#     payer_filter = request.GET.get('payer')
+#     scheme_filter = request.GET.get('scheme')
+#     date_from = request.GET.get('date_from')
+#     date_to = request.GET.get('date_to')
+#     order = request.GET.get('order', 'added_at')
+
+#     discharged_members = Member_Detail.objects.filter(admission_status= 'discharged')
+
+
+#     if query:
+#         discharged_members = discharged_members.filter(
+#             Q(name__icontains=query) |
+#             Q(membership_number__icontains=query)
+#         )
+#     if payer_filter:
+#         discharged_members = discharged_members.filter(payer__icontains=payer_filter)
+#     if scheme_filter:
+#         discharged_members = discharged_members.filter(scheme__icontains=scheme_filter)
+#     if date_from:
+#         discharged_members = discharged_members.filter(discharge_details__discharge_date__gte=parse_date(date_from))
+#     if date_to:
+#         discharged_members = discharged_members.filter(discharge_details__discharge_date__lte=parse_date(date_to))
+
+#     discharged_members = discharged_members.order_by(order)
+    
+#     return render(request, 'discharged/discharged_members.html', 
+#                   {'discharged_members': discharged_members, 
+#                     'query': query, 'payer_filter': payer_filter, 
+#                     'scheme_filter': scheme_filter, 
+#                     'date_from': date_from, 'date_to': date_to, 
+#                     'order': order})
+
+from django.shortcuts import render
+from django.db.models import Q
+from django.utils.dateparse import parse_date
+from .models import Discharge_details
+
+def discharged_members(request): 
+    query = request.GET.get('q')
+    payer_filter = request.GET.get('payer')
+    scheme_filter = request.GET.get('scheme')
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    order = request.GET.get('order', '-discharge_date')  # Default order field
+
+    discharged_entries = Discharge_details.objects.all()  # Get all discharge entries
+
+    # Filtering based on search query
+    if query:
+        discharged_entries = discharged_entries.filter(
+            Q(name__icontains=query) |
+            Q(membership_number__icontains=query)
+        )
+    
+    # Filtering based on payer
+    if payer_filter:
+        discharged_entries = discharged_entries.filter(payer__icontains=payer_filter)
+    
+    # Filtering based on scheme
+    if scheme_filter:
+        discharged_entries = discharged_entries.filter(scheme__icontains=scheme_filter)
+    
+    # Filtering based on discharge date
+    if date_from:
+        try:
+            date_from = parse_date(date_from)
+            discharged_entries = discharged_entries.filter(discharge_date__gte=date_from)
+        except ValueError:
+            # Handle invalid date format
+            pass
+    
+    if date_to:
+        try:
+            date_to = parse_date(date_to)
+            discharged_entries = discharged_entries.filter(discharge_date__lte=date_to)
+        except ValueError:
+            # Handle invalid date format
+            pass
+
+    # Ensure ordering field is valid
+    valid_order_fields = ['discharge_date', 'membership_number', 'name', 'payer', 'scheme']
+    if order not in valid_order_fields:
+        order = '-discharge_date'
+
+    discharged_entries = discharged_entries.order_by(order)
+
+    context = {
+        'discharged_entries': discharged_entries,
+        'query': query,
+        'payer_filter': payer_filter,
+        'scheme_filter': scheme_filter,
+        'date_from': date_from,
+        'date_to': date_to,
+        'order': order,
+    }
+
+    return render(request, 'discharged/discharged_members.html', context)
+
+
+def admission_history(request, discharge_id):
+    # Get the discharge details based on the ID
+    discharge_entry = get_object_or_404(Discharge_details, pk=discharge_id)
+
+    # Fetch the member's previous admissions
+    previous_admissions = Admission_details.objects.filter(member=discharge_entry.member)
+
+    context = {
+        'member': discharge_entry.member,
+        'discharge_entry': discharge_entry,
+        'previous_admissions': previous_admissions,
+    }
+    
+    return render(request, 'discharged/admission_history.html', context)

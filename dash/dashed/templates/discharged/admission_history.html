@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discharge Member Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 0;
+            background-color: #f0f2f5;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 200px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: block;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 220px; /* Leave space for the sidebar */
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            color: #007bff;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-group input[readonly] {
+            background-color: #e9ecef;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #d3d3d3;
+        }
+
+        .clickable-row {
+            cursor: pointer;
+        }
+
+        .add-btn,
+        .save-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .add-btn:hover,
+        .save-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .nav-links {
+            margin-bottom: 15px;
+        }
+
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 15px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #0056b3;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = document.querySelectorAll('.clickable-row');
+            rows.forEach(row => {
+                row.addEventListener('click', function () {
+                    window.location = row.dataset.href;
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="{% url 'pending_admissions' %}">Pending Admissions</a></li>
+            <li><a href="{% url 'discharge_list' %}">Admitted Members</a></li>
+            <li><a href="{% url 'discharged_list' %}">Discharged Members</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <a href="{% url 'discharged_members' %}" class="back-link">&larr; Back to Discharged List</a>
+            <div class="section">
+                <h2>Member Details</h2>
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" readonly value="{{ member.name }}">
+                </div>
+                <div class="form-group">
+                    <label>Membership Number:</label>
+                    <input type="text" readonly value="{{ member.membership_number }}">
+                </div>
+                <div class="form-group">
+                    <label>Payer:</label>
+                    <input type="text" readonly value="{{ member.payer }}">
+                </div>
+                <div class="form-group">
+                    <label>Scheme:</label>
+                    <input type="text" readonly value="{{ member.scheme }}">
+                </div>
+                <div class="form-group">
+                    <label>Status:</label>
+                    <input type="text" readonly value="{{ member.status }}">
+                </div>
+                <div class="form-group">
+                    <label>Validity:</label>
+                    <input type="text" readonly value="{{ member.validity }}">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Admission History</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date of Admission</th>
+                                <th>Date of Discharge</th>
+                                <th>Duration of Stay (Days)</th>
+                                <th>Cover Used</th>
+                                <th>Admitting Provider</th>
+                                <th>Final Approved Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for admission in previous_admissions %}
+                            <tr>
+                                <td>{{ admission.admission_date }}</td>
+                                <td>{{ admission.discharge_date }}</td>
+                                <td>{{ admission.duration_of_stay }}</td>
+                                <td>{{ admission.cover_used }}</td>
+                                <td>{{ admission.provider.name }}</td>
+                                <td>{{ admission.final_approved_amount }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6">No previous admissions found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -3,16 +3,13 @@ from .views import (
     admit_member, 
     index, member_detail, 
     discharge_list, 
-    discharge_member,
     discharge_member1, 
     discharge_member_detail, 
     undo_admit_member, 
     undo_discharge_member, 
     discharged_list, 
     discharged_member_detail, 
-    pending_admissions,
-    discharging_member_detail,
-    # add_update
+        # add_update
     )
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views
@@ -32,7 +29,8 @@ urlpatterns = [
     path('admitting_member_detail/<int:pk>/', views.admitting_member_detail, name='admitting_member_detail'),
     path('discharging_member_detail/<int:pk>/', views.discharging_member_detail, name='discharging_member_detail'),
     path('discharge_member<int:pk>/', views.discharge_member, name='discharge_member'),
-    # path('update_member/<int:pk>/', add_update, name='add_update'),
+    path('discharged_members/', views.discharged_members, name='discharged_members'),
+    path('admission_history/<int:discharge_id>/', views.admission_history, name='admission_history'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('discharged/', discharged_list, name='discharged_list'),
     path('discharged/<int:pk>/', discharged_member_detail, name='dis'),

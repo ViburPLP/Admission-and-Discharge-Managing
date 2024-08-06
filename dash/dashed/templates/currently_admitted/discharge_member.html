@@ -7,48 +7,105 @@
     <title>Discharge Member Detail</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+      .sidebar {
+            width: 200px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: block;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+      
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 220px; /* Leave space for the sidebar */
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 900px;
+            margin: 40px auto;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 28px;
         }
 
         .section {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .section h2 {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            color: #007bff;
+            font-size: 22px;
         }
 
         .form-group {
-            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
         }
 
         .form-group label {
-            display: block;
-            font-weight: bold;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
+            padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
         }
 
         .form-group input[readonly] {
             background-color: #e9ecef;
+            cursor: not-allowed;
         }
 
         .table-container {
@@ -69,11 +126,18 @@
 
         th,
         td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
+            font-size: 15px;
         }
 
         th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(even) {
             background-color: #f2f2f2;
         }
 
@@ -81,10 +145,12 @@
         .save-btn {
             background-color: #007bff;
             color: white;
-            padding: 10px 15px;
+            padding: 12px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
 
         .add-btn:hover,
@@ -95,11 +161,53 @@
         .error {
             color: red;
             margin-top: 5px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .section h2 {
+                font-size: 20px;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                font-size: 14px;
+            }
+
+            th,
+            td {
+                font-size: 14px;
+            }
+
+            .add-btn,
+            .save-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 
 <body>
+  <div class="sidebar">
+        <h2>Navigation</h2>
+        <ul>
+            <li><a href="{% url 'pending_admissions' %}">Pending Admissions</a></li>
+            <li><a href="{% url 'discharge_list' %}">Admitted Members</a></li>
+            <li><a href="{% url 'discharged_list' %}">Discharged Members</a></li>
+        </ul>
+    </div>
+  
+  <div class="content">
     <div class="container">
         <h1>Discharge Member Detail</h1>
 
@@ -184,34 +292,36 @@
                 <input type="text" value="{{ admission_details.initial_cover_balance }}" readonly>
             </div>
         </div>
+             
 
         <!-- Progress Notes & Interim Bill Section -->
-             <!-- Daily Updates Form -->
-             <div class="section">
-                <h2>Add Daily Update</h2>
-                <form method="post" action="{% url 'discharge_member' member.pk %}">
-                    {% csrf_token %}
-                    {{ update_form.as_p }}
-                    <input type="hidden" name="add_update" value="1">
-                    <div class="form-group">
-                        <label for="date">Date:</label>
-                        <input type="date" name="date" id="date" value="{{ current_date }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="progress_notes">Progress Notes:</label>
-                        <textarea name="progress_notes" id="progress_notes" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="interim_bill">Interim Bill:</label>
-                        <input type="number" name="interim_bill" id="interim_bill" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="care_manager">Care Manager:</label>
-                        <input type="text" name="care_manager" id="care_manager" required>
-                    </div>
-                    <button type="submit" class="add-btn">Add Update</button>
-                </form>
-            </div>
+        <!-- Daily Updates Form -->
+        <div class="section">
+            <h2>Add Daily Update</h2>
+            <form method="post" action="{% url 'discharge_member' member.pk %}">
+                {% csrf_token %}
+                {{ update_form.as_p }}
+                <input type="hidden" name="add_update" value="1">
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" name="date" id="date" value="{{ current_date }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="progress_notes">Progress Notes:</label>
+                    <textarea name="progress_notes" id="progress_notes" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="interim_bill">Interim Bill:</label>
+                    <input type="number" name="interim_bill" id="interim_bill" step="0.01" required>
+                    <span id="interim_bill_error" class="error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="care_manager">Care Manager:</label>
+                    <input type="text" name="care_manager" id="care_manager" required>
+                </div>
+                <button type="submit" class="add-btn" onclick="addProgressUpdate()">Add Update</button>
+            </form>
+        </div>
 
         <!-- Discharge Details Section -->
         <div class="section">
@@ -223,7 +333,7 @@
                     <input type="date" id="discharge_date" name="discharge_date" value="{{ current_date }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="final_cover_balance">Final Cover Balance:</label>
+                    <label for="final_cover_balance">Final Approved LOU:</label>
                     <input type="text" id="final_cover_balance" name="final_cover_balance" >
                 </div>
                 <div class="form-group">
@@ -317,6 +427,7 @@
             finalBillInput.value = currentFinalBill.toFixed(2);
         }
     </script>
+   </div>             
 </body>
 
 </html>
