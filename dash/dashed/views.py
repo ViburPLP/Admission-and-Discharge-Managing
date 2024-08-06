@@ -366,12 +366,13 @@ from .forms import UpdateForm
 def discharge_member(request, pk):  #discharge a member button
     member = get_object_or_404(Member_Detail, pk=pk)
     admission_details = Admission_details.objects.filter(member=member).first()
+    update_form = UpdateForm(request.POST or None)
 
     # Handle form submissions for daily updates
     if request.method == 'POST':
         if 'add_update' in request.POST:
             # Handle daily update form submission
-            update_form = UpdateForm(request.POST)
+            # update_form = UpdateForm(request.POST)
             
             if update_form.is_valid():
                 # Create and save the update
@@ -382,7 +383,7 @@ def discharge_member(request, pk):  #discharge a member button
                 # Redirect to the same page to show the new update
                 return redirect('discharge_member', pk=pk)
         
-        elif 'discharge_member' in request.POST:
+        elif 'discharge_member_form' in request.POST:
             # Saving to Discharge_details object
             discharge_details = Discharge_details(
                 member=member,
@@ -417,8 +418,8 @@ def discharge_member(request, pk):  #discharge a member button
 
             return redirect('current_admissions')  # Redirect to a success page or the member list
 
-    else:
-        update_form = UpdateForm()
+    # else:
+    #     update_form = UpdateForm()
 
     # Retrieve existing daily updates for this admission
     updates = Daily_update.objects.filter(admission=admission_details).order_by('-date')

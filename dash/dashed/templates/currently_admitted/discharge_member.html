@@ -186,19 +186,32 @@
         </div>
 
         <!-- Progress Notes & Interim Bill Section -->
-        <div class="section">
-            <h2>Progress Notes & Interim Bill</h2>
-            <div class="form-group">
-                <label for="progress_notes">Progress Notes:</label>
-                <textarea id="progress_notes" rows="4" placeholder="Enter progress notes here..."></textarea>
+             <!-- Daily Updates Form -->
+             <div class="section">
+                <h2>Add Daily Update</h2>
+                <form method="post" action="{% url 'discharge_member' member.pk %}">
+                    {% csrf_token %}
+                    {{ update_form.as_p }}
+                    <input type="hidden" name="add_update" value="1">
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" name="date" id="date" value="{{ current_date }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="progress_notes">Progress Notes:</label>
+                        <textarea name="progress_notes" id="progress_notes" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="interim_bill">Interim Bill:</label>
+                        <input type="number" name="interim_bill" id="interim_bill" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="care_manager">Care Manager:</label>
+                        <input type="text" name="care_manager" id="care_manager" required>
+                    </div>
+                    <button type="submit" class="add-btn">Add Update</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="interim_bill">Interim Bill:</label>
-                <input type="number" id="interim_bill" placeholder="Enter interim bill amount...">
-                <div id="interim_bill_error" class="error"></div>
-            </div>
-            <button class="add-btn" onclick="addProgressUpdate()">Add Update</button>
-        </div>
 
         <!-- Discharge Details Section -->
         <div class="section">
@@ -211,21 +224,21 @@
                 </div>
                 <div class="form-group">
                     <label for="final_cover_balance">Final Cover Balance:</label>
-                    <input type="text" id="final_cover_balance" name="final_cover_balance" required>
+                    <input type="text" id="final_cover_balance" name="final_cover_balance" >
                 </div>
                 <div class="form-group">
                     <label for="discharge_summary">Discharge Summary:</label>
-                    <textarea id="discharge_summary" name="discharge_summary" rows="4" placeholder="Enter discharge summary..." required></textarea>
+                    <textarea id="discharge_summary" name="discharge_summary" rows="4" placeholder="Enter discharge summary..." ></textarea>
                 </div>
                 <div class="form-group">
                     <label for="discharge_notes">Discharge Notes:</label>
-                    <textarea id="discharge_notes" name="discharge_notes" rows="4" placeholder="Enter any additional notes..." required></textarea>
+                    <textarea id="discharge_notes" name="discharge_notes" rows="4" placeholder="Enter any additional notes..." ></textarea>
                 </div>
                 <div class="form-group">
                     <label for="discharged_by">Discharged By:</label>
                     <input type="text" id="discharged_by" name="discharged_by" value="{{ user.username }}" readonly>
                 </div>
-                <button class="save-btn" type="submit">Discharge Member</button>
+                <button class="save-btn" name="discharge_member_form" type="submit">Discharge Member</button>
             </form>
         </div>
 
@@ -239,6 +252,7 @@
                             <th>Date</th>
                             <th>Progress Notes</th>
                             <th>Interim Bill</th>
+                            <th>Care Manager</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -247,6 +261,7 @@
                             <td>{{ update.date }}</td>
                             <td>{{ update.progress_notes }}</td>
                             <td>{{ update.interim_bill }}</td>
+                            <td>{{ update.care_manager }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
