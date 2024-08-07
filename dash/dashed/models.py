@@ -3,45 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime
 
-class MemberDetail(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    payer = models.CharField(max_length=255)
-    membership_number = models.CharField(max_length=255)
-    relationship = models.CharField(max_length=255)
-    validity = models.CharField(max_length=255)
-    scheme = models.CharField(max_length=255)
-    added_at = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.membership_number})"
-
-class Discharge(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    payer = models.CharField(max_length=255)
-    membership_number = models.CharField(max_length=255)
-    relationship = models.CharField(max_length=255)
-    validity = models.CharField(max_length=255)
-    scheme = models.CharField(max_length=255)
-    added_at = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.membership_number})"
-
-class Discharged(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    payer = models.CharField(max_length=255)
-    membership_number = models.CharField(max_length=255)
-    relationship = models.CharField(max_length=255)
-    validity = models.CharField(max_length=255)
-    scheme = models.CharField(max_length=255)
-    added_at = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.membership_number})"
-    
+  
 #********************************************************************************
 class Member_Detail(models.Model):
     STATUS_CHOICES = [

@@ -214,8 +214,8 @@
         <h2>Navigation</h2>
         <ul>
             <li><a href="{% url 'pending_admissions' %}">Pending Admissions</a></li>
-            <li><a href="{% url 'discharge_list' %}">Admitted Members</a></li>
-            <li><a href="{% url 'discharged_list' %}">Discharged Members</a></li>
+            <li><a href="{% url 'current_admissions' %}">Admitted Members</a></li>
+            <li><a href="{% url 'discharged_members' %}">Discharged Members</a></li>
         </ul>
     </div>
 
@@ -269,14 +269,14 @@
                             <tr>
                                 <td>{{ admission.admission_date }}</td>
                                 <td>{{ admission.discharge_date }}</td>
-                                <td>{{ admission.duration_of_stay }}</td>
+                                <td>{{ admission.days_admitted }}</td>
                                 <td>{{ admission.cover_used }}</td>
                                 <td>{{ admission.provider.name }}</td>
                                 <td>{{ admission.final_approved_amount }}</td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6">No previous admissions found.</td>
+                                <td colspan="4">No previous admissions found.</td>
                             </tr>
                             {% endfor %}
                         </tbody>

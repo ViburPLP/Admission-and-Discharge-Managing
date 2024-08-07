@@ -1,8 +1,5 @@
 from django.contrib import admin
 from .models import (
-    MemberDetail, 
-    Discharge, 
-    Discharged, 
     Member_Detail, 
     InsuranceDetail, 
     Scheme, 
@@ -25,10 +22,7 @@ class ProviderAdmin(admin.ModelAdmin):
 
 
 # admin.site.register(Person)
-admin.site.register(MemberDetail)
 admin.site.register(Member_Detail)
-admin.site.register(Discharge)
-admin.site.register(Discharged)
 admin.site.register(InsuranceDetail)
 admin.site.register(Scheme, SchemeAdmin)
 admin.site.register(Provider, ProviderAdmin)

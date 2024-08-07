@@ -67,7 +67,7 @@
         h1 {
             color: #333;
             margin-bottom: 20px;
-            text-align: center;
+            text-align: left;
             font-size: 28px;
         }
 
@@ -194,6 +194,19 @@
                 font-size: 14px;
             }
         }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
+        }
     </style>
 </head>
 
@@ -202,13 +215,14 @@
         <h2>Navigation</h2>
         <ul>
             <li><a href="{% url 'pending_admissions' %}">Pending Admissions</a></li>
-            <li><a href="{% url 'discharge_list' %}">Admitted Members</a></li>
-            <li><a href="{% url 'discharged_list' %}">Discharged Members</a></li>
+            <li><a href="{% url 'current_admissions' %}">Admitted Members</a></li>
+            <li><a href="{% url 'discharged_members' %}">Discharged Members</a></li>
         </ul>
     </div>
   
   <div class="content">
     <div class="container">
+        <a href="{% url 'current_admissions' %}" class="back-link">&larr; Back to Admitted Members List</a>
         <h1>Discharge Member Detail</h1>
 
         <!-- Member Details Summary -->
@@ -317,9 +331,9 @@
                 </div>
                 <div class="form-group">
                     <label for="care_manager">Care Manager:</label>
-                    <input type="text" name="care_manager" id="care_manager" required>
+                    <input type="text" name="care_manager" id="care_manager" value="{{ user.username }}" readonly>
                 </div>
-                <button type="submit" class="add-btn" onclick="addProgressUpdate()">Add Update</button>
+                <button type="submit" class="add-btn" >Add Update</button>
             </form>
         </div>
 
@@ -333,8 +347,8 @@
                     <input type="date" id="discharge_date" name="discharge_date" value="{{ current_date }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="final_cover_balance">Final Approved LOU:</label>
-                    <input type="text" id="final_cover_balance" name="final_cover_balance" >
+                    <label for="final_approved_amount">Final Approved LOU:</label>
+                    <input type="text" id="final_approved_amount" name="final_approved_amount" >
                 </div>
                 <div class="form-group">
                     <label for="discharge_summary">Discharge Summary:</label>
@@ -366,12 +380,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for update in updates %}
+                        
+                        {% for update in admission_details.updates.all %}
                         <tr>
                             <td>{{ update.date }}</td>
                             <td>{{ update.progress_notes }}</td>
                             <td>{{ update.interim_bill }}</td>
                             <td>{{ update.care_manager }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4">No updates available.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
