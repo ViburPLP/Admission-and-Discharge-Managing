@@ -8,6 +8,12 @@ from datetime import datetime
 from django.utils.timezone import now
 from django.utils import timezone
 from .forms import UpdateForm
+from .forms import UpdateForm
+import tempfile
+import io
+from django.http import FileResponse, HttpResponseRedirect
+from django.template.loader import render_to_string
+from weasyprint import HTML
 from .models import (
     Member_Detail, 
     InsuranceDetail,
@@ -113,6 +119,45 @@ def admit_member(request, pk): # Updated The button to admit a member
         'providers': providers,
         'insurance_details': insurance_details,
     })
+
+# @login_required
+# def generate_admission_pdf(request, pk):
+    # Retrieve member and related details
+    member = get_object_or_404(Member_Detail, pk=pk)
+    admission_details = Admission_details.objects.filter(member=member).first()
+    discharge_details = Discharge_details.objects.filter(member=member).last()
+
+    # Retrieve updates
+    updates = Daily_update.objects.filter(admission=admission_details).order_by('-date')
+
+    # Context for rendering the PDF
+    context = {
+        'member': member,
+        'admission_details': admission_details,
+        'discharge_details': discharge_details,
+        'updates': updates,
+        'current_date': timezone.now().date(),
+    }
+
+    # Render the HTML template to a string
+    html_string = render_to_string('currently_admitted/discharge_summary.html', context)
+
+    # Generate the PDF in memory using BytesIO
+    pdf_io = io.BytesIO()
+    HTML(string=html_string).write_pdf(target=pdf_io)
+
+    # Rewind the BytesIO object to the beginning
+    pdf_io.seek(0)
+
+    # Create a FileResponse for downloading the PDF
+    response = FileResponse(pdf_io, as_attachment=True, filename=f'Discharge_Summary_{member.name}.pdf')
+
+    # Return the FileResponse
+    return response
+
+    # After returning the PDF response, redirect to the discharged_members page
+    return HttpResponseRedirect(reverse('discharged_members'))
+
 
 def current_admissions(request): #active admissions list. 
     query = request.GET.get('q')
@@ -220,7 +265,7 @@ def discharge_member(request, pk):  #discharge a member button
             member.admission_status = 'discharged'
             member.save()
 
-            return redirect('discharged_members')  # Redirect to a discharged_members page - will add LOU generation 
+            return redirect('generate_discharge_pdf', pk=pk)  # Redirect to a discharged_members page - will add LOU generation 
 
    
     # Retrieve existing daily updates for this admission
@@ -235,7 +280,42 @@ def discharge_member(request, pk):  #discharge a member button
         'current_date': timezone.now().date(),
     }
 
-    return render(request, 'discharged/discharge_member.html', context)
+    return render(request, 'discharged/discharged_members.html', context)
+
+@login_required
+def generate_discharge_pdf(request, pk):
+    # Retrieve member and related details
+    member = get_object_or_404(Member_Detail, pk=pk)
+    admission_details = Admission_details.objects.filter(member=member).first()
+    discharge_details = Discharge_details.objects.filter(member=member).last()
+
+    # Retrieve updates
+    updates = Daily_update.objects.filter(admission=admission_details).order_by('-date')
+
+    # Context for rendering the PDF
+    context = {
+        'member': member,
+        'admission_details': admission_details,
+        'discharge_details': discharge_details,
+        'updates': updates,
+        'current_date': timezone.now().date(),
+    }
+
+    # Render the HTML template to a string
+    html_string = render_to_string('currently_admitted/discharge_summary.html', context)
+
+    # Generate the PDF in memory using BytesIO
+    pdf_io = io.BytesIO()
+    HTML(string=html_string).write_pdf(target=pdf_io)
+
+    # Rewind the BytesIO object to the beginning
+    pdf_io.seek(0)
+
+    # Create a FileResponse for downloading the PDF
+    response = FileResponse(pdf_io, as_attachment=True, filename=f'Discharge_Summary_{member.name}.pdf')
+
+    # Return the FileResponse
+    return response
 
 
 def discharged_members(request): 
@@ -303,12 +383,12 @@ def discharged_members(request):
 def admission_history(request, discharge_id):
     # Get the discharge details based on the ID
     discharge_entry = get_object_or_404(
-        Discharge_details.objects.select_related('member', 'provider'), 
+        Discharge_details.objects.select_related('member'), 
         pk=discharge_id
     )
 
     # Fetch the member's previous admissions using Discharge_details model
-    previous_admissions = Discharge_details.objects.filter(member=discharge_entry.member).select_related('provider')
+    previous_admissions = Discharge_details.objects.filter(member=discharge_entry.member)
 
     context = {
         'member': discharge_entry.member,

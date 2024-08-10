@@ -100,6 +100,7 @@ class Discharge_details(models.Model):
 
     #Admission_details
     admission_date = models.DateField()
+    provider = models.CharField(max_length=100, null=True)
     admission_diagnosis = models.CharField(max_length=100)
     cover_used = models.CharField(max_length=100)
     initial_cover_value = models.CharField(max_length=100)
@@ -130,7 +131,7 @@ class Discharge_details(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.member.name} - {self.discharge_date} - Discharged"
+        return f"{self.name} - {self.discharge_date} - Discharged"
     
 class Daily_update(models.Model):
     admission = models.ForeignKey('Admission_details', on_delete=models.CASCADE, related_name='updates')
