@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+      
+        .header {
+            padding: 0px;
+      		margin-top: 0px;
+            text-align: left;
+        }
+      
+        .date {
+              text-align: left;
+            font-size: 12px;
+          }
+
+        .handler {
+              text-align: right;
+      		  font-size: 12px;
+          }
+
+        .Provider {
+              text-align: left;
+            	font-size: 12px;
+          }
+      
+        .header h1 {
+            margin: 0;
+      		font-size: 18px;
+        }
+      
+        .content {
+      		font-size: 12px;
+        }
+        .section {
+            margin-bottom: 5px;
+        }
+        .section h3 {
+            color: #333;
+      		font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+      		margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            font-size: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Admission Letter Of Undertaking (LOU)</h1>
+       </div>
+   <div class="date">
+          <h3>Date: {{ current_date }}</h3>
+       </div>
+   <div class="handler">
+        <h3>Handler by name</h3>
+        <p>Handler address: many monkeys drive</p>
+       <p>Handler address:P. O. Box 123 </p>
+       <p>Handler address: Other relant details</p>
+    </div>
+    <div class="Provider">
+          <p>Dear {{ admission_details.Provider.name }},</p>
+         
+      </div>
+    <div class="content">
+      
+       <!-- Member details -->
+        <div class="section">
+            <h3>Admitting {{ member.name }}</h3>
+            <table>
+    
+    <tbody>
+       <tr>
+            <td>Payer</td>
+            <td><strong>{{ member.payer }}</strong></td>
+        </tr>
+        <tr>
+            <td>Scheme</td>
+            <td>{{ member.scheme }}</td>
+        </tr>
+        <tr>
+            <td>Member name</td>
+            <td> {{ member.name }}</td>
+        </tr>
+        <tr>
+            <td>Member number</td>
+            <td>{{ member.membership_number }}</td>
+        </tr>
+        <tr>
+            <td>Date of admission</td>
+            <td>{{ admission_details.admission_date }}</td>
+        </tr>
+           <tr>
+            <td>Approved amount</td>
+            <td> <strong>Ksh {{ admission_details.lou_issued }}.00 from {{ admission_details.cover_used }} benefit</strong> </td> 
+        </tr>
+    </tbody>
+</table>
+
+        </div>
+        <!-- Admission Details Section -->
+        <div class="section">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br><br>
+
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br><br>
+              </p>
+        </div>
+
+        <!-- Discharge Details Section -->
+        <div class="section">
+          <p>
+            Kind regards<br>
+            {{ discharge_details.discharged_by }}<br>
+            Care Manager
+            </p>
+        </div>
+
+       
+    </div>
+</body>
+</html>

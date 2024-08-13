@@ -89,7 +89,7 @@ def admit_member(request, pk): # Updated The button to admit a member
         initial_cover_value = request.POST.get('initial_cover_value')
         initial_cover_balance = request.POST.get('initial_cover_balance')
         requested_amount = request.POST.get('requested_amount')
-        lou_issued = request.POST.get('lou_issued')
+        lou_issued = request.POST.get('lou_amount')
 
         # Get the selected provider and cover used
         provider = get_object_or_404(Provider, pk=service_provider_id)
@@ -112,7 +112,7 @@ def admit_member(request, pk): # Updated The button to admit a member
         member.save()
         admission_detail.save()
 
-        return redirect('current_admissions')  # Redirect to the list of current admissions page or admission summary - an LOU generation page to be added before proceeding to the list of currently admitted members.
+        return redirect('generate_admission_pdf', pk=member.pk)  # Redirect to the list of current admissions page or admission summary - an LOU generation page to be added before proceeding to the list of currently admitted members.
 
     return render(request, 'currently_admitted/currently_admitted.html', {
         'member': member,
@@ -120,27 +120,21 @@ def admit_member(request, pk): # Updated The button to admit a member
         'insurance_details': insurance_details,
     })
 
-# @login_required
-# def generate_admission_pdf(request, pk):
+@login_required
+def generate_admission_pdf(request, pk):
     # Retrieve member and related details
     member = get_object_or_404(Member_Detail, pk=pk)
     admission_details = Admission_details.objects.filter(member=member).first()
-    discharge_details = Discharge_details.objects.filter(member=member).last()
-
-    # Retrieve updates
-    updates = Daily_update.objects.filter(admission=admission_details).order_by('-date')
-
+    
     # Context for rendering the PDF
     context = {
         'member': member,
         'admission_details': admission_details,
-        'discharge_details': discharge_details,
-        'updates': updates,
         'current_date': timezone.now().date(),
     }
 
     # Render the HTML template to a string
-    html_string = render_to_string('currently_admitted/discharge_summary.html', context)
+    html_string = render_to_string('pending_admissions/admission_summary.html', context)
 
     # Generate the PDF in memory using BytesIO
     pdf_io = io.BytesIO()
@@ -150,13 +144,11 @@ def admit_member(request, pk): # Updated The button to admit a member
     pdf_io.seek(0)
 
     # Create a FileResponse for downloading the PDF
-    response = FileResponse(pdf_io, as_attachment=True, filename=f'Discharge_Summary_{member.name}.pdf')
+    response = FileResponse(pdf_io, as_attachment=True, filename=f'Admission LOU - {member.name}.pdf')
 
     # Return the FileResponse
     return response
 
-    # After returning the PDF response, redirect to the discharged_members page
-    return HttpResponseRedirect(reverse('discharged_members'))
 
 
 def current_admissions(request): #active admissions list. 
@@ -252,7 +244,7 @@ def discharge_member(request, pk):  #discharge a member button
                 scheme=member.scheme,
                 status=member.status,
                 validity=member.validity,
-                discharge_date=request.POST.get('discharge_date', timezone.now()),
+                discharge_date=request.POST.get('discharge_date'),
                 discharge_summary=request.POST.get('discharge_summary', ''),
                 final_approved_amount=request.POST.get('final_approved_amount', ''),
                 discharge_notes=request.POST.get('discharge_notes', ''),

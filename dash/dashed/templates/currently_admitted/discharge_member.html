@@ -316,10 +316,10 @@
                 {% csrf_token %}
                 {{ update_form.as_p }}
                 <input type="hidden" name="add_update" value="1">
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="date">Date:</label>
-                    <input type="date" name="date" id="date" value="{{ current_date }}" required>
-                </div>
+                    <input type="hidden" name="date" id="date" value="{{ current_date }}" required>
+                </div> -->
                 <div class="form-group">
                     <label for="progress_notes">Progress Notes:</label>
                     <textarea name="progress_notes" id="progress_notes" rows="4" required></textarea>
@@ -358,10 +358,10 @@
                     <label for="discharge_notes">Discharge Notes:</label>
                     <textarea id="discharge_notes" name="discharge_notes" rows="4" placeholder="Enter any additional notes..." ></textarea>
                 </div>
-                <div class="form-group">
+                <div id="discharge_member_form" class="form-group">
                     <label for="discharged_by">Discharged By:</label>
                     <input type="text" id="discharged_by" name="discharged_by" value="{{ user.username }}" readonly>
-                </div id="discharge_member_form">
+                </div>
                 <button class="save-btn" name="discharge_member_form" type="submit" onclick="handleDownload()">Discharge Member</button>
             </form>
 
@@ -403,14 +403,41 @@
 
     <script>
 
-        function handleDownload() {
+        function handleDownload() { 
+            // Validate form fields
+            const dischargeDate = document.getElementById("discharge_date").value;
+                const finalApprovedAmount = document.getElementById("final_approved_amount").value;
+                const dischargeSummary = document.getElementById("discharge_summary").value;
+                const dischargeNotes = document.getElementById("discharge_notes").value;
+
+                // Check if all required fields are filled
+                if (!dischargeDate || !finalApprovedAmount || !dischargeSummary || !dischargeNotes) {
+                    alert("Please fill out all required fields.");
+                    return; // Prevent form submission
+                }
+                
+            const dischargeForm = document.getElementById('discharge_member_form');
             
+            // Create a form data object
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            
+            // Submit the form using fetch
+            fetch("{% url 'generate_discharge_pdf' member.pk %}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                // Handle the download logic
+            })
+            .catch(error => console.error('Error:', error));
+
             setTimeout(function() {
             window.location.href = "{% url 'discharged_members' %}";
-            }, 0);  // Adjust the delay as needed
-
-            }
-
+            }, 500);  // Adjust the delay as needed
+        }
+    
         // JavaScript to handle adding progress updates and interim bills
         const updatesTableBody = document.getElementById('updates_table').getElementsByTagName('tbody')[0];
 
@@ -461,6 +488,3 @@
 </body>
 
 </html>
-
-
-
