@@ -79,9 +79,29 @@ class MemberScrapSpider(scrapy.Spider):
                 cover_balance = div.css('p.label::text').re_first(r'KSh ([\d,]+\.00)')
 
                 cover_item = insurance_details()
-                cover_item['cover_type'] = cover_type.strip()
-                cover_item['cover_value'] = cover_value.strip()
-                cover_item['cover_balance'] = cover_balance.strip()
+                if cover_type:
+                    cover_item['cover_type'] = cover_type.strip()
+                elif cover_type:
+                    cover_item['cover_type'] = cover_type
+                else:
+                    cover_type = None
+
+                
+                if cover_value:
+                    cover_item['cover_value'] = cover_value.strip()
+                elif cover_value:
+                    cover_item['cover_value'] = cover_value
+                else:
+                    cover_value = None
+
+                
+                if cover_balance:
+                    cover_item['cover_balance'] = cover_balance.strip()
+                elif cover_balance:
+                    cover_item['cover_balance'] = cover_balance
+                else:
+                    cover_balance = None
+                
                 
                 yield cover_item
 

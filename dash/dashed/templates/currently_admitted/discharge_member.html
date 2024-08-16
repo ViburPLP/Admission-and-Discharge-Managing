@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -340,7 +340,7 @@
         <!-- Discharge Details Section -->
         <div class="section">
             <h2>Discharge Details</h2>
-            <form action="{% url 'discharge_member' member.pk %}" method="post">
+            <form action="{% url 'discharge_member' member.pk %}" method="post" id="discharge-form">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="discharge_date">Discharge Date:</label>
@@ -483,6 +483,12 @@
             currentFinalBill += interimBill;
             finalBillInput.value = currentFinalBill.toFixed(2);
         }
+
+        document.getElementById("discharge-form").addEventListener("submit", function() {
+            setTimeout(function() {
+                window.location.href = "{% url 'discharged_members' %}";
+            }, 2000); 
+        });
     </script>
    </div>             
 </body>

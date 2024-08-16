@@ -305,7 +305,7 @@
         <!-- Daily Updates Form -->
         <div class="section">
             <h2>Admission Details</h2>
-            <form method="post" action="{% url 'admit_member' member.pk %}">
+            <form id="admission-form" method="post" action="{% url 'admit_member' member.pk %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="service_provider">Select Service Provider:</label>
@@ -465,11 +465,12 @@
             // diagnosisDescriptionInput.value = currentDescription.join(', ');      
                 }
 
-        function generate_admission_pdf() {
+        document.getElementById("admission-form").addEventListener("submit", function() {
             setTimeout(function() {
                 window.location.href = "{% url 'current_admissions' %}";
-                }, 500);
-                }
+            }, 2000); // Adjust the delay as necessary
+        });
+
 
         function updateCoverDetails() {
             const dropdown = document.getElementById('cover_type_dropdown');

@@ -10,7 +10,7 @@ from django.utils import timezone
 from .forms import UpdateForm
 from .forms import UpdateForm
 import tempfile
-import io
+import io, os
 from django.http import FileResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from weasyprint import HTML
@@ -112,43 +112,24 @@ def admit_member(request, pk): # Updated The button to admit a member
         member.save()
         admission_detail.save()
 
-        return redirect('generate_admission_pdf', pk=member.pk)  # Redirect to the list of current admissions page or admission summary - an LOU generation page to be added before proceeding to the list of currently admitted members.
+        context = {
+            'member': member,
+            'admission_details': admission_detail,
+            'current_date': timezone.now().date(),
+        }
+        html_string = render_to_string('pending_admissions/admission_summary.html', context)
+        pdf_io = io.BytesIO()
+        HTML(string=html_string).write_pdf(target=pdf_io)
+        pdf_io.seek(0)
 
-    return render(request, 'currently_admitted/currently_admitted.html', {
+        # Create a FileResponse for downloading the PDF
+        response = FileResponse(pdf_io, as_attachment=True, filename=f'Admission LOU - {member.name}.pdf')
+        return response
+    
+    return render(request, 'pending_admissions/admitting_member_detail.html', {
         'member': member,
-        'providers': providers,
         'insurance_details': insurance_details,
     })
-
-@login_required
-def generate_admission_pdf(request, pk):
-    # Retrieve member and related details
-    member = get_object_or_404(Member_Detail, pk=pk)
-    admission_details = Admission_details.objects.filter(member=member).first()
-    
-    # Context for rendering the PDF
-    context = {
-        'member': member,
-        'admission_details': admission_details,
-        'current_date': timezone.now().date(),
-    }
-
-    # Render the HTML template to a string
-    html_string = render_to_string('pending_admissions/admission_summary.html', context)
-
-    # Generate the PDF in memory using BytesIO
-    pdf_io = io.BytesIO()
-    HTML(string=html_string).write_pdf(target=pdf_io)
-
-    # Rewind the BytesIO object to the beginning
-    pdf_io.seek(0)
-
-    # Create a FileResponse for downloading the PDF
-    response = FileResponse(pdf_io, as_attachment=True, filename=f'Admission LOU - {member.name}.pdf')
-
-    # Return the FileResponse
-    return response
-
 
 
 def current_admissions(request): #active admissions list. 
@@ -213,19 +194,16 @@ def discharge_member(request, pk):  #discharge a member button
     admission_details = Admission_details.objects.filter(member=member).first()
     update_form = UpdateForm(request.POST or None)
 
-    # Handle form submissions for daily updates
     if request.method == 'POST':
-        if 'add_update' in request.POST: #saving to Daily_update object.          
-            if update_form.is_valid(): # Create and save the update
+        if 'add_update' in request.POST:          
+            if update_form.is_valid():
                 update = update_form.save(commit=False)
                 update.admission = admission_details
                 update.save()
 
-                #redirect to the same page to show the new update
                 return redirect('discharging_member_detail', pk=pk)
         
         elif 'discharge_member_form' in request.POST:
-            # Saving to Discharge_details object
             discharge_details = Discharge_details(
                 member=member,
                 provider=admission_details.Provider,
@@ -253,16 +231,34 @@ def discharge_member(request, pk):  #discharge a member button
             
             discharge_details.save()
 
-            # Update member status to discharged
             member.admission_status = 'discharged'
             member.save()
 
-            return redirect('generate_discharge_pdf', pk=pk)  # Redirect to a discharged_members page - will add LOU generation 
+            context = {
+                'member': member,
+                'admission_details': admission_details,
+                'discharge_details': discharge_details,
+                'updates': Daily_update.objects.filter(admission=admission_details).order_by('-date'),
+                'current_date': timezone.now().date(),
+            }
 
-   
-    # Retrieve existing daily updates for this admission
+            html_string = render_to_string('currently_admitted/discharge_summary.html', context)
+            pdf_io = io.BytesIO()
+            HTML(string=html_string).write_pdf(target=pdf_io)
+            pdf_io.seek(0)
+
+            # Save PDF to temporary file
+            pdf_filename = f'Discharge_Summary_{member.name}.pdf'
+            pdf_path = os.path.join(tempfile.gettempdir(), pdf_filename)
+            with open(pdf_path, 'wb') as f:
+                f.write(pdf_io.getbuffer())
+
+            # Provide PDF download link and then redirect
+            response = FileResponse(open(pdf_path, 'rb'), as_attachment=True, filename=pdf_filename)
+
+            return response
+
     updates = Daily_update.objects.filter(admission=admission_details).order_by('-date')
-
 
     context = {
         'member': member,

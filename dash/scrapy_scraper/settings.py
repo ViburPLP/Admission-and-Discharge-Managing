@@ -24,16 +24,6 @@ FEED_STORAGES = {
     'file': 'scrapy_scraper.custom_feed_exporter.CustomFileFeedStorage',
 }
 
-# FEEDS = {
-#     'member_details.json': {'format': 'json'},
-# }
-
-# FEED_URI = 'file:///C:/Users/Victor/Documents/Scraper/Localscraper/dash/scrapy_scraper/spiders/member_details.json'
-# FEED_FORMAT = 'json'
-# FEED_STORAGES = {
-#     'file': 'scrapy_scraper.custom_feed_exporter.CustomFileFeedStorage',
-# }
-
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
