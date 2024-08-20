@@ -385,7 +385,7 @@
                 <table id="updates_table">
                     <thead>
                         <tr>
-                            <th>Date</th>
+                            <th>Discharge Date</th>
                             <th> Provider</th>
                             <th> Length</th>
                             <th> Cover Benefits</th>
@@ -395,16 +395,18 @@
                     </thead>
                     <tbody>
                         
-                        {% for update in admission_details.updates.all %}
+                        {% for admission in previous_admissions %}
                         <tr>
-                            <td>{{ update.date }}</td>
-                            <td>{{ update.progress_notes }}</td>
-                            <td>{{ update.interim_bill }}</td>
-                            <td>{{ update.care_manager }}</td>
+                            <td>{{ admission.discharge_date }}</td>
+                            <td>{{ admission.provider }}</td>
+                            <td>{{ admission.days_admitted }}</td>
+                            <td>{{ admission.cover_used }}</td>
+                            <td>{{ admission.final_approved_amount }}</td>
+                            <td>{{ admission.discharged_by }}</td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4">No updates available.</td>
+                            <td colspan="4">No admission history available.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

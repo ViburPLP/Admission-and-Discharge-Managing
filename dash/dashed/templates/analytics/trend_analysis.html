@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trend Analysis</title>
+</head>
+<body>
+    <h1>Trend of Admissions and Discharges</h1>
+
+    <!-- Filter Form -->
+    <form method="get">
+        <label for="scheme">Scheme:</label>
+        <select name="scheme" id="scheme">
+            <option value="">All Schemes</option>
+            {% for scheme in schemes %}
+                <option value="{{ scheme.name }}" {% if scheme.name == scheme_filter %}selected{% endif %}>{{ scheme.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="payer">Payer:</label>
+        <select name="payer" id="payer">
+            <option value="">All Payers</option>
+            {% for payer in payers %}
+                <option value="{{ payer }}" {% if payer == payer_filter %}selected{% endif %}>{{ payer }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="provider">Provider:</label>
+        <select name="provider" id="provider">
+            <option value="">All Providers</option>
+            {% for provider in providers %}
+                <option value="{{ provider.name }}" {% if provider.name == provider_filter %}selected{% endif %}>{{ provider.name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- Plotly Graph -->
+    <div id="graph">{{ graph|safe }}</div>
+</body>
+</html>

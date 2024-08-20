@@ -403,44 +403,6 @@
 
     <script>
 
-        function handleDownload() { 
-            // Validate form fields
-            const dischargeDate = document.getElementById("discharge_date").value;
-                const finalApprovedAmount = document.getElementById("final_approved_amount").value;
-                const dischargeSummary = document.getElementById("discharge_summary").value;
-                const dischargeNotes = document.getElementById("discharge_notes").value;
-
-                // Check if all required fields are filled
-                if (!dischargeDate || !finalApprovedAmount || !dischargeSummary || !dischargeNotes) {
-                    alert("Please fill out all required fields.");
-                    return; // Prevent form submission
-                }
-                
-            const dischargeForm = document.getElementById('discharge_member_form');
-            
-            // Create a form data object
-            const formData = new FormData();
-            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-            
-            // Submit the form using fetch
-            fetch("{% url 'generate_discharge_pdf' member.pk %}", {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.blob())
-            .then(blob => {
-                // Handle the download logic
-            })
-            .catch(error => console.error('Error:', error));
-
-            setTimeout(function() {
-            window.location.href = "{% url 'discharged_members' %}";
-            }, 500);  // Adjust the delay as needed
-        }
-    
-        // JavaScript to handle adding progress updates and interim bills
-        const updatesTableBody = document.getElementById('updates_table').getElementsByTagName('tbody')[0];
-
         function addProgressUpdate() {
             const progressNotes = document.getElementById('progress_notes').value;
             const interimBill = parseFloat(document.getElementById('interim_bill').value);

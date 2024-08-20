@@ -23,6 +23,10 @@ from .models import (
     Discharge_details,
     Daily_update
     )
+ #**************************************************************************************************************************************************
+import pandas as pd
+import plotly.express as px
+from django.db.models import Count
 
  #**************************************************************************************************************************************************
 def pending_admissions(request): #list of recently imported, awaiting admission.
@@ -62,6 +66,11 @@ def pending_admissions(request): #list of recently imported, awaiting admission.
 def admitting_member_detail(request, pk): #page displaying details of the member to be admited.
     member = get_object_or_404(Member_Detail, pk=pk)
     insurance_details = InsuranceDetail.objects.filter(member=member)
+    previous_admissions = Discharge_details.objects.filter(
+        name=member.name,
+        membership_number=member.membership_number
+        )
+
     try:
         scheme = Scheme.objects.get(name=member.scheme)
         providers = scheme.providers.all()
@@ -73,7 +82,8 @@ def admitting_member_detail(request, pk): #page displaying details of the member
                   {'member': member, 
                    'insurance_details': insurance_details,
                    'scheme': scheme,
-                   'providers': providers
+                   'providers': providers,                 
+                    'previous_admissions': previous_admissions,
                    })
 
 def admit_member(request, pk): # Updated The button to admit a member
@@ -117,6 +127,8 @@ def admit_member(request, pk): # Updated The button to admit a member
             'admission_details': admission_detail,
             'current_date': timezone.now().date(),
         }
+
+        # Creating the admission LOU
         html_string = render_to_string('pending_admissions/admission_summary.html', context)
         pdf_io = io.BytesIO()
         HTML(string=html_string).write_pdf(target=pdf_io)
@@ -189,13 +201,13 @@ def discharging_member_detail(request, pk): #page displaying details of the memb
     return render(request, 'currently_admitted/discharge_member.html', context)
 
 @login_required
-def discharge_member(request, pk):  #discharge a member button
+def discharge_member(request, pk):
     member = get_object_or_404(Member_Detail, pk=pk)
     admission_details = Admission_details.objects.filter(member=member).first()
     update_form = UpdateForm(request.POST or None)
 
     if request.method == 'POST':
-        if 'add_update' in request.POST:          
+        if 'add_update' in request.POST:
             if update_form.is_valid():
                 update = update_form.save(commit=False)
                 update.admission = admission_details
@@ -204,8 +216,8 @@ def discharge_member(request, pk):  #discharge a member button
                 return redirect('discharging_member_detail', pk=pk)
         
         elif 'discharge_member_form' in request.POST:
+            # Save discharge details
             discharge_details = Discharge_details(
-                member=member,
                 provider=admission_details.Provider,
                 admission_date=admission_details.admission_date,
                 admission_diagnosis=admission_details.admission_diagnosis,
@@ -223,7 +235,6 @@ def discharge_member(request, pk):  #discharge a member button
                 status=member.status,
                 validity=member.validity,
                 discharge_date=request.POST.get('discharge_date'),
-                discharge_summary=request.POST.get('discharge_summary', ''),
                 final_approved_amount=request.POST.get('final_approved_amount', ''),
                 discharge_notes=request.POST.get('discharge_notes', ''),
                 discharged_by=request.POST.get('discharged_by', request.user.username)
@@ -231,9 +242,11 @@ def discharge_member(request, pk):  #discharge a member button
             
             discharge_details.save()
 
+            # Change member status to discharged
             member.admission_status = 'discharged'
             member.save()
 
+            # Generate and save PDF
             context = {
                 'member': member,
                 'admission_details': admission_details,
@@ -247,14 +260,10 @@ def discharge_member(request, pk):  #discharge a member button
             HTML(string=html_string).write_pdf(target=pdf_io)
             pdf_io.seek(0)
 
-            # Save PDF to temporary file
-            pdf_filename = f'Discharge_Summary_{member.name}.pdf'
-            pdf_path = os.path.join(tempfile.gettempdir(), pdf_filename)
-            with open(pdf_path, 'wb') as f:
-                f.write(pdf_io.getbuffer())
-
-            # Provide PDF download link and then redirect
-            response = FileResponse(open(pdf_path, 'rb'), as_attachment=True, filename=pdf_filename)
+            response = FileResponse(pdf_io, as_attachment=True, filename=f'Discharge_Summary_{member.name}.pdf')
+            
+            # Delete related records
+            member.delete()
 
             return response
 
@@ -269,41 +278,6 @@ def discharge_member(request, pk):  #discharge a member button
     }
 
     return render(request, 'discharged/discharged_members.html', context)
-
-@login_required
-def generate_discharge_pdf(request, pk):
-    # Retrieve member and related details
-    member = get_object_or_404(Member_Detail, pk=pk)
-    admission_details = Admission_details.objects.filter(member=member).first()
-    discharge_details = Discharge_details.objects.filter(member=member).last()
-
-    # Retrieve updates
-    updates = Daily_update.objects.filter(admission=admission_details).order_by('-date')
-
-    # Context for rendering the PDF
-    context = {
-        'member': member,
-        'admission_details': admission_details,
-        'discharge_details': discharge_details,
-        'updates': updates,
-        'current_date': timezone.now().date(),
-    }
-
-    # Render the HTML template to a string
-    html_string = render_to_string('currently_admitted/discharge_summary.html', context)
-
-    # Generate the PDF in memory using BytesIO
-    pdf_io = io.BytesIO()
-    HTML(string=html_string).write_pdf(target=pdf_io)
-
-    # Rewind the BytesIO object to the beginning
-    pdf_io.seek(0)
-
-    # Create a FileResponse for downloading the PDF
-    response = FileResponse(pdf_io, as_attachment=True, filename=f'Discharge_Summary_{member.name}.pdf')
-
-    # Return the FileResponse
-    return response
 
 
 def discharged_members(request): 
@@ -371,17 +345,204 @@ def discharged_members(request):
 def admission_history(request, discharge_id):
     # Get the discharge details based on the ID
     discharge_entry = get_object_or_404(
-        Discharge_details.objects.select_related('member'), 
-        pk=discharge_id
+        Discharge_details, pk=discharge_id
     )
 
     # Fetch the member's previous admissions using Discharge_details model
-    previous_admissions = Discharge_details.objects.filter(member=discharge_entry.member)
+    previous_admissions = Discharge_details.objects.filter(
+        name=discharge_entry.name,
+        membership_number=discharge_entry.membership_number
+        )
 
     context = {
-        'member': discharge_entry.member,
-        'discharge_entry': discharge_entry,
-        'previous_admissions': previous_admissions,
+       'discharge_entry': discharge_entry,  # The specific entry being viewed
+        'previous_admissions': previous_admissions,  # All entries with the same name
     }
     
     return render(request, 'discharged/admission_history.html', context)
+
+ #**************************************************************************************************************************************************
+def trend_analysis(request):
+    # Fetch query parameters for filtering
+    scheme_filter = request.GET.get('scheme')
+    payer_filter = request.GET.get('payer')
+    provider_filter = request.GET.get('provider')
+
+    # Fetch admission and discharge data
+    admissions = Admission_details.objects.all()
+    discharges = Discharge_details.objects.all()
+
+    # Apply filters if any
+    if scheme_filter:
+        admissions = admissions.filter(member__scheme=scheme_filter)
+        discharges = discharges.filter(scheme=scheme_filter)
+    if payer_filter:
+        admissions = admissions.filter(member__payer=payer_filter)
+        discharges = discharges.filter(payer=payer_filter)
+    if provider_filter:
+        admissions = admissions.filter(provider__name=provider_filter)
+        discharges = discharges.filter(provider=provider_filter)
+
+    # Group by date and count the admissions and discharges
+    admission_trend = (
+        admissions.values('admission_date')
+        .annotate(count=Count('id'))
+        .order_by('admission_date')
+    )
+
+    discharge_trend = (
+        discharges.values('discharge_date')
+        .annotate(count=Count('id'))  # Count discharges as independent units
+        .order_by('discharge_date')
+    )
+
+    # Convert to DataFrame
+    admission_df = pd.DataFrame(list(admission_trend))
+    discharge_df = pd.DataFrame(list(discharge_trend))
+
+    # Ensure DataFrames are not empty and handle the renaming accordingly
+    if not admission_df.empty:
+        admission_df.columns = ['date', 'admissions']
+    else:
+        admission_df = pd.DataFrame(columns=['date', 'admissions'])
+
+    if not discharge_df.empty:
+        discharge_df.columns = ['date', 'discharges']
+    else:
+        discharge_df = pd.DataFrame(columns=['date', 'discharges'])
+
+    # Create a complete date range from the earliest to the latest date
+    if not admission_df.empty and not discharge_df.empty:
+        min_date = min(admission_df['date'].min(), discharge_df['date'].min())
+        max_date = max(admission_df['date'].max(), discharge_df['date'].max())
+    elif not admission_df.empty:
+        min_date = admission_df['date'].min()
+        max_date = admission_df['date'].max()
+    elif not discharge_df.empty:
+        min_date = discharge_df['date'].min()
+        max_date = discharge_df['date'].max()
+    else:
+        min_date = datetime.now().date()
+        max_date = datetime.now().date()
+
+    complete_date_range = pd.date_range(start=min_date, end=max_date)
+
+    # Ensure all dates are covered
+    admission_df = admission_df.set_index('date').reindex(complete_date_range, fill_value=0).reset_index()
+    discharge_df = discharge_df.set_index('date').reindex(complete_date_range, fill_value=0).reset_index()
+
+    # Rename the 'index' column back to 'date'
+    admission_df.columns = ['date', 'admissions']
+    discharge_df.columns = ['date', 'discharges']
+
+    # Merge DataFrames on the date
+    trend_df = pd.merge(admission_df, discharge_df, on='date', how='outer').fillna(0)
+
+    # Create the line graph using Plotly
+    fig = px.line(trend_df, x='date', y=['admissions', 'discharges'],
+                  labels={'value': 'Number of Members', 'date': 'Date'},
+                  title='Trend of Admissions and Discharges')
+
+    # Convert the plot to HTML
+    graph_html = fig.to_html(full_html=False)
+
+    context = {
+        'graph': graph_html,
+        'scheme_filter': scheme_filter,
+        'payer_filter': payer_filter,
+        'provider_filter': provider_filter,
+    }
+
+    return render(request, 'analytics/trend_analysis.html', context)
+
+
+import openpyxl
+from openpyxl.utils import get_column_letter
+from django.http import HttpResponse
+from django.db.models import Sum, Count
+from datetime import date
+
+def generate_admission_report(request):
+    # Query currently admitted members
+    admissions = Admission_details.objects.filter(member__admission_status='admitted').select_related('member')
+
+    # Create a new workbook and select the active worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Admitted Members Report"
+
+    # Add headers to the sheet
+    headers = [
+        "Diagnosis", "Membership Number", "Scheme", "Payer", "Admission Date",
+        "LOU Issued", "Last Interim Bill", "Date of Last Interim Bill",
+        "Cover Used", "Duration Since Admission", "Relationship"
+    ]
+    for col_num, header in enumerate(headers, 1):
+        ws.cell(row=1, column=col_num, value=header)
+
+    # Add the data rows
+    row = 2
+    for admission in admissions:
+    # Fetch the last interim bill and its date
+        last_update = admission.updates.order_by('-date').first()
+        last_bill = last_update.interim_bill if last_update else None
+        last_bill_date = last_update.date if last_update else None
+
+        # Strip timezone from dates if they are datetime objects
+        if isinstance(admission.admission_date, datetime):
+            admission_date = admission.admission_date.replace(tzinfo=None)
+        else:
+            admission_date = admission.admission_date
+
+        if isinstance(last_bill_date, datetime):
+            last_bill_date = last_bill_date.replace(tzinfo=None)
+
+        # Calculate duration since admission
+        duration = (date.today() - admission_date).days
+
+        data = [
+            admission.admission_diagnosis,
+            admission.member.membership_number,
+            admission.member.scheme,
+            admission.member.payer,
+            admission_date,
+            admission.lou_issued,
+            last_bill,
+            last_bill_date,
+            admission.cover_used,
+            duration,
+            admission.member.relationship
+        ]
+        
+        for col_num, cell_value in enumerate(data, 1):
+            ws.cell(row=row, column=col_num, value=cell_value)
+        
+        row += 1
+
+
+    # Group by Payer and Scheme
+    ws.auto_filter.ref = f"A1:{get_column_letter(len(headers))}1"
+    
+    # Add summary sheet
+    summary_ws = wb.create_sheet(title="Summary")
+    summary_ws.append(["Payer", "Scheme", "Total LOU Issued", "Number of Admissions"])
+
+    # Summary Data
+    summary_data = admissions.values('member__payer', 'member__scheme').annotate(
+        total_lou=Sum('lou_issued'),
+        admissions_count=Count('id')
+    ).filter(admissions_count__gt=0)
+
+    for summary in summary_data:
+        summary_ws.append([
+            summary['member__payer'],
+            summary['member__scheme'],
+            summary['total_lou'],
+            summary['admissions_count']
+        ])
+
+    # Set response with the Excel file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Admitted_Members_Report.xlsx'
+    wb.save(response)
+    return response

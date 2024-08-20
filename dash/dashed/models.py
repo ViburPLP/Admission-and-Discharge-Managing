@@ -75,20 +75,7 @@ class Admission_details(models.Model):
         return f"{self.member.name} - {self.admission_date}"
     
 class Discharge_details(models.Model):
-    # FKs
-    member = models.ForeignKey(
-        Member_Detail, 
-        related_name='discharge_details', 
-        on_delete=models.CASCADE, 
-        null=True
-    )
-    provider = models.ForeignKey(
-        Provider, 
-        related_name='discharge_details', 
-        on_delete=models.CASCADE, 
-        null=True
-    )
-    
+  
     #Member_Detail
     name = models.CharField(max_length=200)
     relationship = models.CharField(max_length=100)
@@ -111,7 +98,6 @@ class Discharge_details(models.Model):
         
     #added Fields
     discharge_date = models.DateField(default=timezone.now)
-    discharge_summary = models.TextField()
     final_approved_amount = models.CharField(max_length=100)
     days_admitted = models.PositiveIntegerField(default=0)
     discharge_notes = models.TextField()
