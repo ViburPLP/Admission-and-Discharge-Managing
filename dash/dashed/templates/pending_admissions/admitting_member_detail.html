@@ -259,6 +259,7 @@
             <li><a href="{% url 'pending_admissions' %}">Pending Admissions</a></li>
             <li><a href="{% url 'current_admissions' %}">Admitted Members</a></li>
             <li><a href="{% url 'discharged_members' %}">Discharged Members</a></li>
+            <li><a href="{% url 'user_account' %}">My Account</a></li>
         </ul>
     </div>
   
@@ -309,12 +310,12 @@
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="service_provider">Select Service Provider:</label>
-                    <select id="service_provider" name="service_provider" required>
+                    <select id="service_provider" name="service_provider" required style="width: 100%;">
                         <option value="">Select</option>
                         {% for provider in providers %}
-                            <option value="{{ provider.id }}"> {{ provider.name }}</option>
+                            <option value="{{ provider.id }}">{{ provider.name }}</option>
                         {% endfor %}
-                        </select>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="date">Scheduled/Admission Date:</label>
@@ -385,7 +386,7 @@
                 <table id="updates_table">
                     <thead>
                         <tr>
-                            <th>Date</th>
+                            <th>Discharge Date</th>
                             <th> Provider</th>
                             <th> Length</th>
                             <th> Cover Benefits</th>
@@ -395,16 +396,18 @@
                     </thead>
                     <tbody>
                         
-                        {% for update in admission_details.updates.all %}
+                        {% for admission in previous_admissions %}
                         <tr>
-                            <td>{{ update.date }}</td>
-                            <td>{{ update.progress_notes }}</td>
-                            <td>{{ update.interim_bill }}</td>
-                            <td>{{ update.care_manager }}</td>
+                            <td>{{ admission.discharge_date }}</td>
+                            <td>{{ admission.provider }}</td>
+                            <td>{{ admission.days_admitted }}</td>
+                            <td>{{ admission.cover_used }}</td>
+                            <td>{{ admission.final_approved_amount }}</td>
+                            <td>{{ admission.discharged_by }}</td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4">No updates available.</td>
+                            <td colspan="4">No admission history available.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -412,6 +415,10 @@
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
       <script>
           function setToday() {
@@ -482,7 +489,14 @@
             document.getElementById('initial_cover_value').value = 'Ksh. ' + coverValue;
             document.getElementById('initial_cover_balance').value = 'Ksh. ' + coverBalance;
             }
-      </script>
+
+        $(document).ready(function() {
+            $('#service_provider').select2({
+            placeholder: 'Select a provider',
+            allowClear: true
+        });
+    });
+    </script>
    </div>             
 </body>
 

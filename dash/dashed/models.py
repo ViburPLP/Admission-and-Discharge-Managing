@@ -2,7 +2,26 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime
+from django.core.validators import FileExtensionValidator
+from django.core.exceptions import ValidationError
+import magic
 
+#********************************************************************************
+extension_validator = FileExtensionValidator(['.csv', '.xlsx', '.xls', '.pdf'])
+
+def validate_file_mimetype(file):
+    accepted_mime_types = [
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel',
+        'application/vnd.oasis.opendocument.spreadsheet',
+        'text/csv', 
+        'application/vnd.ms-excel', 
+        'application/pdf',
+        ]
+    
+    file_mimetype= magic.from_buffer(file.read(1024), mime=True)
+    if file_mimetype not in accepted_mime_types:
+        raise ValidationError('Invalid format. Please upload a valid Excel or PDF file.')
   
 #********************************************************************************
 class Member_Detail(models.Model):
@@ -25,7 +44,10 @@ class Member_Detail(models.Model):
         return f"{self.name} - {self.membership_number} - {self.admission_status}"
 
 class InsuranceDetail(models.Model):
-    member = models.ForeignKey(Member_Detail, related_name='insurance_details', on_delete=models.CASCADE, null=True)
+    member = models.ForeignKey(Member_Detail, 
+                               related_name='insurance_details', 
+                               on_delete=models.CASCADE, null=True
+                               )
     cover_type = models.CharField(max_length=100)
     cover_value = models.DecimalField(max_digits=10, decimal_places=2)
     cover_balance = models.DecimalField(max_digits=10, decimal_places=2)
@@ -35,6 +57,15 @@ class InsuranceDetail(models.Model):
     
 class Scheme(models.Model):
     name=models.CharField(max_length=100)
+    payer=models.CharField(max_length=100, null=True)
+    rm=models.CharField(max_length=100, null=True)
+    rm_contact=models.CharField(max_length=100, null=True)
+    policy_start_date=models.DateField(null=True)
+    policy_end_date=models.DateField(null=True)
+    policy_document=models.FileField(
+        upload_to='policy_documents/', 
+        null=True, 
+        validators=[extension_validator, validate_file_mimetype])
 
     def __str__(self):
         return self.name
@@ -42,6 +73,14 @@ class Scheme(models.Model):
 class Provider(models.Model):
     name= models.CharField(max_length=100)
     schemes= models.ManyToManyField(Scheme, related_name='providers')
+    location= models.CharField(max_length=100, null=True)
+    care_manager=models.CharField(max_length=100, null=True)
+    cm_contact=models.CharField(max_length=100, null=True)
+    services= models.CharField(max_length=100, null=True)
+    agreed_packages= models.FileField(
+        upload_to='agreed_packages/', 
+        null=True, 
+        validators=[extension_validator, validate_file_mimetype])
 
     def __str__(self):
         return self.name
@@ -75,20 +114,7 @@ class Admission_details(models.Model):
         return f"{self.member.name} - {self.admission_date}"
     
 class Discharge_details(models.Model):
-    # FKs
-    member = models.ForeignKey(
-        Member_Detail, 
-        related_name='discharge_details', 
-        on_delete=models.CASCADE, 
-        null=True
-    )
-    provider = models.ForeignKey(
-        Provider, 
-        related_name='discharge_details', 
-        on_delete=models.CASCADE, 
-        null=True
-    )
-    
+  
     #Member_Detail
     name = models.CharField(max_length=200)
     relationship = models.CharField(max_length=100)
@@ -111,7 +137,6 @@ class Discharge_details(models.Model):
         
     #added Fields
     discharge_date = models.DateField(default=timezone.now)
-    discharge_summary = models.TextField()
     final_approved_amount = models.CharField(max_length=100)
     days_admitted = models.PositiveIntegerField(default=0)
     discharge_notes = models.TextField()

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discharged Members</title>
+    <title>Pending Admission List</title>
     <style>
         body {
             display: flex;
@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
         }
-        .sidebar {
+         .sidebar {
             width: 200px;
             padding: 20px;
             background-color: #f4f4f4;
@@ -133,46 +133,27 @@
         </ul>
     </div>
     <div class="content">
-        <h1>Discharged Members</h1>
+        <h1>Insurance Schemes</h1>
         <form method="GET" action="">
             <input type="text" name="q" value="{{ query|default_if_none:'' }}" placeholder="Search...">
-            <input type="text" name="payer" value="{{ payer_filter|default_if_none:'' }}" placeholder="Payer...">
-            <input type="text" name="scheme" value="{{ scheme_filter|default_if_none:'' }}" placeholder="Scheme...">
-            <input type="date" name="date_from" value="{{ date_from|default_if_none:'' }}" placeholder="Date from...">
-            <input type="date" name="date_to" value="{{ date_to|default_if_none:'' }}" placeholder="Date to...">
-            <select name="order">
-                <option value=" " disabled>Select ordering</option>
-                <option value="-discharge_date" {% if order == '-discharge_date' %}selected{% endif %}>Discharge Date (recent first)</option>
-                <option value="discharge_date" {% if order == 'discharge_date' %}selected{% endif %}>Discharge Date (oldest first)</option>
-                <option value="membership_number" {% if order == 'membership_number' %}selected{% endif %}>Membership Number</option>
-                <option value="name" {% if order == 'name' %}selected{% endif %}>Name</option>
-                <option value="payer" {% if order == 'payer' %}selected{% endif %}>Payer</option>
-                <option value="scheme" {% if order == 'scheme' %}selected{% endif %}>Scheme</option>
-            </select>
+            <input type="text" name="payer" value="{{ payer_filter|default_if_none:'' }}" placeholder="Payer...">                    
             <button type="submit">Search</button>
         </form>
         <table>
             <thead>
                 <tr>
-                    <th>Discharge Date</th>
-                    <th>Name</th>
-                    <th>Membership Number</th>
-                    <th>Payer</th>
-                    <th>Scheme</th>
+                    <th>Insurance scheme Name</th>
+                    <th>Insurance scheme Payer</th>
                 </tr>
             </thead>
             <tbody>
-                {% for discharge in discharged_entries %}
-                <tr class="clickable-row" data-href="{% url 'admission_history' discharge.pk %}">
-                    <td>{{ discharge.discharge_date }}</td>
-                    <td>{{ discharge.name }}</td>
-                    <td>{{ discharge.membership_number }}</td>
-                    <td>{{ discharge.payer }}</td>
-                    <td>{{ discharge.scheme }}</td>
+                {% for scheme in schemes %}
+                    <td>{{ scheme.name }}</td>
+                    <td>{{ scheme.payer }}</td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" style="text-align:center; padding: 20px;">No discharged members found.</td>
+                    <td colspan="5" style="text-align:center; padding: 20px;">No scheme found.</td>
                 </tr>
                 {% endfor %}
             </tbody>

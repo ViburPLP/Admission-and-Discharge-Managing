@@ -129,6 +129,7 @@
             <li><a href="{% url 'pending_admissions' %}">Pending Admissions</a></li>
             <li><a href="{% url 'current_admissions' %}">Admitted Members</a></li>
             <li><a href="{% url 'discharged_members' %}">Discharged Members</a></li>
+            <li><a href="{% url 'user_account' %}">My Account</a></li>
         </ul>
     </div>
     <div class="content">
@@ -141,8 +142,8 @@
             <input type="date" name="date_to" value="{{ date_to|default_if_none:'' }}" placeholder="Date to...">
             <select name="order">
                 <option value=" " disabled>Select ordering</option>
-                <option value="-discharge_date" {% if order == '-discharge_date' %}selected{% endif %}>Discharge Date (recent first)</option>
-                <option value="discharge_date" {% if order == 'discharge_date' %}selected{% endif %}>Discharge Date (oldest first)</option>
+                <option value="-added_at" {% if order == '-added_at' %}selected{% endif %}> Date (recent first)</option>
+                <option value="added_at" {% if order == 'added_at' %}selected{% endif %}> Date (oldest first)</option>
                 <option value="membership_number" {% if order == 'membership_number' %}selected{% endif %}>Membership Number</option>
                 <option value="name" {% if order == 'name' %}selected{% endif %}>Name</option>
                 <option value="payer" {% if order == 'payer' %}selected{% endif %}>Payer</option>
