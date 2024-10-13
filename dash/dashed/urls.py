@@ -40,4 +40,7 @@ urlpatterns = [
 
     path('schemes/', views.schemes, name='schemes'),
 
+
+    path('trend-analysis/', views.trend_analysis, name='trend_analysis'),
+    path('generate_admission_report/', views.generate_admission_report, name='generate_admission_report'),
 ]
