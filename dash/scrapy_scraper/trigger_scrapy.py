@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
 # app = Flask(__name__)
 
-# @app.route('/trigger_scrapy', methods=['POST'])
+# @app.route('/trigger_scrapy', methods=['POST']) 
 # def trigger_scrapy():
 #     spider_file = os.path.join(os.path.dirname(__file__), 'scrapy_spider', 'spiders', 'scrapy_spider.py')
 #     scrapy_executable = os.path.join(os.path.dirname(sys.executable), 'Scripts', 'scrapy.exe')

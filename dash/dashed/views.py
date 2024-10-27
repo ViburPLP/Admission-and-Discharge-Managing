@@ -87,11 +87,6 @@ def admitting_member_detail(request, pk): #page displaying details of the member
         membership_number=member.membership_number
         )
 
-    previous_admissions = Discharge_details.objects.filter(
-        name=member.name,
-        membership_number=member.membership_number
-        )
-
     try:
         scheme = Scheme.objects.get(name=member.scheme)
         providers = scheme.providers.all()
@@ -103,8 +98,6 @@ def admitting_member_detail(request, pk): #page displaying details of the member
                   {'member': member, 
                    'insurance_details': insurance_details,
                    'scheme': scheme,
-                   'providers': providers,                 
-                    'previous_admissions': previous_admissions,
                    'providers': providers,                 
                     'previous_admissions': previous_admissions,
                    })
@@ -151,8 +144,6 @@ def admit_member(request, pk): # Updated The button to admit a member
             'admission_details': admission_detail,
             'current_date': timezone.now().date(),
         }
-
-        # Creating the admission LOU
 
         # Creating the admission LOU
         html_string = render_to_string('pending_admissions/admission_summary.html', context)
@@ -230,13 +221,11 @@ def discharging_member_detail(request, pk): #page displaying details of the memb
 
 @login_required
 def discharge_member(request, pk):
-def discharge_member(request, pk):
     member = get_object_or_404(Member_Detail, pk=pk)
     admission_details = Admission_details.objects.filter(member=member).first()
     update_form = UpdateForm(request.POST or None)
 
     if request.method == 'POST':
-        if 'add_update' in request.POST:
         if 'add_update' in request.POST:
             if update_form.is_valid():
                 update = update_form.save(commit=False)
@@ -246,7 +235,6 @@ def discharge_member(request, pk):
                 return redirect('discharging_member_detail', pk=pk)
         
         elif 'discharge_member_form' in request.POST:
-            # Save discharge details
             # Save discharge details
             discharge_details = Discharge_details(
                 provider=admission_details.Provider,
@@ -274,11 +262,9 @@ def discharge_member(request, pk):
             discharge_details.save()
 
             # Change member status to discharged
-            # Change member status to discharged
             member.admission_status = 'discharged'
             member.save()
 
-            # Generate and save PDF
             # Generate and save PDF
             context = {
                 'member': member,
@@ -293,10 +279,6 @@ def discharge_member(request, pk):
             HTML(string=html_string).write_pdf(target=pdf_io)
             pdf_io.seek(0)
 
-            response = FileResponse(pdf_io, as_attachment=True, filename=f'Discharge_Summary_{member.name}.pdf')
-            
-            # Delete related records
-            member.delete()
             response = FileResponse(pdf_io, as_attachment=True, filename=f'Discharge_Summary_{member.name}.pdf')
             
             # Delete related records
@@ -385,7 +367,6 @@ def admission_history(request, discharge_id):
     # Get the discharge details based on the ID
     discharge_entry = get_object_or_404(
         Discharge_details, pk=discharge_id
-        Discharge_details, pk=discharge_id
     )
 
     # Fetch the member's previous admissions using Discharge_details model
@@ -393,14 +374,8 @@ def admission_history(request, discharge_id):
         name=discharge_entry.name,
         membership_number=discharge_entry.membership_number
         )
-    previous_admissions = Discharge_details.objects.filter(
-        name=discharge_entry.name,
-        membership_number=discharge_entry.membership_number
-        )
 
     context = {
-       'discharge_entry': discharge_entry,  # The specific entry being viewed
-        'previous_admissions': previous_admissions,  # All entries with the same name
        'discharge_entry': discharge_entry,  # The specific entry being viewed
         'previous_admissions': previous_admissions,  # All entries with the same name
     }
@@ -751,4 +726,3 @@ def schemes(request): #list of schemes.
                   {'schemes': schemes, 
                     'query': query, 
                     'payer_filter': payer_filter})
-

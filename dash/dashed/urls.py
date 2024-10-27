@@ -24,13 +24,13 @@ urlpatterns = [
     path('trend-analysis/', views.trend_analysis, name='trend_analysis'),
     path('generate_admission_report/', views.generate_admission_report, name='generate_admission_report'),
 
-    #account managment
+    # account managment
     path('account/', views.user_account, name='user_account'),
     path('account/update/', views.update_user_details, name='update_user_details'),
     path('account/change-password/', views.change_password, name='change_password'),
 
     #schemes and providers management
-    path('manage/', views.manage_schemes_providers, name='manage_schemes_providers'),
+    # path('manage/', views.manage_schemes_providers, name='manage_schemes_providers'),
     path('edit-scheme/<int:scheme_id>/', views.edit_scheme, name='edit_scheme'),
     path('delete-scheme/<int:scheme_id>/', views.delete_scheme, name='delete_scheme'),
     path('view-providers/<int:scheme_id>/', views.view_providers, name='view_providers'),

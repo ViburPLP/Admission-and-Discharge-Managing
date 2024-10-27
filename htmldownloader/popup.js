@@ -24,6 +24,8 @@ document.getElementById('downloadHtml').addEventListener('click', async () => {
         url: url,
         filename: filename,
       }, () => {
+        console.log('file downloaded', filename);
+        
         fetch('http://localhost:5000/trigger_scrapy', { method: 'POST' });
       });
     } else {

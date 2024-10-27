@@ -10,6 +10,7 @@ class CustomFileFeedStorage(FileFeedStorage):
         self.path = self._get_path(uri)
 
     def store(self, file):
+        
         super().store(file)
         print(f"Storing file at: {self.path}")  # Debugging statement
         self.run_command()
