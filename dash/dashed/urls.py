@@ -10,6 +10,7 @@ urlpatterns = [
 
 
     #pages in order or flow of activity
+    path('', views.home, name='home'),
     path('pending_admissions/', views.pending_admissions, name='pending_admissions'), #list of recently imported, awaiting admission.
     path('admitting_member_detail/<int:pk>/', views.admitting_member_detail, name='admitting_member_detail'), #page displaying details of the member to be admited.
     path('admit_member/<int:pk>/', views.admit_member, name='admit_member'), #admit member 'button'.
@@ -30,7 +31,7 @@ urlpatterns = [
     path('account/change-password/', views.change_password, name='change_password'),
 
     #schemes and providers management
-    # path('manage/', views.manage_schemes_providers, name='manage_schemes_providers'),
+    path('manage/', views.manage_schemes_providers, name='manage_schemes_providers'),
     path('edit-scheme/<int:scheme_id>/', views.edit_scheme, name='edit_scheme'),
     path('delete-scheme/<int:scheme_id>/', views.delete_scheme, name='delete_scheme'),
     path('view-providers/<int:scheme_id>/', views.view_providers, name='view_providers'),

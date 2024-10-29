@@ -43,6 +43,8 @@ import plotly.express as px
 from django.db.models import Count
 
  #**************************************************************************************************************************************************
+def home(request):
+    return render(request, 'template/index.html')
 @login_required
 def pending_admissions(request): #list of recently imported, awaiting admission.
     query = request.GET.get('q')
@@ -70,7 +72,7 @@ def pending_admissions(request): #list of recently imported, awaiting admission.
 
     pending_members = pending_members.order_by(order)
     
-    return render(request, 'pending_admissions/pending_admissions.html', 
+    return render(request, 'template/admissions/pending.html', 
                   {'pending_members': pending_members, 
                     'query': query, 'payer_filter': payer_filter, 
                     'scheme_filter': scheme_filter, 
@@ -94,7 +96,7 @@ def admitting_member_detail(request, pk): #page displaying details of the member
         scheme = None
         providers = []
 
-    return render(request, 'pending_admissions/admitting_member_detail.html', 
+    return render(request, 'template/admissions/admission-page.html', 
                   {'member': member, 
                    'insurance_details': insurance_details,
                    'scheme': scheme,
