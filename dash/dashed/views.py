@@ -102,6 +102,7 @@ def admitting_member_detail(request, pk): #page displaying details of the member
                    'scheme': scheme,
                    'providers': providers,                 
                     'previous_admissions': previous_admissions,
+                    'current_date': timezone.now().date(),
                    })
 
 @login_required
@@ -131,7 +132,6 @@ def admit_member(request, pk): # Updated The button to admit a member
             admission_date=admission_date,
             admission_diagnosis=admission_diagnosis,
             cover_used=cover_used.cover_type,
-            initial_cover_value=initial_cover_value,
             initial_cover_balance=initial_cover_balance,
             requested_amount=requested_amount,
             lou_issued=lou_issued,

@@ -54,7 +54,7 @@ h2 {
 h3 {
   margin-top: 20px;
   margin-bottom: 10px;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 30px;
 }
@@ -251,8 +251,8 @@ a.w--current {
   flex: 0 auto;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   padding-left: 40px;
   padding-right: 40px;
   transition: opacity .2s;
@@ -289,6 +289,8 @@ a.w--current {
 
 .sb-item-text {
   padding: 0 10px;
+  font-size: 12PX;
+  font-weight: 300;
 }
 
 .sb-item-text:hover {
@@ -318,7 +320,7 @@ a.w--current {
   text-transform: capitalize;
   padding-left: 10px;
   padding-right: 10px;
-  font-size: 14px;
+  font-size: 1px;
   font-weight: 600;
   line-height: 24px;
 }
@@ -1037,7 +1039,7 @@ tr.clickable-row:hover {
   border-radius: 5px;
   flex-flow: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: top;
   padding: 5px 10px;
   display: flex;
 }
