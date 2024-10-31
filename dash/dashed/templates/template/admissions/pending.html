@@ -26,7 +26,7 @@
       <div id="user-div" class="user-div">
         <a id="user-div" href="../user/user-page.html" class="user-div w-inline-block">
           <div id="User-greating" class="user-greetings">
-            <h4 id="UG-text" class="user-greating-text">Good morning {{user}}</h4>
+            <h4 id="UG-text" class="user-greating-text">{{ greeting }},&nbsp;  {{ user.first_name }}!</h4>
           </div>
           <div id="User-Icon" class="user-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" alt="" class="image"></div>
         </a>

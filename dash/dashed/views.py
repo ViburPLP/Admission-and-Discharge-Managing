@@ -148,7 +148,7 @@ def admit_member(request, pk): # Updated The button to admit a member
         }
 
         # Creating the admission LOU
-        html_string = render_to_string('pending_admissions/admission_summary.html', context)
+        html_string = render_to_string('template/admissions/admission_lou.html', context)
         pdf_io = io.BytesIO()
         HTML(string=html_string).write_pdf(target=pdf_io)
         pdf_io.seek(0)
@@ -194,7 +194,7 @@ def current_admissions(request): #active admissions list.
 
     admitted_members = admitted_members.order_by(order) #sorting by date
     
-    return render(request, 'currently_admitted/currently_admitted.html', 
+    return render(request, 'template/admissions/admitted.html', 
                   {'admitted_members': admitted_members, 
                     'query': query, 'payer_filter': payer_filter, 
                     'scheme_filter': scheme_filter, 
@@ -219,7 +219,7 @@ def discharging_member_detail(request, pk): #page displaying details of the memb
         'days_since_admission': days_since_admission,
         } #context variables
 
-    return render(request, 'currently_admitted/discharge_member.html', context)
+    return render(request, 'template/admissions/discharge-page.html', context)
 
 @login_required
 def discharge_member(request, pk):

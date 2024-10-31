@@ -1,5 +1,5 @@
 <!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Mon Oct 28 2024 09:43:30 GMT+0000 (Coordinated Universal Time)  -->
-<html data-wf-page="67120015fbc396e5f837a0a8" data-wf-site="67101f23c4dd72e625d98d34">
+<html data-wf-page="67120015fbc396e5f837a0a8" data-wf-site="67101f23c4dd72e625d98d34" lang="en">
 <head>
   <meta charset="utf-8">
   <title>Admission page</title>
@@ -18,56 +18,6 @@
   <link href="{% static 'images/webclip.png' %}" rel="apple-touch-icon">
 </head>
 <body data-w-id="67113bae6c58ef2c24125606" class="body-2">
-  <section style="display:none" class="modal-pop-up">
-    <form id="admission-form" method="post" action="{% url 'admit_member' member.pk %}">
-    {% csrf_token %}
-    <div class="div-block-20">
-      <h1 data-w-id="5e0ad675-69c4-d235-72e4-fbbddfc1ca19" class="x">X</h1>
-    </div>
-    <div class="div-block-13">
-      <div class="adm-dets">
-        <h2 class="modal-title">{{ member.name }} Admission LOU</h2>
-      </div>
-      <div class="div-block-14">
-        <div id="w-node-_5e0ad675-69c4-d235-72e4-fbbddfc1ca22-f837a0a8" class="div-block-15 logo">
-          <div id="w-node-_5e0ad675-69c4-d235-72e4-fbbddfc1ca25-f837a0a8" class="tbl-list txt">{company logo}</div>
-        </div>
-        <div id="w-node-_5e0ad675-69c4-d235-72e4-fbbddfc1ca27-f837a0a8" class="div-block-15"></div>
-        <div id="w-node-_5e0ad675-69c4-d235-72e4-fbbddfc1ca2c-f837a0a8" class="div-block-15">
-          <div id="w-node-_5e0ad675-69c4-d235-72e4-fbbddfc1ca39-f837a0a8" class="tbl-list txt">Date: {{ current_date }}</div>
-        </div>
-        <div id="w-node-_5e0ad675-69c4-d235-72e4-fbbddfc1ca34-f837a0a8" class="tbl-list txt">company Ltd. <br>000, fulani Road <br>P.O. Box 00000 - 00000 <br>Nairobi, Kenya. T : +254 712 345 678<br>M : info@company .com <br>W : www.company .com</div>
-        <div id="w-node-_5e0ad675-69c4-d235-72e4-fbbddfc1ca31-f837a0a8" class="div-block-15 table">
-          <div id="w-node-_98a82f70-84b3-79bb-d13b-e7946cd6c3a1-f837a0a8" class="tbl-list txt">Dear {provider name},<br>‍</div>
-          <div id="w-node-d000525e-d9f9-8b8c-a963-f3231e26402f-f837a0a8" class="tbl-list txt">ADMISSION PPROVAL</div>
-          <div id="w-node-dac78aba-dc18-baff-c93a-d9f8e830f843-f837a0a8" class="content-table txt">claim number</div>
-          <div id="w-node-d458abca-d320-70a0-449f-22adf92a62ef-f837a0a8" class="content-table txt"> </div>
-          <div id="w-node-_45627ae5-86a5-5172-3e8e-92a23658f60b-f837a0a8" class="content-table txt">policy holder name</div>
-          <div id="w-node-_5cc09a85-7064-5760-d47c-4ea8ac3bdd85-f837a0a8" class="content-table txt">{{ member.scheme}}</div>
-          <div id="w-node-_07f3d801-67de-47af-18eb-cd7dde69f08f-f837a0a8" class="content-table txt">claimant name</div>
-          <div id="w-node-_654d0978-ad80-c3fe-2b50-03f944384808-f837a0a8" class="content-table txt">{{ member.name }}</div>
-          <div id="w-node-_93772394-06a1-c16d-edab-e3070e1e070c-f837a0a8" class="content-table txt">membership number</div>
-          <div id="w-node-_4ca56909-64a1-edb0-e244-71053e8f7fdc-f837a0a8" class="content-table txt">{{ member.membership_number }}</div>
-          <div id="w-node-_387842f8-baa0-23cc-5182-cdd33f12d029-f837a0a8" class="content-table txt">admission day</div>
-          <div id="admission_date" class="content-table txt">{admission date}</div>
-          <div id="w-node-af4811d9-c350-887b-673f-29a851cc9173-f837a0a8" class="content-table txt">approval date</div>
-          <div id="w-node-_5f2cabb3-9ac3-ad33-8e4c-fbbf2264a7d6-f837a0a8" class="content-table txt">{{ current_date }}</div>
-          <div id="w-node-_89f42771-fe71-3be3-2fe1-7e9a8e34ae4c-f837a0a8" class="content-table txt">approved amount</div>
-          <div id="approved_amount" class="content-table txt"> approved amount</div>
-        </div>
-        <div id="w-node-_5e0ad675-69c4-d235-72e4-fbbddfc1ca36-f837a0a8" class="div-block-15">
-          <p class="tbl-list txt-2">We undertake to pay for the medical expenses as per the table above for the period of admission which shall be <strong>NET OF NHIF. <br>‍</strong>This approval of treatment covers only the specified conditions, treatments, and/or approved discharge date. <br>Please note the following:<br><br>‍<strong>1.    </strong>The maximum approved amount payable is net of NHIF (the patient should avail NHIF card or pay cash).<br>‍<strong>2.    </strong>Please ensure you give us full disclosure of the condition, medical history and the treatment offered. Kindly provide any additional or new information relating to this condition.<br>‍<strong>3.    </strong>A copy of this letter together with a discharge summary and duly filled claim/preauthorization form should be attached to the detailed invoice for claims processing.<br>‍<strong>4.    </strong>All Preauthorization forms must be signed by both patient and the doctor and sent to company for the claim and payment to be honored. <br>‍<strong>NOTE: <em>This is an initial undertaking and shall be reviewed from time to time and after the final bill is submitted. <br><br>‍</em></strong>Yours Faithfully,<br>{user-name} <br>‍<strong>Care Management.      </strong></p>
-        </div>
-        <div id="w-node-_5e0ad675-69c4-d235-72e4-fbbddfc1ca3b-f837a0a8" class="footer">
-          <div id="w-node-_9fe58499-37fa-59cf-9d30-c5bcbc26b3dd-f837a0a8" class="tbl-list txt">{footer | footer | footer | footer | footer | footer | footer | footer | footer | footer | footer | footer | }</div>
-        </div>
-      </div>
-      <div class="adm-lou">
-        <button href="#" class="button w-button" type="submit" >Complete and download</button>
-      </div>
-    </div>
-  </form>
-  </section>
   <section class="section">
     <div class="header">
       <div class="logo-div">
@@ -78,7 +28,7 @@
       <div id="user-div" class="user-div">
         <a id="user-div" href="../user/user-page.html" class="user-div w-inline-block">
           <div id="User-greating" class="user-greetings">
-            <h4 id="UG-text" class="user-greating-text">Good morning {{user}}</h4>
+            <h4 id="UG-text" class="user-greating-text">{{ greeting }},&nbsp;  {{ user.first_name }}!</h4>
           </div>
           <div id="User-Icon" class="user-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" alt="" class="image"></div>
         </a>
@@ -190,8 +140,7 @@
                 <input type="hidden" id="admission_diagnosis_description" name="admission_diagnosis_description" required>            
               </div>
             </div>
-            <button class="button w-button" type="submit">Admit Member</button>
-          <a id="w-node-ac65f898-6ea6-e77d-afb1-c14610c4cbc7-f837a0a8" data-w-id="ac65f898-6ea6-e77d-afb1-c14610c4cbc7" href="#" class="button w-button">Admit member</a>
+          <button type="submit" id="w-node-ac65f898-6ea6-e77d-afb1-c14610c4cbc7-f837a0a8" data-w-id="ac65f898-6ea6-e77d-afb1-c14610c4cbc7" class="button w-button">Admit member</button>
           <a id="w-node-e01aebf4-9aed-2c1b-c3b5-1c110ac2482b-f837a0a8" href="#" class="button danger w-button">Delete</a>
         </div>
     </form>
@@ -296,7 +245,7 @@
   document.getElementById("admission-form").addEventListener("submit", function() {
       setTimeout(function() {
           window.location.href = "{% url 'current_admissions' %}";
-      }, 2000); 
+      }, 1000); 
   });
 
 
@@ -313,31 +262,6 @@
       $('#service_provider').select2({
       placeholder: 'Select a provider',
       allowClear: true
-  });
-
-  document.addEventListener('DOMContentLoaded', function() {
-    const admissionDateInput = document.getElementById('admission_date');
-    const initial_LOU_input = document.getElementById('lou_amount');
-    const coverdropdown = document.getElementById('cover_type_dropdown');
-    const approvalDiv = document.getElementById('approved_amount');
-    // Corrected the typo here
-    const admissionDay = document.getElementById('admission_date'); 
-
-    function updateLOU() {
-        const admissionDate = admissionDateInput.value;
-        const louAmount = initial_LOU_input.value;
-        const selectedCover = coverdropdown.options[coverdropdown.selectedIndex]?.text || "No cover selected";
-        
-        // Use style: 'decimal' to format the amount and prepend 'KSh.'
-        approvalDiv.textContent = `${louAmount ? 'KSh. ' + parseFloat(louAmount).toLocaleString('en-KE', { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'KSh. 0.00'} from ${selectedCover} benefits.`;
-
-        // Corrected the variable assignment
-        admissionDay.value = admissionDate; // Assuming you want to update the input value
-    }
-
-    admissionDateInput.addEventListener('change', updateLOU);
-    initial_LOU_input.addEventListener('change', updateLOU);
-    coverdropdown.addEventListener('change', updateLOU);
   });
 });
 </script>
