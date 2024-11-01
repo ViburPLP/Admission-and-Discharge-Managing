@@ -217,6 +217,7 @@ def discharging_member_detail(request, pk): #page displaying details of the memb
         'member': member,
         'admission_details': admission_details,
         'days_since_admission': days_since_admission,
+        'current_date': timezone.now().date(),
         } #context variables
 
     return render(request, 'template/admissions/discharge-page.html', context)

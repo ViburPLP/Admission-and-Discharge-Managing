@@ -722,6 +722,7 @@ a.w--current {
   width: 100%;
   border-collapse: collapse;
 }
+
 th {
   background-color: #ffffff;
   text-align: left;
@@ -766,6 +767,57 @@ tr.clickable-row:hover {
   background-color: #f0f0f0;
   cursor: pointer;
 }
+
+.table-updates {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-updates th {
+  background-color: #ffffff;
+  text-align: left;
+  padding: 15px; /* Adjusted padding for updates version */
+  border-bottom: 1px solid #000;
+}
+
+.table-updates th:nth-child(1),
+.table-updates td:nth-child(1) {
+  width: 0.5fr;
+}
+
+.table-updates th:nth-child(2),
+.table-updates td:nth-child(2) {
+  width: 0.5fr;
+}
+
+.table-updates th:nth-child(3),
+.table-updates td:nth-child(3) {
+  width: 0.5fr;
+}
+
+.table-updates th:nth-child(4),
+.table-updates td:nth-child(4) {
+  width: 1fr;
+}
+
+.table-updates th:nth-child(5),
+.table-updates td:nth-child(5) {
+  width: 0.5fr;
+}
+
+.table-updates td {
+  padding: 15px; 
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+  font-size: small;
+}
+
+.table-updates tr.clickable-row:hover {
+  background-color: #e8f0fe;
+  cursor: pointer;
+}
+
 
 .table-header {
   grid-column-gap: 16px;
@@ -1044,6 +1096,14 @@ tr.clickable-row:hover {
   display: flex;
 }
 
+.adm-details-field::placeholder {
+  color: white;
+}
+
+.adm-details-field:hover::placeholder {
+  color: var(--primary);
+}
+
 .adm-details-field.select {
   background-color: var(--primary-2);
   color: #fff;
@@ -1062,6 +1122,10 @@ tr.clickable-row:hover {
   overflow: auto;
 }
 
+.adm-details-field.fixed {
+  background-color: var(--default);
+  color: #fff;
+}
 
 .dx {
   background-color: var(--back);
@@ -1094,6 +1158,13 @@ tr.clickable-row:hover {
   object-fit: fill;
   overflow: visible;
 }
+
+.manager-field {
+  border: none;
+  font-style: italic;
+  font-size: 12px;
+}
+
 
 .dropdown-toggle-3 {
   justify-content: flex-start;
@@ -1150,9 +1221,30 @@ tr.clickable-row:hover {
 
 .progress-notes {
   border: 1px solid #000;
+  padding: 10px 10px;
+  font-size: 12px;
   border-radius: 5px;
   min-height: 5.5rem;
 }
+
+
+.progress-notes-container {
+  width: 100%; 
+  max-width: 600px;
+}
+
+
+.progress-notes:focus {
+  border-color: var(--primary-1); 
+  outline: none; 
+  box-shadow: 0 0 5px var(--primary-1);
+}
+
+.progress-notes::placeholder {
+  color: #888; 
+  font-style: italic; 
+}
+
 
 .tabs {
   flex-flow: column;
@@ -1715,7 +1807,7 @@ tr.clickable-row:hover {
 }
 
 .list-item {
-  font-weight: 600;
+  font-weight: 300;
 }
 
 .tabs-menu-2 {
@@ -2309,6 +2401,7 @@ tr.clickable-row:hover {
   .adm-details-field.select {
     background-color: var(--primary-2);
   }
+
 
   .dropdown-toggle-3 {
     display: inline-flex;

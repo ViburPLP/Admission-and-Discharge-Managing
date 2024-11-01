@@ -162,7 +162,7 @@ class Daily_update(models.Model):
     admission = models.ForeignKey('Admission_details', on_delete=models.CASCADE, related_name='updates')
     date = models.DateTimeField(default=timezone.now)
     progress_notes = models.TextField()
-    interim_bill = models.DecimalField(max_digits=10, decimal_places=2)
+    interim_bill = models.DecimalField(max_digits=100, decimal_places=2)
     care_manager = models.CharField(max_length=100, null=True)
 
     def __str__(self):
