@@ -259,7 +259,7 @@ def discharge_member(request, pk):
                 discharge_date=request.POST.get('discharge_date'),
                 final_approved_amount=request.POST.get('final_approved_amount', ''),
                 discharge_notes=request.POST.get('discharge_notes', ''),
-                discharged_by=request.POST.get('discharged_by', f"{request.user.first_name} {request.user.last_name}" )
+                discharged_by=f"{request.user.first_name} {request.user.last_name}"
             )
             
             discharge_details.save()
@@ -277,7 +277,7 @@ def discharge_member(request, pk):
                 'current_date': timezone.now().date(),
             }
 
-            html_string = render_to_string('currently_admitted/discharge_summary.html', context)
+            html_string = render_to_string('template/admissions/discharge_lou.html', context)
             pdf_io = io.BytesIO()
             HTML(string=html_string).write_pdf(target=pdf_io)
             pdf_io.seek(0)
@@ -362,7 +362,7 @@ def discharged_members(request):
         'order': order,
     }
 
-    return render(request, 'discharged/discharged_members.html', context)
+    return render(request, 'template/admissions/discharged.html', context)
 
 
 @login_required
@@ -383,7 +383,7 @@ def admission_history(request, discharge_id):
         'previous_admissions': previous_admissions,  # All entries with the same name
     }
     
-    return render(request, 'discharged/admission_history.html', context)
+    return render(request, 'template/admissions/discharge-history-page.html', context)
 
  #**************************************************************************************************************************************************
 @login_required

@@ -83,16 +83,23 @@
       </div>
       <div class="search-and-filter-div">
         <div class="form-block w-form">
-          <form method="get" class="form" action="">
-            <input class="search-bar w-input" type="text" name="q" value="{{ query|default_if_none:'' }}" placeholder="Search...">
-            <select id="order" name="order" class="search-bar w-select">
-              <option value="-added_at" {% if order == '-added_at' %}selected{% endif %}> Date (recent first)</option>
-              <option value="added_at" {% if order == 'added_at' %}selected{% endif %}> Date (oldest first)</option>
-          </select>
-            <input type="date" name="date_from" value="{{ date_from|default_if_none:'' }}" placeholder="Date from..." class="search-bar w-select">
-            <input type="date" name="date_to" value="{{ date_to|default_if_none:'' }}" placeholder="Date to..." class="search-bar w-select">            
-            <button type="submit" data-wait="Please wait..." class="button w-button" value="  search  ">Search</button>
-          </form>
+          <form method="GET" class="form" action="">
+            <input type="text" name="q" value="{{ query|default_if_none:'' }}" class="search-bar w-input" placeholder="Search...">
+            <input type="text" name="payer" value="{{ payer_filter|default_if_none:'' }}" class="search-bar w-input" placeholder="Payer...">
+            <input type="text" name="scheme" value="{{ scheme_filter|default_if_none:'' }}" class="search-bar w-input" placeholder="Scheme...">
+            <input type="date" name="date_from" value="{{ date_from|default_if_none:'' }}" class="search-bar w-input" placeholder="Date from...">
+            <input type="date" name="date_to" value="{{ date_to|default_if_none:'' }}" class="search-bar w-input" placeholder="Date to...">
+            <select class="search-bar w-input" name="order">
+                <option value=" " disabled>Select ordering</option>
+                <option value="-discharge_date" {% if order == '-discharge_date' %}selected{% endif %}>Discharge Date (recent first)</option>
+                <option value="discharge_date" {% if order == 'discharge_date' %}selected{% endif %}>Discharge Date (oldest first)</option>
+                <option value="membership_number" {% if order == 'membership_number' %}selected{% endif %}>Membership Number</option>
+                <option value="name" {% if order == 'name' %}selected{% endif %}>Name</option>
+                <option value="payer" {% if order == 'payer' %}selected{% endif %}>Payer</option>
+                <option value="scheme" {% if order == 'scheme' %}selected{% endif %}>Scheme</option>
+            </select>
+            <button ype="submit" data-wait="Please wait..." class="button w-button">Search</button>
+        </form>
         </div>
       </div>
       <div class="adm-state-div">
@@ -100,10 +107,10 @@
           <a id="w-node-e7980940-f857-b22c-a55e-a8f2dea544ce-007fbd25" href="{% url 'pending_admissions' %}" class="pending-pg w-inline-block">
             <h4 id="w-node-d72d6472-e96d-9a51-a6ed-d62bce7a43dc-007fbd25" class="adm-state-txt active">pending</h4>
           </a>
-          <a id="w-node-_8db4b94a-7bcb-25c4-fc03-f8a6ef19a61f-007fbd25" href="../admissions/admitted.html" class="admitted-page w-inline-block">
-            <h4 id="w-node-_08facc1e-d21a-216b-ee13-73c81f625103-007fbd25" class="adm-state-txt">admitted</h4>
+          <a id="w-node-_8db4b94a-7bcb-25c4-fc03-f8a6ef19a61f-007fbd25" href="#" class="admitted-page w-inline-block">
+            <h4 id="w-node-_08facc1e-d21a-216b-ee13-73c81f625103-007fbd25" class="adm-state-txt " >admitted</h4>
           </a>
-          <a id="w-node-_7c5205a3-ee4f-41ea-6c9a-29fb4aca47de-007fbd25" href="../admissions/discharged.html" class="discharged-page w-inline-block">
+          <a id="w-node-_7c5205a3-ee4f-41ea-6c9a-29fb4aca47de-007fbd25" href="{% url 'discharged_members' %}" class="discharged-page w-inline-block">
             <h4 id="w-node-_8ff9eb49-3ba3-a562-2ac3-bc8179a91576-007fbd25" class="adm-state-txt y">Discharged</h4>
           </a>
         </div>

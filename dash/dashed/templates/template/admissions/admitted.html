@@ -37,10 +37,10 @@
   </section>
   <section class="divider-sect"></section>
   <section class="content-sect-1-0">
-    <div id="w-node-_656730b6-7fe7-8434-e232-d1acd4e24abd-65651e0d" class="side-bar">
+    <div id="w-node-fdfe0d76-af7f-df40-bc06-38716c850a09-f837a0a8" class="side-bar">
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item active">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">admission</h3>
           </div>
@@ -48,7 +48,7 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">Schemes</h3>
           </div>
@@ -56,7 +56,7 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">Providers</h3>
           </div>
@@ -64,7 +64,7 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">Reporting</h3>
           </div>
@@ -72,7 +72,7 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">packages</h3>
           </div>
@@ -85,16 +85,23 @@
       </div>
       <div class="search-and-filter-div">
         <div class="form-block w-form">
-          <form method="get" class="form" action="">
-            <input class="search-bar w-input" type="text" name="q" value="{{ query|default_if_none:'' }}" placeholder="Search...">
-            <select id="order" name="order" class="search-bar w-select">
-              <option value="-added_at" {% if order == '-added_at' %}selected{% endif %}> Date (recent first)</option>
-              <option value="added_at" {% if order == 'added_at' %}selected{% endif %}> Date (oldest first)</option>
-          </select>
-            <input type="date" name="date_from" value="{{ date_from|default_if_none:'' }}" placeholder="Date from..." class="search-bar w-select">
-            <input type="date" name="date_to" value="{{ date_to|default_if_none:'' }}" placeholder="Date to..." class="search-bar w-select">            
-            <button type="submit" data-wait="Please wait..." class="button w-button">Search</button>
-          </form>
+          <form method="GET" class="form" action="">
+            <input type="text" name="q" value="{{ query|default_if_none:'' }}" class="search-bar w-input" placeholder="Search...">
+            <input type="text" name="payer" value="{{ payer_filter|default_if_none:'' }}" class="search-bar w-input" placeholder="Payer...">
+            <input type="text" name="scheme" value="{{ scheme_filter|default_if_none:'' }}" class="search-bar w-input" placeholder="Scheme...">
+            <input type="date" name="date_from" value="{{ date_from|default_if_none:'' }}" class="search-bar w-input" placeholder="Date from...">
+            <input type="date" name="date_to" value="{{ date_to|default_if_none:'' }}" class="search-bar w-input" placeholder="Date to...">
+            <select class="search-bar w-input" name="order">
+                <option value=" " disabled>Select ordering</option>
+                <option value="-discharge_date" {% if order == '-discharge_date' %}selected{% endif %}>Discharge Date (recent first)</option>
+                <option value="discharge_date" {% if order == 'discharge_date' %}selected{% endif %}>Discharge Date (oldest first)</option>
+                <option value="membership_number" {% if order == 'membership_number' %}selected{% endif %}>Membership Number</option>
+                <option value="name" {% if order == 'name' %}selected{% endif %}>Name</option>
+                <option value="payer" {% if order == 'payer' %}selected{% endif %}>Payer</option>
+                <option value="scheme" {% if order == 'scheme' %}selected{% endif %}>Scheme</option>
+            </select>
+            <button ype="submit" data-wait="Please wait..." class="button w-button">Search</button>
+        </form>
         </div>
       </div>
       <div class="adm-state-div">

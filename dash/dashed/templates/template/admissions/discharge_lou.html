@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Discharge Summary</title>
+    <style>
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, sans-serif;
+            line-height: 1.6;
+        }
+      
+        .header {
+            padding: 0px;
+      		margin-top: 0px;
+            text-align: left;
+        }
+      
+        .date {
+              text-align: left;
+            font-size: 13px;
+          }
+
+        .handler {
+              text-align: right;
+      		  font-size: 13px;
+          }
+
+        .Provider {
+              text-align: left;
+            	font-size: 13px;
+          }
+      
+        .header h1 {
+            margin: 0;
+      		font-size: 16px;
+        }
+      
+        .content {
+      		font-size: 12px;
+        }
+        .section {
+            margin-bottom: 5px;
+            padding: 0px 0 10px  0px;
+        }
+        .section h3 {
+            color: #333;
+      		font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0px;
+        }
+        table, th, td {
+            border: 1.5px solid #333;
+            padding: 5px;
+            padding-left: 10px;
+            font-size: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .footer {
+      width: 100%;
+      background-color: rgb(4, 181, 4);
+      color: white;
+      text-align: center;
+      margin-top: 5px;
+      position: fixed;
+      bottom: 0;
+    }
+    </style>
+</head>
+<body>
+  <div>
+    <div class="header">
+        <h1>Discharge Letter Of Undertaking (LOU)</h1>
+       </div>
+   <div class="date">
+          <h3>Date: {{ current_date }}</h3>
+       </div>
+   <div class="handler">
+        <h3>Handler by name</h3>
+        <p>Handler address: many monkeys drive</p>
+       <p>Handler address:P. O. Box 123 </p>
+       <p>Handler address: Other relant details</p>
+    </div>
+    <div class="Provider">
+          <p>Dear {{ admission_details.Provider.name }},</p>
+         
+      </div>
+    <div class="content">
+      
+       <!-- Member details -->
+        <div class="section">
+            <h3>Admission approval for {{ member.name }}</h3>
+            <table>
+    
+    <tbody>
+       <tr>
+            <td>Payer</td>
+            <td><strong>{{ member.payer }}</strong></td>
+        </tr>
+        <tr>
+            <td>Scheme</td>
+            <td>{{ member.scheme }}</td>
+        </tr>
+        <tr>
+            <td>Member name</td>
+            <td> {{ member.name }}</td>
+        </tr>
+        <tr>
+            <td>Member number</td>
+            <td>{{ member.membership_number }}</td>
+        </tr>
+        <tr>
+            <td>Date of admission</td>
+            <td>{{ admission_details.admission_date }}</td>
+        </tr>
+           <tr>
+            <td>Approved amount</td>
+            <td> <strong>Ksh {{ discharge_details.final_approved_amount }}.00 from {{ admission_details.cover_used }} benefit</strong> </td> 
+        </tr>
+    </tbody>
+</table>
+
+        </div>
+        <!-- Admission Details Section -->
+        <div class="section">
+            <p>
+                We undertake to pay for the medical expenses as per the table above for the period of admission which shall be NET OF NHIF. <br>
+This approval of treatment covers only the specified conditions, treatments, and/or approved discharge date. <br> <br>
+<em>Please note the following:</em> <br><ol>
+  <li>The maximum approved amount payable is net of NHIF (the patient should avail NHIF card or pay cash).
+  </li>
+  <li>Please ensure you give us full disclosure of the condition, medical history and the treatment offered. Kindly provide any additional or new information relating to this condition.
+  </li>
+  <li>A copy of this letter together with a discharge summary and duly filled claim/preauthorization form should be attached to the detailed invoice for claims processing.
+  </li>
+  <li>All Preauthorization forms must be signed by both patient and the doctor and sent to company for the claim and payment to be honored. 
+  </li>
+</ol>
+<em>NOTE: This is an initial undertaking and shall be reviewed from time to time and after the final bill is submitted.
+</em>            
+</p>
+        </div>
+
+        <!-- Discharge Details Section -->
+        <div class="section">
+          <p>
+            Kind regards<br>
+            <strong>{{ admission_details.admited_by }}<br></strong>
+            Care Manager
+            </p>
+        </div>        
+    </div>
+    <footer class="footer">
+      <p>© 2024 Handler by name. All rights reserved.</p>
+    </footer>
+</body>
+</html>

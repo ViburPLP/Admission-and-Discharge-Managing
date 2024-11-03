@@ -2,7 +2,7 @@
 <html data-wf-page="67120015fbc396e5f837a0a8" data-wf-site="67101f23c4dd72e625d98d34" lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Admission page</title>
+  <title>Admission {{ member.name }}</title>
   {% load static %}
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
@@ -131,9 +131,9 @@
           </select>
           <input type="date" id="admission_date" name="admission_date" required class="adm-details-field select">
           <input type="text" id="initial_cover_balance" name="initial_cover_balance" placeholder=" ksh 0.00" class="adm-details-field" readonly>        
-          <input type="number" id="requested_amount" placeholder="Ksh. 0.00" name="requested_amount" class="adm-details-field">     
-          <input type="number" id="lou_amount" placeholder="Ksh. 0.00" name="lou_amount" class="adm-details-field" required>
-          <input type="text" id="w-node-af3f604f-34c8-e394-da8f-20469a1cbb0d-f837a0a8" name="admission_diagnosis" onkeypress="handleKeyPress(event)" class="adm-details-field" placeholder=" Add Diagnosis...">
+          <input type="number" id="requested_amount" placeholder="Amount requested" name="requested_amount" class="adm-details-field select">     
+          <input type="number" id="lou_amount" placeholder="Initial LOU" name="lou_amount" class="adm-details-field select" required>
+          <input type="text" id="w-node-af3f604f-34c8-e394-da8f-20469a1cbb0d-f837a0a8" name="admission_diagnosis" onkeypress="handleKeyPress(event)" class="adm-details-field select" placeholder=" Add Diagnosis...">
             <div id="w-node-e76ee873-a4a4-51a9-c961-0b617ee76726-f837a0a8" class="adm-details-field list">
               <div id="diagnosis_list" class="dx"> 
                 <ol id="w-node-af3f604f-34c8-e394-da8f-20469a1cbb0d-f837a0a8" role="list" class="dx"></ol>

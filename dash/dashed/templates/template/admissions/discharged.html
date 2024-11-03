@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8">
   <title>Discharged</title>
+  {% load static %}
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
-  <link href="../css/normalize.css" rel="stylesheet" type="text/css">
-  <link href="../css/webflow.css" rel="stylesheet" type="text/css">
-  <link href="../css/dash-c5ca12.webflow.css" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/normalize.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/webflow.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/dash-c5ca12.webflow.css' %}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
-  <script type="text/javascript">WebFont.load({  google: {    families: ["Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic"]  }});</script>
-  <script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
-  <link href="../images/favicon.ico" rel="shortcut icon" type="image/x-icon">
-  <link href="../images/webclip.png" rel="apple-touch-icon">
+  <script type="{% static 'text/javascript' %}">WebFont.load({  google: {    families: ["Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic"]  }});</script>
+  <script type="{% static 'text/javascript' %}">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
+  <link href="{% static 'images/favicon.ico' %}" rel="shortcut icon" type="image/x-icon">
+  <link href="{% static 'images/webclip.png' %}" rel="apple-touch-icon">
 </head>
 <body class="body">
   <section class="section">
@@ -27,7 +28,7 @@
       <div id="user-div" class="user-div">
         <a id="user-div" href="../user/user-page.html" class="user-div w-inline-block">
           <div id="User-greating" class="user-greetings">
-            <h4 id="UG-text" class="user-greating-text">Good morning {FIRST_NAME}</h4>
+            <h4 id="UG-text" class="user-greating-text">{{ greeting }},&nbsp;  {{ user.first_name }}!</h4>
           </div>
           <div id="User-Icon" class="user-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" alt="" class="image"></div>
         </a>
@@ -36,10 +37,10 @@
   </section>
   <section class="divider-sect"></section>
   <section class="content-sect-1-0">
-    <div id="w-node-_656730b6-7fe7-8434-e232-d1acd4e24abd-b8287cbb" class="side-bar">
+    <div id="w-node-fdfe0d76-af7f-df40-bc06-38716c850a09-f837a0a8" class="side-bar">
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item active">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">admission</h3>
           </div>
@@ -47,7 +48,7 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">Schemes</h3>
           </div>
@@ -55,7 +56,7 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">Providers</h3>
           </div>
@@ -63,7 +64,7 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">Reporting</h3>
           </div>
@@ -71,7 +72,7 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">packages</h3>
           </div>
@@ -83,207 +84,67 @@
         <h2 class="page-title">Discharged members</h2>
       </div>
       <div class="search-and-filter-div">
-        <div class="div-block-4">
-          <div class="text-block">Search... . . . . . . . . . .. . . . . . . . . . . . . . . ...</div>
-        </div>
-        <div data-hover="false" data-delay="0" class="w-dropdown">
-          <div class="dropdown-toggle w-dropdown-toggle">
-            <div class="w-icon-dropdown-toggle"></div>
-            <div>Select Program</div>
-          </div>
-          <nav class="w-dropdown-list">
-            <a href="#" class="w-dropdown-link">Link 1</a>
-            <a href="#" class="w-dropdown-link">Link 2</a>
-            <a href="#" class="w-dropdown-link">Link 3</a>
-          </nav>
-        </div>
-        <div data-hover="false" data-delay="0" class="w-dropdown">
-          <div class="w-dropdown-toggle">
-            <div class="w-icon-dropdown-toggle"></div>
-            <div>Dates    </div>
-          </div>
-          <nav class="w-dropdown-list">
-            <a href="#" class="w-dropdown-link">Link 1</a>
-            <a href="#" class="w-dropdown-link">Link 2</a>
-            <a href="#" class="w-dropdown-link">Link 3</a>
-          </nav>
+        <div class="form-block w-form">
+            <form method="GET" class="form" action="">
+              <input type="text" name="q" value="{{ query|default_if_none:'' }}" class="search-bar w-input" placeholder="Search...">
+              <input type="text" name="payer" value="{{ payer_filter|default_if_none:'' }}" class="search-bar w-input" placeholder="Payer...">
+              <input type="text" name="scheme" value="{{ scheme_filter|default_if_none:'' }}" class="search-bar w-input" placeholder="Scheme...">
+              <input type="date" name="date_from" value="{{ date_from|default_if_none:'' }}" class="search-bar w-input" placeholder="Date from...">
+              <input type="date" name="date_to" value="{{ date_to|default_if_none:'' }}" class="search-bar w-input" placeholder="Date to...">
+              <select class="search-bar w-input" name="order">
+                  <option value=" " disabled>Select ordering</option>
+                  <option value="-discharge_date" {% if order == '-discharge_date' %}selected{% endif %}>Discharge Date (recent first)</option>
+                  <option value="discharge_date" {% if order == 'discharge_date' %}selected{% endif %}>Discharge Date (oldest first)</option>
+                  <option value="membership_number" {% if order == 'membership_number' %}selected{% endif %}>Membership Number</option>
+                  <option value="name" {% if order == 'name' %}selected{% endif %}>Name</option>
+                  <option value="payer" {% if order == 'payer' %}selected{% endif %}>Payer</option>
+                  <option value="scheme" {% if order == 'scheme' %}selected{% endif %}>Scheme</option>
+              </select>
+              <button ype="submit" data-wait="Please wait..." class="button w-button">Search</button>
+          </form>
         </div>
       </div>
       <div class="adm-state-div">
-        <div class="adm-state-div top">
-          <a id="w-node-c7c53061-bddf-a813-f6b4-a6f9c3c3757a-b8287cbb" href="../index.html" class="pending-pg w-inline-block">
-            <h4 id="w-node-d72d6472-e96d-9a51-a6ed-d62bce7a43dc-b8287cbb" class="adm-state-txt y">pending</h4>
-          </a>
-          <a id="w-node-_125dd63f-6ff6-d949-b116-6efbfc7590b6-b8287cbb" href="../admissions/admitted.html" class="admitted-page w-inline-block">
-            <h4 id="w-node-_08facc1e-d21a-216b-ee13-73c81f625103-b8287cbb" class="adm-state-txt">admitted</h4>
-          </a>
-          <a id="w-node-_6f8809bc-4b25-baed-3106-4428e92eb88a-b8287cbb" href="../admissions/discharged.html" aria-current="page" class="discharged-page w-inline-block w--current">
-            <h4 id="w-node-_8ff9eb49-3ba3-a562-2ac3-bc8179a91576-b8287cbb" class="adm-state-txt active">Discharged</h4>
-          </a>
-        </div>
+        <div class="adm-state-div">
+          <div class="adm-state-div top">
+            <a id="w-node-e7980940-f857-b22c-a55e-a8f2dea544ce-007fbd25" href="{% url 'pending_admissions' %}" class="pending-pg w-inline-block">
+              <h4 id="w-node-d72d6472-e96d-9a51-a6ed-d62bce7a43dc-007fbd25" class="adm-state-txt y">pending</h4>
+            </a>
+            <a id="w-node-_8db4b94a-7bcb-25c4-fc03-f8a6ef19a61f-007fbd25" href="{% url 'current_admissions' %}" class="admitted-page w-inline-block">
+              <h4 id="w-node-_08facc1e-d21a-216b-ee13-73c81f625103-007fbd25" class="adm-state-txt" >admitted</h4>
+            </a>
+            <a id="w-node-_7c5205a3-ee4f-41ea-6c9a-29fb4aca47de-007fbd25" href="{% url 'discharged_members' %}" class="discharged-page w-inline-block">
+              <h4 id="w-node-_8ff9eb49-3ba3-a562-2ac3-bc8179a91576-007fbd25" class="adm-state-txt active">Discharged</h4>
+            </a>
+          </div>
         <div class="adm-state-div table-div">
           <div class="table-header">
-            <h5 id="w-node-_270ded5f-1caa-01ff-ea0f-add2b4e1304e-b8287cbb" class="tbl-heading">Date</h5>
-            <h5 id="w-node-_8c0adc3f-6018-6a9e-856a-5d8785782986-b8287cbb" class="tbl-heading">Beneficiary</h5>
-            <h5 id="w-node-_97005131-47fd-5f64-4d75-3057e4d0a637-b8287cbb" class="tbl-heading">Membership No. </h5>
-            <h5 id="w-node-_668aff85-27f0-6aaa-5acf-c5529e4de7d5-b8287cbb" class="tbl-heading">Scheme/Program</h5>
-            <h5 id="w-node-c18702f4-f2c4-0c71-c090-a0c88c383d38-b8287cbb" class="tbl-heading">Insurer</h5>
-          </div>
-          <div class="table-contents">
-            <div class="table-list">
-              <h5 id="w-node-d40cfb7d-f9a3-aabb-0b01-e44d8706e723-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-d40cfb7d-f9a3-aabb-0b01-e44d8706e725-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-d40cfb7d-f9a3-aabb-0b01-e44d8706e727-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-d40cfb7d-f9a3-aabb-0b01-e44d8706e729-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-d40cfb7d-f9a3-aabb-0b01-e44d8706e72b-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-f5669ba6-e72d-df97-6090-dd0a51e912c6-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-f5669ba6-e72d-df97-6090-dd0a51e912c8-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-f5669ba6-e72d-df97-6090-dd0a51e912ca-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-f5669ba6-e72d-df97-6090-dd0a51e912cc-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-f5669ba6-e72d-df97-6090-dd0a51e912ce-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-dd73ae3c-05bf-0382-6a38-5a1a8ecdf0f7-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-dd73ae3c-05bf-0382-6a38-5a1a8ecdf0f9-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-dd73ae3c-05bf-0382-6a38-5a1a8ecdf0fb-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-dd73ae3c-05bf-0382-6a38-5a1a8ecdf0fd-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-dd73ae3c-05bf-0382-6a38-5a1a8ecdf0ff-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_96073eea-6eb9-f9e3-00a1-f642900566f7-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_96073eea-6eb9-f9e3-00a1-f642900566f9-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_96073eea-6eb9-f9e3-00a1-f642900566fb-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_96073eea-6eb9-f9e3-00a1-f642900566fd-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_96073eea-6eb9-f9e3-00a1-f642900566ff-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-ae50ba8a-e38f-e018-1c1f-5f713270f042-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-ae50ba8a-e38f-e018-1c1f-5f713270f044-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-ae50ba8a-e38f-e018-1c1f-5f713270f046-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-ae50ba8a-e38f-e018-1c1f-5f713270f048-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-ae50ba8a-e38f-e018-1c1f-5f713270f04a-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_439e3c3e-2a29-0a9f-5458-d716d9af08d6-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_439e3c3e-2a29-0a9f-5458-d716d9af08d8-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_439e3c3e-2a29-0a9f-5458-d716d9af08da-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_439e3c3e-2a29-0a9f-5458-d716d9af08dc-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_439e3c3e-2a29-0a9f-5458-d716d9af08de-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_0d6ece33-bcd9-ef98-7cdb-36313640c1f9-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_0d6ece33-bcd9-ef98-7cdb-36313640c1fb-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_0d6ece33-bcd9-ef98-7cdb-36313640c1fd-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_0d6ece33-bcd9-ef98-7cdb-36313640c1ff-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_0d6ece33-bcd9-ef98-7cdb-36313640c201-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_3de0001f-ef6e-5df8-b4cb-303e4226ca19-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_3de0001f-ef6e-5df8-b4cb-303e4226ca1b-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_3de0001f-ef6e-5df8-b4cb-303e4226ca1d-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_3de0001f-ef6e-5df8-b4cb-303e4226ca1f-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_3de0001f-ef6e-5df8-b4cb-303e4226ca21-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-c9b5bce5-a382-4dd0-251b-ec97bea2bb5f-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-c9b5bce5-a382-4dd0-251b-ec97bea2bb61-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-c9b5bce5-a382-4dd0-251b-ec97bea2bb63-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-c9b5bce5-a382-4dd0-251b-ec97bea2bb65-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-c9b5bce5-a382-4dd0-251b-ec97bea2bb67-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_1b028f66-5741-848c-1568-ac5f5fd754bf-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_1b028f66-5741-848c-1568-ac5f5fd754c1-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_1b028f66-5741-848c-1568-ac5f5fd754c3-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_1b028f66-5741-848c-1568-ac5f5fd754c5-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_1b028f66-5741-848c-1568-ac5f5fd754c7-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-cc99a601-230f-390f-d65f-5711dd970f32-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-cc99a601-230f-390f-d65f-5711dd970f34-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-cc99a601-230f-390f-d65f-5711dd970f36-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-cc99a601-230f-390f-d65f-5711dd970f38-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-cc99a601-230f-390f-d65f-5711dd970f3a-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-f604b426-404a-6317-227e-d388323a1cfb-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-f604b426-404a-6317-227e-d388323a1cfd-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-f604b426-404a-6317-227e-d388323a1cff-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-f604b426-404a-6317-227e-d388323a1d01-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-f604b426-404a-6317-227e-d388323a1d03-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_6b605896-c19e-c3f5-7511-069bba7e54a5-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_6b605896-c19e-c3f5-7511-069bba7e54a7-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_6b605896-c19e-c3f5-7511-069bba7e54a9-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_6b605896-c19e-c3f5-7511-069bba7e54ab-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_6b605896-c19e-c3f5-7511-069bba7e54ad-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-a3b00775-e377-5cff-5c03-71a169355d33-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-a3b00775-e377-5cff-5c03-71a169355d35-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-a3b00775-e377-5cff-5c03-71a169355d37-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-a3b00775-e377-5cff-5c03-71a169355d39-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-a3b00775-e377-5cff-5c03-71a169355d3b-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-f2c80a7c-5373-df5c-39da-e491f5f8e1f0-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-f2c80a7c-5373-df5c-39da-e491f5f8e1f2-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-f2c80a7c-5373-df5c-39da-e491f5f8e1f4-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-f2c80a7c-5373-df5c-39da-e491f5f8e1f6-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-f2c80a7c-5373-df5c-39da-e491f5f8e1f8-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-f90df804-fd80-aa84-5b51-e26062b44018-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-f90df804-fd80-aa84-5b51-e26062b4401a-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-f90df804-fd80-aa84-5b51-e26062b4401c-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-f90df804-fd80-aa84-5b51-e26062b4401e-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-f90df804-fd80-aa84-5b51-e26062b44020-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_58ddaa86-b57f-5024-42c7-d892c1c032f2-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_58ddaa86-b57f-5024-42c7-d892c1c032f4-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_58ddaa86-b57f-5024-42c7-d892c1c032f6-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_58ddaa86-b57f-5024-42c7-d892c1c032f8-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_58ddaa86-b57f-5024-42c7-d892c1c032fa-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_03a5ee66-a542-69df-c5a5-09952f2cc751-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_03a5ee66-a542-69df-c5a5-09952f2cc753-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_03a5ee66-a542-69df-c5a5-09952f2cc755-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_03a5ee66-a542-69df-c5a5-09952f2cc757-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_03a5ee66-a542-69df-c5a5-09952f2cc759-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_19260660-c556-4afd-45ae-9e10318426a1-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_19260660-c556-4afd-45ae-9e10318426a3-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_19260660-c556-4afd-45ae-9e10318426a5-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_19260660-c556-4afd-45ae-9e10318426a7-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_19260660-c556-4afd-45ae-9e10318426a9-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_04548e1e-ce24-5c44-7647-db65c8266ef6-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_04548e1e-ce24-5c44-7647-db65c8266ef8-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_04548e1e-ce24-5c44-7647-db65c8266efa-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_04548e1e-ce24-5c44-7647-db65c8266efc-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_04548e1e-ce24-5c44-7647-db65c8266efe-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_25c52c2b-13a3-5ddb-7720-2ca49e73dddc-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_25c52c2b-13a3-5ddb-7720-2ca49e73ddde-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_25c52c2b-13a3-5ddb-7720-2ca49e73dde0-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_25c52c2b-13a3-5ddb-7720-2ca49e73dde2-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_25c52c2b-13a3-5ddb-7720-2ca49e73dde4-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
-            <div class="table-list">
-              <h5 id="w-node-_932887b8-8b5d-3b9b-3db6-d753915b5364-b8287cbb" class="tbl-list">20 Aug 2024</h5>
-              <h5 id="w-node-_932887b8-8b5d-3b9b-3db6-d753915b5366-b8287cbb" class="tbl-list">John Doe Ghost</h5>
-              <h5 id="w-node-_932887b8-8b5d-3b9b-3db6-d753915b5368-b8287cbb" class="tbl-list">KJD 123 456 789</h5>
-              <h5 id="w-node-_932887b8-8b5d-3b9b-3db6-d753915b536a-b8287cbb" class="tbl-list">Test Scheme/Program one</h5>
-              <h5 id="w-node-_932887b8-8b5d-3b9b-3db6-d753915b536c-b8287cbb" class="tbl-list">Test Insurance payer one</h5>
-            </div>
+            <table class=" table">
+              <thead>
+                  <tr>
+                      <th>Date</th>
+                      <th>Name</th>
+                      <th>Membership Number</th>
+                      <th>Payer</th>
+                      <th>Scheme</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for discharge in discharged_entries %}
+                  <tr class="clickable-row" data-href="{% url 'admission_history' discharge.pk %}">
+                    <td>{{ discharge.discharge_date }}</td>
+                    <td>{{ discharge.name }}</td>
+                    <td>{{ discharge.membership_number }}</td>
+                    <td>{{ discharge.payer }}</td>
+                    <td>{{ discharge.scheme }}</td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                      <td colspan="5" style="text-align:center; padding: 20px;">No discharged members found..</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>          
           </div>
         </div>
       </div>
@@ -291,5 +152,15 @@
   </section>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=67101f23c4dd72e625d98d34" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="../js/webflow.js" type="text/javascript"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.clickable-row');
+        rows.forEach(row => {
+            row.addEventListener('click', function() {
+                window.location = row.dataset.href;
+            });
+        });
+    });
+</script>
 </body>
 </html>
