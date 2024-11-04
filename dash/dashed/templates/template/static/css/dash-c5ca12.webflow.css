@@ -1,10 +1,10 @@
 :root {
-  --tertiary-2: #3b5265;
-  --primary-2: #3b90af;
+  --tertiary-2: #007090;
+  --primary-2: #006989;
   --primary: #9e999c;
-  --back: #f5f0e6;
+  --back: #eaebed;
   --general-tuna-card: #343142;
-  --primary-1: #7cb9e8;
+  --primary-1: #01a7c2;
   --tertiary-1: #9b9fa4;
   --transparent: transparent;
   --aliceblue: var(--light-cyan);
@@ -2252,7 +2252,7 @@ tr.clickable-row:hover {
 }
 
 .landing-card._3 {
-  background-color: var(--tertiary-2);
+  background-color: var(--primary-1);
 }
 
 .landing-card._4 {
@@ -2369,14 +2369,13 @@ tr.clickable-row:hover {
 }
 
 
-.adm-hx {
+
+.adm-hx2 {
   grid-column-gap: 30px;
   grid-row-gap: 30px;
   grid-template: ". . . ."
                  ". . . ."
                  ". . . ."
-                 "Area Area Area Area"
-                 "Area-2 Area-2 Area-2 Area-2"
                  / 1fr 1fr .75fr 1fr;
   grid-auto-columns: 1fr;
   padding: 20px;

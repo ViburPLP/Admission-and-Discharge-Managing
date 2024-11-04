@@ -376,7 +376,7 @@ def admission_history(request, discharge_id):
     previous_admissions = Discharge_details.objects.filter(
         name=discharge_entry.name,
         membership_number=discharge_entry.membership_number
-        )
+        ).order_by('-discharge_date')
 
     context = {
        'discharge_entry': discharge_entry,  # The specific entry being viewed

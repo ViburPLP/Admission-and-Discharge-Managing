@@ -81,7 +81,7 @@
     </div>
     <section class="content-wrapper">
       <div class="content-div-basic">
-        <h2 class="page-title">history of {{ discharge_entry.name }}</h2>
+        <h2 class="page-title">{{ discharge_entry.name }} admission history</h2>
       </div>
       <div class="adm-summary hx">
         <div id="w-node-fdfe0d76-af7f-df40-bc06-38716c850a32-60e898b3" class="ben-details hx">
@@ -100,14 +100,6 @@
           <div id="w-node-cf7f9744-c005-d0da-c33f-a6ca80b5d2bf-60e898b3" class="maj-min">
             <h5 id="w-node-cf7f9744-c005-d0da-c33f-a6ca80b5d2c0-60e898b3" class="major-field">Relationship</h5>
             <div id="w-node-cf7f9744-c005-d0da-c33f-a6ca80b5d2c2-60e898b3" class="minor-field">{{ discharge_entry.relationship }}</div>
-          </div>
-          <div id="w-node-_140d27db-3557-7928-eb4f-f2bea32651b3-60e898b3" class="maj-min">
-            <h5 id="w-node-_140d27db-3557-7928-eb4f-f2bea32651b4-60e898b3" class="major-field">policy validity period</h5>
-            <div id="w-node-_140d27db-3557-7928-eb4f-f2bea32651b6-60e898b3" class="minor-field">{{discharge_entry.validity}}</div>
-          </div>
-          <div id="w-node-_30b4ca85-ab7b-c4c2-a93d-6243679dc030-60e898b3" class="maj-min">
-            <h5 id="w-node-_30b4ca85-ab7b-c4c2-a93d-6243679dc031-60e898b3" class="major-field">policy status</h5>
-            <div id="w-node-_30b4ca85-ab7b-c4c2-a93d-6243679dc033-60e898b3" class="minor-field">{{discharge_entry.status}} <br> <em style="font-size: 0.8em;">during adm.</em></div>
           </div>
         </div>
       </div>
@@ -138,60 +130,32 @@
                     <td>{{ admission.provider }}</td>
                     <td>{{ admission.final_approved_amount }}</td>
                   </tr>
-                  <tr class="hidden-section" style="display: none; background-color: #f5f0e6;">
+                  <tr class="hidden-section" style="display: none; background-color: #eaebed;">
                     <td colspan="6">
-                          <div class="adm-hx">                            
-                            <div id="w-node-c9fe0609-48a9-29d5-03ef-e87ae52aa575-60e898b3" class="maj-min">
-                              <h5 id="w-node-c9fe0609-48a9-29d5-03ef-e87ae52aa576-60e898b3" class="major-field">admission date</h5>
-                              <div id="w-node-c9fe0609-48a9-29d5-03ef-e87ae52aa578-60e898b3" class="minor-field">{date}</div>
-                            </div>
-                            <div id="w-node-aa6d2761-a2a7-81a0-e6a1-14359fb6123f-60e898b3" class="maj-min">
-                              <h5 id="w-node-aa6d2761-a2a7-81a0-e6a1-14359fb61240-60e898b3" class="major-field">Service provider</h5>
-                              <div id="w-node-aa6d2761-a2a7-81a0-e6a1-14359fb61242-60e898b3" class="minor-field">{date}</div>
+                          <div class="adm-hx2">   
+                            <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e08-60e898b3" class="maj-min">
+                              <h5 id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e09-60e898b3" class="major-field">initial balance</h5>
+                              <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e0b-60e898b3" class="minor-field">{{admission.initial_cover_balance}}</div>
                             </div>
                             <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9571-60e898b3" class="maj-min">
                               <h5 id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9572-60e898b3" class="major-field">initial LOU</h5>
-                              <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9574-60e898b3" class="minor-field">{date}</div>
-                            </div>
-                            <div id="w-node-d94607f4-f67f-2bae-851e-b1c92939cc5b-60e898b3" class="maj-min">
-                              <h5 id="w-node-d94607f4-f67f-2bae-851e-b1c92939cc5c-60e898b3" class="major-field">Cover used</h5>
-                              <div id="w-node-d94607f4-f67f-2bae-851e-b1c92939cc5e-60e898b3" class="minor-field">{date}</div>
-                            </div>
-                            <div id="w-node-bf6b9dab-ef94-b91d-a4b7-d75f2e3350b4-60e898b3" class="maj-min">
-                              <h5 id="w-node-bf6b9dab-ef94-b91d-a4b7-d75f2e3350b5-60e898b3" class="major-field">Length of stay (days)</h5>
-                              <div id="w-node-bf6b9dab-ef94-b91d-a4b7-d75f2e3350b7-60e898b3" class="minor-field">{date}</div>
+                              <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9574-60e898b3" class="minor-field">{{admission.lou_issued}}</div>
                             </div>
                             <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149571-60e898b3" class="maj-min">
-                              <h5 id="w-node-e5c344fb-00b1-594e-befd-2f9f60149572-60e898b3" class="major-field">admitting manager</h5>
-                              <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149574-60e898b3" class="minor-field">{date}</div>
+                              <h5 id="w-node-e5c344fb-00b1-594e-befd-2f9f60149572-60e898b3" class="major-field">admitted by:</h5>
+                              <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149574-60e898b3" class="minor-field">{{admission.admitted_by}}</div>
                             </div>
                             <div id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f1-60e898b3" class="maj-min">
                               <h5 id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f2-60e898b3" class="major-field">ex-Gratia</h5>
-                              <div id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f4-60e898b3" class="minor-field">{date}</div>
-                            </div>
-                            <div id="w-node-_51d9677c-1dd9-ed0d-b4ca-ad4095a910a9-60e898b3" class="maj-min">
-                              <h5 id="w-node-_51d9677c-1dd9-ed0d-b4ca-ad4095a910aa-60e898b3" class="major-field">Cover value</h5>
-                              <div id="w-node-_51d9677c-1dd9-ed0d-b4ca-ad4095a910ac-60e898b3" class="minor-field">{date}</div>
-                            </div>
-                            <div id="w-node-eddc0038-e6ac-450b-f5ef-cfc1f7fb1311-60e898b3" class="maj-min">
-                              <h5 id="w-node-eddc0038-e6ac-450b-f5ef-cfc1f7fb1312-60e898b3" class="major-field">Discharge date</h5>
-                              <div id="w-node-eddc0038-e6ac-450b-f5ef-cfc1f7fb1314-60e898b3" class="minor-field">{date}</div>
+                              <div id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f4-60e898b3" class="minor-field">{{admission.discharge_notes}}</div>
                             </div>
                             <div id="w-node-_0988439e-ff83-a45d-8b03-aa726183760e-60e898b3" class="maj-min">
-                              <h5 id="w-node-_0988439e-ff83-a45d-8b03-aa726183760f-60e898b3" class="major-field">Discharging manager</h5>
-                              <div id="w-node-_0988439e-ff83-a45d-8b03-aa7261837611-60e898b3" class="minor-field">{date}</div>
-                            </div>
-                            <div id="w-node-_63052253-5b6e-1534-4707-03b453763a6e-60e898b3" class="maj-min">
-                              <h5 id="w-node-_63052253-5b6e-1534-4707-03b453763a6f-60e898b3" class="major-field">Final LOU</h5>
-                              <div id="w-node-_63052253-5b6e-1534-4707-03b453763a71-60e898b3" class="minor-field">{date}</div>
-                            </div>
-                            <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e08-60e898b3" class="maj-min">
-                              <h5 id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e09-60e898b3" class="major-field">initial balance</h5>
-                              <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e0b-60e898b3" class="minor-field">{date}</div>
+                              <h5 id="w-node-_0988439e-ff83-a45d-8b03-aa726183760f-60e898b3" class="major-field">Discharged by:</h5>
+                              <div id="w-node-_0988439e-ff83-a45d-8b03-aa7261837611-60e898b3" class="minor-field">{{admission.discharged_by}}</div>
                             </div>
                             <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
                               <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Admitted for:</h5>
-                              <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{diagnosis}</div>
+                              <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.admission_diagnosis}}</div>
                             </div>
                           </div>
                   </tr>
