@@ -348,6 +348,7 @@ a.w--current {
 }
 
 .section {
+  z-index: 99;
   flex-flow: column;
   display: flex;
   position: fixed;

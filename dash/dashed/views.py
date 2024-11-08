@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse
-from django.db.models import Q
+from django.db.models import Q, F
 from django.utils.dateparse import parse_date
 from datetime import datetime
 from django.utils.timezone import now
@@ -43,6 +43,8 @@ import plotly.express as px
 from django.db.models import Count
 
  #**************************************************************************************************************************************************
+ #Admissions Management
+@login_required
 def home(request):
     return render(request, 'template/index.html')
 @login_required
@@ -480,6 +482,62 @@ def trend_analysis(request):
 
     return render(request, 'analytics/trend_analysis.html', context)
 
+
+#***************************************************************************
+# Reporting
+
+@login_required
+def reports(request):
+    admitted = Admission_details.objects.filter(member__admission_status='admitted')
+    discharged = Discharge_details.objects.all()
+
+    admitted_payer_annotate= Admission_details.objects.annotate(
+        payer_new = F('member__payer')
+    )
+
+    discharges_payer_annotate = Discharge_details.objects.annotate(
+        payer_new = F('payer')
+    )
+    
+    admitted_payers = admitted_payer_annotate.values('payer_new').distinct()
+    discharged_payers = discharges_payer_annotate.values('payer_new').distinct()
+
+    total_admitted_cases = admitted.count()
+    total_admitted_lou = Admission_details.objects.aggregate(Sum('lou_issued'))['lou_issued__sum'] or 0
+    total_discharged_cases = discharged.count()
+    
+    payers = admitted_payers.union (discharged_payers)
+
+    payer_data = []
+
+    total_ip_cases = total_admitted_cases + total_discharged_cases
+
+    for payer in payers:
+        payer_name= payer.get('payer_new')
+
+        total_admitted_payer = Admission_details.objects.filter(member__payer=payer_name, member__admission_status='admitted').count()
+        total_admitted_lou_payer = Admission_details.objects.filter(member__payer=payer_name, member__admission_status='admitted').aggregate(Sum('lou_issued'))['lou_issued__sum'] or 0
+        total_discharged_payer = Discharge_details.objects.filter(payer=payer_name).count()
+        total_payer_cases = total_admitted_payer + total_discharged_payer
+
+        payer_data.append({
+            'payer': payer_name,
+            'total_admitted_payer': total_admitted_payer,
+            'total_admitted_lou_payer': total_admitted_lou_payer,
+            'total_discharged_payer': total_discharged_payer,
+            'total_payer_cases': total_payer_cases
+        })
+
+    context = {
+        'total_admitted_cases': total_admitted_cases,
+        'total_discharged_cases': total_discharged_cases,
+        'total_ip_cases': total_ip_cases,
+        'total_admitted_lou': total_admitted_lou,
+        'payer_data': payer_data
+    }
+    return render(request, 'template/report/reports.html' , context)
+
+
 @login_required
 def generate_admission_report(request):
     # Query currently admitted members
@@ -568,6 +626,7 @@ def generate_admission_report(request):
 
 #***************************************************************************
 #Accounts management
+
 @login_required
 def user_account(request):
     """View to display user account details."""

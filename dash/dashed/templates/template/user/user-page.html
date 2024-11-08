@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="user-greetings">
-        <a id="user-div" href="../user/user-page.html" aria-current="page" class="user-div w-inline-block w--current">
+        <a id="user-div" href="{% url 'user_account' %}" aria-current="page" class="user-div w-inline-block w--current">
           <div id="User-greating" class="user-greetings">
             <h4 id="UG-text" class="user-greating-text">{{ greeting }},&nbsp;  {{ user.first_name }}!</h4>
           </div>

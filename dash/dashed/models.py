@@ -103,7 +103,7 @@ class Admission_details(models.Model):
     initial_cover_value = models.CharField(max_length=100)
     initial_cover_balance = models.CharField(max_length=100)
     requested_amount = models.CharField(max_length=100)
-    lou_issued = models.CharField(max_length=100)
+    lou_issued = models.DecimalField(max_digits=100, decimal_places=2, null=True)
     admited_by = models.CharField(max_length=100)
     def save (self, *args, **kwargs):
         if not self.admited_by:
@@ -138,7 +138,7 @@ class Discharge_details(models.Model):
     #added Fields
     discharge_date = models.DateField(default=timezone.now)
     final_approved_amount = models.CharField(max_length=100)
-    days_admitted = models.PositiveIntegerField(default=0)
+    days_admitted = models.PositiveIntegerField(default=0, null=True)
     discharge_notes = models.TextField()
     discharged_by = models.CharField(max_length=100)
 
