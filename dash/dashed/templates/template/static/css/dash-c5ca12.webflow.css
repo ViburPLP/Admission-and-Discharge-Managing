@@ -8,9 +8,9 @@
   --tertiary-1: #9b9fa4;
   --transparent: transparent;
   --aliceblue: var(--light-cyan);
-  --general-aqua-forest-card: #65a867;
+  --general-aqua-forest-card: #88ab75;
   --general-fine-bush-card: #e2982f;
-  --warning-red: #f44336;
+  --warning-red: #d62246;
   --faded-black: #00000080;
   --light-cyan: #e0ffff;
   --purple: #6900d1;
@@ -1175,7 +1175,7 @@ tr.clickable-row:hover {
 }
 
 .button {
-  background-color: var(--primary-1);
+  background-color: var(--general-aqua-forest-card);
   color: #fff;
   text-transform: capitalize;
   border-radius: 5px;
@@ -2200,7 +2200,7 @@ tr.clickable-row:hover {
   align-items: stretch;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  padding: 1rem 8rem .125rem;
+  padding: 10px 10px .125rem;
   display: flex;
 }
 

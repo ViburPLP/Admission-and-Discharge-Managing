@@ -83,7 +83,10 @@
       <section class="section-2">
         <div id="w-node-adcb5ca2-522e-73e6-17c3-fda0a8cd554f-4f2cd566" class="div-block-6">
           <a href="#" class="button w-button">Edit profile</a>
-          <a href="#" class="button danger w-button">logout</a>
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="button danger w-button">logout</button>
+          </form>
         </div>
         <div id="w-node-e678955a-33d0-a987-754f-c3b125c76945-4f2cd566" class="data-block">
           <div id="w-node-cc109bcc-680b-fd0b-62c0-d4b127cab2b0-4f2cd566" class="data-card _2">
