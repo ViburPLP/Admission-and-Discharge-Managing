@@ -571,7 +571,7 @@ def generate_admission_report(request):
 @login_required
 def user_account(request):
     """View to display user account details."""
-    return render(request, 'user_account/user_account.html')
+    return render(request, 'template/user/user-page.html')
 
 @login_required
 def update_user_details(request):
