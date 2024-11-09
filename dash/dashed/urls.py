@@ -25,6 +25,7 @@ urlpatterns = [
     path('trend-analysis/', views.trend_analysis, name='trend_analysis'),
     path('generate_admission_report/', views.generate_admission_report, name='generate_admission_report'),
     path('reports/', views.reports, name='reports'),
+    path('payer_reports/<str:payer_name>/', views.payer_reports, name='payer_reports'),
 
     # account managment
     path('account/', views.user_account, name='user_account'),

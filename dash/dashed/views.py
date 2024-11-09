@@ -491,6 +491,11 @@ def reports(request):
     admitted = Admission_details.objects.filter(member__admission_status='admitted')
     discharged = Discharge_details.objects.all()
 
+    total_admitted_cases = admitted.count()
+    total_admitted_lou = Admission_details.objects.aggregate(Sum('lou_issued'))['lou_issued__sum'] or 0
+    total_discharged_cases = discharged.count()
+
+    
     admitted_payer_annotate= Admission_details.objects.annotate(
         payer_new = F('member__payer')
     )
@@ -501,10 +506,6 @@ def reports(request):
     
     admitted_payers = admitted_payer_annotate.values('payer_new').distinct()
     discharged_payers = discharges_payer_annotate.values('payer_new').distinct()
-
-    total_admitted_cases = admitted.count()
-    total_admitted_lou = Admission_details.objects.aggregate(Sum('lou_issued'))['lou_issued__sum'] or 0
-    total_discharged_cases = discharged.count()
     
     payers = admitted_payers.union (discharged_payers)
 
@@ -536,6 +537,30 @@ def reports(request):
         'payer_data': payer_data
     }
     return render(request, 'template/report/reports.html' , context)
+
+@login_required
+def payer_reports(request, payer_name): 
+    admitted_members = Admission_details.objects.filter(member__payer=payer_name, member__admission_status='admitted')
+    discharged_members = Discharge_details.objects.filter(payer=payer_name)
+
+    # Payer-specific statistics
+    total_admitted_payer = admitted_members.count()
+    total_admitted_lou_payer = admitted_members.aggregate(Sum('lou_issued'))['lou_issued__sum'] or 0
+    total_discharged_payer = discharged_members.count()
+    total_discharged_lou_payer = discharged_members.aggregate(Sum('final_approved_amount'))['final_approved_amount__sum'] or 0
+    total_payer_cases = total_admitted_payer + total_discharged_payer
+
+    context = {
+        'payer_name': payer_name,
+        'total_admitted_payer': total_admitted_payer,
+        'total_admitted_lou_payer': total_admitted_lou_payer,
+        'total_discharged_payer': total_discharged_payer,
+        'total_payer_cases': total_payer_cases,
+        'admitted_members': admitted_members,
+        'discharged_members': discharged_members,
+        'total_discharged_lou_payer': total_discharged_lou_payer
+    }
+    return render(request, 'template/report/reports-view.html', context)
 
 
 @login_required

@@ -8,15 +8,15 @@
   --tertiary-1: #9b9fa4;
   --transparent: transparent;
   --aliceblue: var(--light-cyan);
-  --general-aqua-forest-card: #88ab75;
+  --general-aqua-forest-card: #6e9b42;
   --general-fine-bush-card: #e2982f;
-  --warning-red: #d62246;
+  --warning-red: #f32c1e;
   --faded-black: #00000080;
   --light-cyan: #e0ffff;
   --purple: #6900d1;
   --complement-2: #d19d00;
   --dark-turqoise: darkturquoise;
-  --dark-red: #d13400;
+  --dark-red: #218380;
   --default: #a99d9c;
 } 
 
@@ -76,9 +76,6 @@ h5 {
   line-height: 20px;
 }
 
-a {
-  text-decoration: underline;
-}
 
 a.w--current {
   pointer-events: auto;
@@ -1176,7 +1173,7 @@ tr.clickable-row:hover {
 }
 
 .button {
-  background-color: var(--general-aqua-forest-card);
+  background-color: var(--primary-1);
   color: #fff;
   text-transform: capitalize;
   border-radius: 5px;

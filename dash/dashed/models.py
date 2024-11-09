@@ -137,7 +137,7 @@ class Discharge_details(models.Model):
         
     #added Fields
     discharge_date = models.DateField(default=timezone.now)
-    final_approved_amount = models.CharField(max_length=100)
+    final_approved_amount = models.DecimalField(max_digits=100, decimal_places=2, null=True)
     days_admitted = models.PositiveIntegerField(default=0, null=True)
     discharge_notes = models.TextField()
     discharged_by = models.CharField(max_length=100)
