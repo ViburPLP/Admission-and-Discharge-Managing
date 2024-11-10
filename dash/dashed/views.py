@@ -8,7 +8,6 @@ from datetime import datetime
 from django.utils.timezone import now
 from django.utils import timezone
 from .forms import UpdateForm
-from .forms import UpdateForm
 import tempfile
 import io, os
 from django.http import FileResponse, HttpResponseRedirect
@@ -569,6 +568,106 @@ def payer_reports(request, payer_name):
         'all_inpatient_cases': all_inpatient_cases,
     }
     return render(request, 'template/report/reports-view.html', context)
+
+def export_payer_report(request, payer_name):
+    admitted_members= Admission_details.objects.filter(member__payer=payer_name, member__admission_status='admitted')
+    discharged_members= Discharge_details.objects.filter(payer=payer_name)
+
+    current_date= now().date()
+    for member in admitted_members:
+        admission_date = member.admission_date
+        los= (current_date - admission_date).days
+        member.los = los
+
+    for update in admitted_members:
+        last_update = update.updates.order_by('-date').first()
+        interim_bill = last_update.interim_bill if last_update else None
+        date_of_interim_bill = last_update.date if last_update else None
+
+    wb = openpyxl.Workbook()
+    ws= wb.active
+    ws.title = f"{payer_name}'s Report"
+
+    headers= [
+        "Beneficiary", "Membership No.", "scheme", "Relationship",
+        "Date of Admission", "Diagnosis", "Admitting Provider", "Ammount Requested", 
+        "Initial LOU issued", "Cover Benefits Applied", "Available Cover Balance",
+        "Interim Bill", "Date of Interim Bill", 
+        "LOS", "Date of Discharge", "Final LOU Issued", "Ex-Gratia",
+        "Admited By", "Discharged By",
+    ]
+
+    for col_num, header in enumerate(headers, 1):
+        col_letter = get_column_letter(col_num)
+        ws[f"{col_letter}1"] = header
+
+    row_num = 2
+    for member in admitted_members:
+        ws[f"A{row_num}"] = member.member.name
+        ws[f"B{row_num}"] = member.member.membership_number
+        ws[f"C{row_num}"] = member.member.scheme
+        ws[f"D{row_num}"] = member.member.relationship
+        ws[f"E{row_num}"] = member.admission_date
+        ws[f"F{row_num}"] = member.admission_diagnosis
+        ws[f"G{row_num}"] = member.Provider.name
+        ws[f"H{row_num}"] = member.requested_amount
+        ws[f"I{row_num}"] = member.lou_issued
+        ws[f"J{row_num}"] = member.cover_used
+        ws[f"K{row_num}"] = member.initial_cover_balance
+        ws[f"L{row_num}"] = interim_bill
+        ws[f"M{row_num}"] = date_of_interim_bill
+        ws[f"N{row_num}"] = member.los 
+        ws[f"O{row_num}"] = "Admitted"
+        ws[f"P{row_num}"] = "-"
+        ws[f"Q{row_num}"] = "-"
+        ws[f"R{row_num}"] = member.admited_by
+        ws[f"S{row_num}"] = "Admitted"
+       
+        ws[f"H{row_num}"].number_format = '#,##0.00' 
+        ws[f"I{row_num}"].number_format = '#,##0.00'
+        row_num += 1
+
+    for member in discharged_members:
+        ws[f"A{row_num}"] = member.name
+        ws[f"B{row_num}"] = member.membership_number
+        ws[f"C{row_num}"] = member.scheme
+        ws[f"D{row_num}"] = member.relationship
+        ws[f"E{row_num}"] = member.admission_date
+        ws[f"F{row_num}"] = member.admission_diagnosis
+        ws[f"G{row_num}"] = member.provider
+        ws[f"H{row_num}"] = member.requested_amount
+        ws[f"I{row_num}"] = member.lou_issued
+        ws[f"J{row_num}"] = member.cover_used
+        ws[f"K{row_num}"] = member.initial_cover_balance
+        ws[f"L{row_num}"] = "Discharged"
+        ws[f"M{row_num}"] = "Discharged"
+        ws[f"N{row_num}"] = member.days_admitted  
+        ws[f"O{row_num}"] = member.discharge_date
+        ws[f"P{row_num}"] = member.final_approved_amount
+        ws[f"Q{row_num}"] = member.discharge_notes
+        ws[f"R{row_num}"] = member.admitted_by
+        ws[f"S{row_num}"] = member.discharged_by
+
+        ws[f"H{row_num}"].number_format = '#,##0.00' 
+        ws[f"I{row_num}"].number_format = '#,##0.00'
+        ws[f"P{row_num}"].number_format = '#,##0.00' 
+        row_num += 1
+
+        for col in ws.columns:
+            max_length = 0
+            col_letter = get_column_letter(col[0].column)
+            for cell in col:
+                cell_value = str(cell.value)
+                max_length = max(max_length, len(cell_value))
+            ws.column_dimensions[col_letter].width = max_length + 2
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = f'attachment; filename="{payer_name}_report.xlsx"'        
+
+    wb.save(response)
+    return response
 
 
 @login_required

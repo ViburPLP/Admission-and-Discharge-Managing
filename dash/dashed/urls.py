@@ -26,6 +26,7 @@ urlpatterns = [
     path('generate_admission_report/', views.generate_admission_report, name='generate_admission_report'),
     path('reports/', views.reports, name='reports'),
     path('payer_reports/<str:payer_name>/', views.payer_reports, name='payer_reports'),
+    path('export_report/<str:payer_name>/', views.export_payer_report, name='export_payer_report'),
 
     # account managment
     path('account/', views.user_account, name='user_account'),
