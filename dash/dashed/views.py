@@ -664,7 +664,7 @@ def export_payer_report(request, payer_name):
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
-    response['Content-Disposition'] = f'attachment; filename="{payer_name}_report.xlsx"'        
+    response['Content-Disposition'] = f'attachment; filename="{payer_name}_report_{current_date}.xlsx"'        
 
     wb.save(response)
     return response
