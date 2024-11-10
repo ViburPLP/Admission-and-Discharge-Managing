@@ -543,12 +543,19 @@ def payer_reports(request, payer_name):
     admitted_members = Admission_details.objects.filter(member__payer=payer_name, member__admission_status='admitted')
     discharged_members = Discharge_details.objects.filter(payer=payer_name)
 
-    # Payer-specific statistics
+    #payer-specific statistics
     total_admitted_payer = admitted_members.count()
     total_admitted_lou_payer = admitted_members.aggregate(Sum('lou_issued'))['lou_issued__sum'] or 0
     total_discharged_payer = discharged_members.count()
     total_discharged_lou_payer = discharged_members.aggregate(Sum('final_approved_amount'))['final_approved_amount__sum'] or 0
     total_payer_cases = total_admitted_payer + total_discharged_payer
+    all_inpatient_cases = list(admitted_members) + list(discharged_members)
+
+    current_date = now().date()
+    for member in admitted_members:
+        admission_date = member.admission_date
+        los = (current_date - admission_date).days
+        member.los = los #(temporarily saves this to the object)
 
     context = {
         'payer_name': payer_name,
@@ -558,7 +565,8 @@ def payer_reports(request, payer_name):
         'total_payer_cases': total_payer_cases,
         'admitted_members': admitted_members,
         'discharged_members': discharged_members,
-        'total_discharged_lou_payer': total_discharged_lou_payer
+        'total_discharged_lou_payer': total_discharged_lou_payer,
+        'all_inpatient_cases': all_inpatient_cases,
     }
     return render(request, 'template/report/reports-view.html', context)
 

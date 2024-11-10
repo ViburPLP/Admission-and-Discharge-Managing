@@ -236,48 +236,85 @@
           </a>
         </div>
         <div class="w-tab-content">
-          <div data-w-tab="Totals" class="w-tab-pane">
+          <div data-w-tab="Totals" class="w-tab-pane" style=" overflow: auto;">
             <div class="adm-state-div table-div report">
               <div class="table-header">
                 <table class=" table">
                   <thead>
                       <tr>
-                          <th>Admission Date</th>
-                          <th>Name</th>
-                          <th>Membership Number</th>
-                          <th>Provider</th>
-                          <th>Scheme</th>
+                        <th>Beneficiary</th>
+                        <th>Membership No.</th>
+                        <th>Date of Admission</th>
+                        <th>Date of Discharge</th>
+                        <th>Los</th>
+                        <th>Cover Used</th>
+                        <th>Admitting Provider</th>
+                        <th>Final LOU</th>
                       </tr>
                   </thead>
                   <tbody>
-                      {% for member in admitted_members %}
-                      <tr  class="clickable-row" style=" cursor:pointer;">
-                          <td>{% for admission in member.admission_details.all %}
-                            {{ admission.admission_date }}<br>
-                        {% endfor %}
-                      </td>
-                          <td>{{ member.name }}</td>
-                          <td>{{ member.membership_number }}</td>
-                          <td>
-                            {% for admission in member.admission_details.all %}
-                            {{ admission.Provider.name }}<br>
-                        {% endfor %}</td>
-                          <td>{{ member.scheme }}</td>
+                      {% for admission in all_inpatient_cases %}
+                      <tr class="clickable-row" style=" cursor:pointer;">
+                        <td>{% if admission.name %}
+                          {{ admission.name }}
+                          {% else %}
+                              {{ admission.member.name }}
+                          {% endif %}
+                        </td>
+                        <td>{% if admission.membership_number %}
+                          {{ admission.membership_number }}
+                          {% else %}
+                              {{ admission.member.membership_number }}
+                          {% endif %}                          
+                        </td>
+                        <td>{{ admission.admission_date }}</td>
+                        <td>{% if admission.discharge_date %}
+                              {{ admission.discharge_date }}
+                            {% else %}
+                            Admitted
+                            {% endif %}
+                            </td>
+                        <td> {% if admission.days_admitted %}
+                            {{ admission.days_admitted }}
+                          {% else %}
+                            {{ admission.los}}
+                          {% endif %}
+                        </td>
+                        <td>{{ admission.cover_used }}</td>
+                        <td>{% if admission.provider %}
+                          {{ admission.provider }}
+                          {% else %}
+                              {{ admission.Provider.name }}
+                          {% endif %}
+                        </td>
+                        <td>KSh {{ admission.final_approved_amount|floatformat:2|intcomma }}</td>
                       </tr>
                       <tr class="hidden-section" style="display: none; background-color: #eaebed;">
-                        <td colspan="6">
-                              <div class="adm-hx2">   
+                        <td colspan="8">
+                              <div class="adm-hx2">  
+                                <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Scheme:</h5>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.scheme}}</div>
+                                </div> 
                                 <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e08-60e898b3" class="maj-min">
                                   <h5 id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e09-60e898b3" class="major-field">initial balance</h5>
                                   <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e0b-60e898b3" class="minor-field">{{admission.initial_cover_balance}}</div>
                                 </div>
-                                <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9571-60e898b3" class="maj-min">
-                                  <h5 id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9572-60e898b3" class="major-field">initial LOU</h5>
-                                  <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9574-60e898b3" class="minor-field">{{admission.lou_issued}}</div>
+                                <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Admitted for:</h5>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.admission_diagnosis}}</div>
                                 </div>
                                 <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149571-60e898b3" class="maj-min">
                                   <h5 id="w-node-e5c344fb-00b1-594e-befd-2f9f60149572-60e898b3" class="major-field">admitted by:</h5>
                                   <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149574-60e898b3" class="minor-field">{{admission.admitted_by}}</div>
+                                </div>
+                                <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Status at admission:</h5>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.status}}</div>
+                                </div>
+                                <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Amount requested:</h5>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">KSh {{admission.requested_amount|floatformat:2|intcomma}}</div>
                                 </div>
                                 <div id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f1-60e898b3" class="maj-min">
                                   <h5 id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f2-60e898b3" class="major-field">ex-Gratia</h5>
@@ -288,14 +325,18 @@
                                   <div id="w-node-_0988439e-ff83-a45d-8b03-aa7261837611-60e898b3" class="minor-field">{{admission.discharged_by}}</div>
                                 </div>
                                 <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
-                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Admitted for:</h5>
-                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.admission_diagnosis}}</div>
+                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Validity:</h5>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.validity}}</div>
+                                </div>
+                                <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9571-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9572-60e898b3" class="major-field">initial LOU</h5>
+                                  <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9574-60e898b3" class="minor-field">KSh {{admission.lou_issued|floatformat:2|intcomma}}</div>
                                 </div>
                               </div>
                       </tr>
                       {% empty %}
                       <tr>
-                          <td colspan="5" style="text-align:center; padding: 20px;">No admitted members found.</td>
+                          <td colspan="7" style="text-align:center; padding: 20px;">No active admissions found.</td>
                       </tr>
                       {% endfor %}
                   </tbody>
@@ -305,66 +346,71 @@
               </div>
             </div>
           </div>
-          <div data-w-tab="Active" class="tab-pane-active w-tab-pane">
+          <div data-w-tab="Active" class="tab-pane-active w-tab-pane" style = "overflow: auto;">
             <div class="adm-state-div table-div report">
               <div class="table-header">
                 <table class=" table">
                   <thead>
                       <tr>
-                          <th>Admission Date</th>
-                          <th>Name</th>
-                          <th>Membership Number</th>
-                          <th>Provider</th>
-                          <th>Scheme</th>
+                        <th>Date of Admission</th>
+                        <th>Beneficiary</th>
+                        <th>Membership No.</th>
+                        <th>Scheme</th>
+                        <th>Cover Used</th>
+                        <th>Admitting Provider</th>
+                        <th>Initial LOU</th>
                       </tr>
                   </thead>
                   <tbody>
-                      {% for member in admitted_members %}
-                      <tr  class="clickable-row" style=" cursor:pointer;">
-                          <td>{% for admission in member.admission_details.all %}
-                            {{ admission.admission_date }}<br>
-                        {% endfor %}
-                      </td>
-                          <td>{{ member.name }}</td>
-                          <td>{{ member.membership_number }}</td>
-                          <td>
-                            {% for admission in member.admission_details.all %}
-                            {{ admission.Provider.name }}<br>
-                        {% endfor %}</td>
-                          <td>{{ member.scheme }}</td>
+                      {% for admission in admitted_members %}
+                      <tr class="clickable-row" style=" cursor:pointer;">
+                        <td>{{ admission.admission_date }}</td>
+                        <td>{{ admission.member.name }}</td>
+                        <td>{{ admission.member.membership_number }}</td>
+                        <td>{{ admission.member.scheme }}</td>
+                        <td>{{ admission.cover_used }}</td>
+                        <td>{{ admission.Provider.name }}</td>
+                        <td>KSh {{ admission.lou_issued|floatformat:2|intcomma }}</td>
                       </tr>
                       <tr class="hidden-section" style="display: none; background-color: #eaebed;">
-                        <td colspan="6">
-                              <div class="adm-hx2">   
+                        <td colspan="8">
+                              <div class="adm-hx2">  
+                                <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Status:</h5>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.member.status}}</div>
+                                </div> 
+                                <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Amount requested:</h5>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">KSh {{admission.requested_amount|floatformat:2|intcomma}}</div>
+                                </div>
+                                <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e08-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e09-60e898b3" class="major-field">Relationship</h5>
+                                  <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e0b-60e898b3" class="minor-field">{{admission.member.relationship}}</div>
+                                </div>
+                                <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149571-60e898b3" class="maj-min">
+                                  <h5 id="w-node-e5c344fb-00b1-594e-befd-2f9f60149572-60e898b3" class="major-field">admitted by:</h5>
+                                  <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149574-60e898b3" class="minor-field">{{admission.admited_by}}</div>
+                                </div>
+                                <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Validity:</h5>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.member.validity}}</div>
+                                </div>
                                 <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e08-60e898b3" class="maj-min">
                                   <h5 id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e09-60e898b3" class="major-field">initial balance</h5>
                                   <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e0b-60e898b3" class="minor-field">{{admission.initial_cover_balance}}</div>
                                 </div>
-                                <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9571-60e898b3" class="maj-min">
-                                  <h5 id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9572-60e898b3" class="major-field">initial LOU</h5>
-                                  <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9574-60e898b3" class="minor-field">{{admission.lou_issued}}</div>
-                                </div>
-                                <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149571-60e898b3" class="maj-min">
-                                  <h5 id="w-node-e5c344fb-00b1-594e-befd-2f9f60149572-60e898b3" class="major-field">admitted by:</h5>
-                                  <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149574-60e898b3" class="minor-field">{{admission.admitted_by}}</div>
-                                </div>
-                                <div id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f1-60e898b3" class="maj-min">
-                                  <h5 id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f2-60e898b3" class="major-field">ex-Gratia</h5>
-                                  <div id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f4-60e898b3" class="minor-field">{{admission.discharge_notes}}</div>
-                                </div>
-                                <div id="w-node-_0988439e-ff83-a45d-8b03-aa726183760e-60e898b3" class="maj-min">
-                                  <h5 id="w-node-_0988439e-ff83-a45d-8b03-aa726183760f-60e898b3" class="major-field">Discharged by:</h5>
-                                  <div id="w-node-_0988439e-ff83-a45d-8b03-aa7261837611-60e898b3" class="minor-field">{{admission.discharged_by}}</div>
-                                </div>
+                                <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
+                                  <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Length of stay(LOS):</h5>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.los}}</div>
+                                </div> 
                                 <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
                                   <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Admitted for:</h5>
                                   <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.admission_diagnosis}}</div>
-                                </div>
-                              </div>
+                                </div>                                
                       </tr>
                       {% empty %}
                       <tr>
-                          <td colspan="5" style="text-align:center; padding: 20px;">No admitted members found.</td>
+                          <td colspan="7" style="text-align:center; padding: 20px;">No previous admissions found.</td>
                       </tr>
                       {% endfor %}
                   </tbody>
@@ -447,7 +493,7 @@
                       </tr>
                       {% empty %}
                       <tr>
-                          <td colspan="5" style="text-align:center; padding: 20px;">No previous admissions found.</td>
+                          <td colspan="8" style="text-align:center; padding: 20px;">No previous admissions found.</td>
                       </tr>
                       {% endfor %}
                   </tbody>
