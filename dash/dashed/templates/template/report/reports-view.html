@@ -392,7 +392,6 @@
             row.addEventListener("click", function() {
                 const nextRow = this.nextElementSibling;
                 if (nextRow && nextRow.classList.contains("hidden-section")) {
-                    // Toggle display of the hidden section
                     if (nextRow.style.display === "none") {
                         nextRow.style.display = "table-row";
                     } else {

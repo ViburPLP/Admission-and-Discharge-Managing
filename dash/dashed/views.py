@@ -28,6 +28,7 @@ from openpyxl.utils import get_column_letter
 from django.http import HttpResponse
 from django.db.models import Sum, Count
 from datetime import date
+from django.utils.timezone import is_naive, make_naive
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -582,7 +583,9 @@ def export_payer_report(request, payer_name):
     for update in admitted_members:
         last_update = update.updates.order_by('-date').first()
         interim_bill = last_update.interim_bill if last_update else None
-        date_of_interim_bill = last_update.date if last_update else None
+        date_of_interim_bill = last_update.date if last_update else None 
+        if not is_naive(date_of_interim_bill): #if date_of_interim_bill is not naive-Excel does not support timezones in datetimes
+            date_of_interim_bill = make_naive(date_of_interim_bill)
 
     wb = openpyxl.Workbook()
     ws= wb.active
@@ -593,7 +596,7 @@ def export_payer_report(request, payer_name):
         "Date of Admission", "Diagnosis", "Admitting Provider", "Ammount Requested", 
         "Initial LOU issued", "Cover Benefits Applied", "Available Cover Balance",
         "Interim Bill", "Date of Interim Bill", 
-        "LOS", "Date of Discharge", "Final LOU Issued", "Ex-Gratia",
+        "LOS", "Date of Discharge", "Final Bill", "Final LOU Issued", "Ex-Gratia",
         "Admited By", "Discharged By",
     ]
 
@@ -618,10 +621,11 @@ def export_payer_report(request, payer_name):
         ws[f"M{row_num}"] = date_of_interim_bill
         ws[f"N{row_num}"] = member.los 
         ws[f"O{row_num}"] = "Admitted"
-        ws[f"P{row_num}"] = "-"
-        ws[f"Q{row_num}"] = "-"
-        ws[f"R{row_num}"] = member.admited_by
-        ws[f"S{row_num}"] = "Admitted"
+        ws[f"P{row_num}"] = "Admitted" #final bill
+        ws[f"Q{row_num}"] = "-" #FInal lou
+        ws[f"R{row_num}"] = "-" #exgratia
+        ws[f"S{row_num}"] = member.admited_by
+        ws[f"T{row_num}"] = "Admitted"
        
         ws[f"H{row_num}"].number_format = '#,##0.00' 
         ws[f"I{row_num}"].number_format = '#,##0.00'
@@ -643,23 +647,43 @@ def export_payer_report(request, payer_name):
         ws[f"M{row_num}"] = "Discharged"
         ws[f"N{row_num}"] = member.days_admitted  
         ws[f"O{row_num}"] = member.discharge_date
-        ws[f"P{row_num}"] = member.final_approved_amount
-        ws[f"Q{row_num}"] = member.discharge_notes
-        ws[f"R{row_num}"] = member.admitted_by
-        ws[f"S{row_num}"] = member.discharged_by
+        ws[f"P{row_num}"] = member.discharge_notes
+        ws[f"Q{row_num}"] = member.final_approved_amount
+        ws[f"R{row_num}"] = "Discharged"
+        ws[f"S{row_num}"] = member.admitted_by
+        ws[f"T{row_num}"] = member.discharged_by
 
         ws[f"H{row_num}"].number_format = '#,##0.00' 
         ws[f"I{row_num}"].number_format = '#,##0.00'
         ws[f"P{row_num}"].number_format = '#,##0.00' 
         row_num += 1
 
-        for col in ws.columns:
-            max_length = 0
-            col_letter = get_column_letter(col[0].column)
-            for cell in col:
-                cell_value = str(cell.value)
-                max_length = max(max_length, len(cell_value))
-            ws.column_dimensions[col_letter].width = max_length + 2
+    summary_ws = wb.create_sheet(title=f"{payer_name}'s Summary")
+    summary_ws.append(["Scheme", "Total LOU Issued", "Number of Admissions", "Distribution"])
+
+    summary_data = admitted_members.values('member__scheme').annotate(
+        total_lou=Sum('lou_issued'),
+        admitted_members_count=Count('id')
+    ).filter(admitted_members_count__gt=0)
+
+    total_active_cases = sum(item['admitted_members_count'] for item in summary_data)
+    distribution = (admitted_members.count() / total_active_cases *100)if total_active_cases > 0 else 0
+
+    for summary in summary_data:
+        summary_ws.append([
+            summary.get('member__scheme', 'N/A'),
+            summary.get('total_lou', 0),
+            summary.get('admitted_members_count', 0),
+            f"{distribution:.2f}%"
+        ])
+
+
+
+        for sheet in [ws, summary_ws]:
+            for col in sheet.columns:
+                max_length = max(len(str(cell.value)) 
+                                 for cell in col if cell.value) + 2
+                sheet.column_dimensions[get_column_letter(col[0].column)].width = max_length
 
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'

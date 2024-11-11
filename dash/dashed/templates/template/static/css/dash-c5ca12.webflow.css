@@ -2203,15 +2203,12 @@ tr.clickable-row:hover {
 }
 
 .div-block-23 {
-  background-color: #fff;
-  border: 1px #000;
   border-radius: 0 20px;
   flex-flow: column;
   align-items: stretch;
   margin: 0 5svw;
   padding: 2rem 4rem;
   display: flex;
-  box-shadow: 0 2px 5px #0003;
 }
 
 .button-4 {
