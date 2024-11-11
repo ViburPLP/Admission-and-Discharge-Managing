@@ -1,47 +1,35 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from datetime import datetime, date
 from django.contrib import messages
-from django.http import HttpResponse
-from django.db.models import Q, F
-from django.utils.dateparse import parse_date
-from datetime import datetime
-from django.utils.timezone import now
-from django.utils import timezone
-from .forms import UpdateForm
-import tempfile
-import io, os
-from django.http import FileResponse, HttpResponseRedirect
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.db.models import Q, F, Sum, Count
+from django.http import HttpResponse, HttpResponseRedirect, FileResponse
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.dateparse import parse_date
+from django.utils.timezone import is_naive, make_naive, now
 from weasyprint import HTML
+import csv
+import io
+import openpyxl
+from openpyxl.utils import get_column_letter
+import pandas as pd
+import plotly.express as px
+import tempfile
+
+from .forms import UpdateForm, UserDetailForm, SchemeForm, ProviderForm
 from .models import (
-    Member_Detail, 
+    Member_Detail,
     InsuranceDetail,
     Scheme,
     Provider,
     Admission_details,
     Discharge_details,
     Daily_update
-    )
-
-import openpyxl
-from openpyxl.utils import get_column_letter
-from django.http import HttpResponse
-from django.db.models import Sum, Count
-from datetime import date
-from django.utils.timezone import is_naive, make_naive
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.contrib import messages
-from .forms import UserDetailForm
-
- #**************************************************************************************************************************************************
-import pandas as pd
-import plotly.express as px
-from django.db.models import Count
-
+)
  #**************************************************************************************************************************************************
  #Admissions Management
 @login_required
@@ -693,93 +681,6 @@ def export_payer_report(request, payer_name):
     wb.save(response)
     return response
 
-
-@login_required
-def generate_admission_report(request):
-    # Query currently admitted members
-    admissions = Admission_details.objects.filter(member__admission_status='admitted').select_related('member')
-
-    # Create a new workbook and select the active worksheet
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Admitted Members Report"
-
-    # Add headers to the sheet
-    headers = [
-        "Diagnosis", "Membership Number", "Scheme", "Payer", "Admission Date",
-        "LOU Issued", "Last Interim Bill", "Date of Last Interim Bill",
-        "Cover Used", "Duration Since Admission", "Relationship"
-    ]
-    for col_num, header in enumerate(headers, 1):
-        ws.cell(row=1, column=col_num, value=header)
-
-    # Add the data rows
-    row = 2
-    for admission in admissions:
-    # Fetch the last interim bill and its date
-        last_update = admission.updates.order_by('-date').first()
-        last_bill = last_update.interim_bill if last_update else None
-        last_bill_date = last_update.date if last_update else None
-
-        # Strip timezone from dates if they are datetime objects
-        if isinstance(admission.admission_date, datetime):
-            admission_date = admission.admission_date.replace(tzinfo=None)
-        else:
-            admission_date = admission.admission_date
-
-        if isinstance(last_bill_date, datetime):
-            last_bill_date = last_bill_date.replace(tzinfo=None)
-
-        # Calculate duration since admission
-        duration = (date.today() - admission_date).days
-
-        data = [
-            admission.admission_diagnosis,
-            admission.member.membership_number,
-            admission.member.scheme,
-            admission.member.payer,
-            admission_date,
-            admission.lou_issued,
-            last_bill,
-            last_bill_date,
-            admission.cover_used,
-            duration,
-            admission.member.relationship
-        ]
-        
-        for col_num, cell_value in enumerate(data, 1):
-            ws.cell(row=row, column=col_num, value=cell_value)
-        
-        row += 1
-
-
-    # Group by Payer and Scheme
-    ws.auto_filter.ref = f"A1:{get_column_letter(len(headers))}1"
-    
-    # Add summary sheet
-    summary_ws = wb.create_sheet(title="Summary")
-    summary_ws.append(["Payer", "Scheme", "Total LOU Issued", "Number of Admissions"])
-
-    # Summary Data
-    summary_data = admissions.values('member__payer', 'member__scheme').annotate(
-        total_lou=Sum('lou_issued'),
-        admissions_count=Count('id')
-    ).filter(admissions_count__gt=0)
-
-    for summary in summary_data:
-        summary_ws.append([
-            summary['member__payer'],
-            summary['member__scheme'],
-            summary['total_lou'],
-            summary['admissions_count']
-        ])
-
-    # Set response with the Excel file
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=Admitted_Members_Report.xlsx'
-    wb.save(response)
-    return response
-
 #***************************************************************************
 #Accounts management
 
@@ -821,11 +722,26 @@ def change_password(request):
 #***************************************************************************
 #Schemes and Providers
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
-from .models import Scheme, Provider
-from .forms import SchemeForm, ProviderForm
-import csv
+@login_required
+def schemes(request): #list of schemes.
+    query = request.GET.get('q')
+    payer_filter = request.GET.get('payer')
+
+    schemes = Scheme.objects.all()
+
+    if query:
+        schemes = schemes.filter(
+            Q(name__icontains=query)
+        )
+    if payer_filter:
+        schemes = schemes.filter(payer__icontains=payer_filter)
+    
+    return render(request, 'template/schemes/scheme-list.html', 
+                  {'schemes': schemes, 
+                    'query': query, 
+                    'payer_filter': payer_filter})
+
+
 
 def manage_schemes_providers(request):
     schemes = Scheme.objects.all()
@@ -926,21 +842,3 @@ def add_scheme(request):
     return render(request, 'manage/manage_schemes_providers.html', {'form': form})
 
 
-@login_required
-def schemes(request): #list of schemes.
-    query = request.GET.get('q')
-    payer_filter = request.GET.get('payer')
-
-    schemes = Scheme.objects.all()
-
-    if query:
-        schemes = schemes.filter(
-            Q(name__icontains=query)
-        )
-    if payer_filter:
-        schemes = schemes.filter(payer__icontains=payer_filter)
-    
-    return render(request, 'manage/schemes.html', 
-                  {'schemes': schemes, 
-                    'query': query, 
-                    'payer_filter': payer_filter})

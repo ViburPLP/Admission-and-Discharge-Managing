@@ -9,26 +9,31 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'), #logout page
 
 
-    #pages in order or flow of activity
+    #home/landing
     path('', views.home, name='home'),
+
+    #admissions
+        #pending-admitting
     path('pending_admissions/', views.pending_admissions, name='pending_admissions'), #list of recently imported, awaiting admission.
     path('admitting_member_detail/<int:pk>/', views.admitting_member_detail, name='admitting_member_detail'), #page displaying details of the member to be admited.
     path('admit_member/<int:pk>/', views.admit_member, name='admit_member'), #admit member 'button'.
-    
+
+        #active-admissions
     path('currently_admitted/', views.current_admissions, name='current_admissions'), #active admissions list.
     path('discharging_member_detail/<int:pk>/', views.discharging_member_detail, name='discharging_member_detail'), #page displaying details of the active admission- for discharge or updates.
     path('discharge_member<int:pk>/', views.discharge_member, name='discharge_member'), #discharge member 'button'.
 
+        #discharged
     path('discharged_members/', views.discharged_members, name='discharged_members'), #discharged members list.
     path('admission_history/<int:discharge_id>/', views.admission_history, name='admission_history'), #page with details of previous admissions.
 
+    #reports
     path('trend-analysis/', views.trend_analysis, name='trend_analysis'),
-    path('generate_admission_report/', views.generate_admission_report, name='generate_admission_report'),
     path('reports/', views.reports, name='reports'),
     path('payer_reports/<str:payer_name>/', views.payer_reports, name='payer_reports'),
     path('export_report/<str:payer_name>/', views.export_payer_report, name='export_payer_report'),
 
-    # account managment
+    # account
     path('account/', views.user_account, name='user_account'),
     path('account/update/', views.update_user_details, name='update_user_details'),
     path('account/change-password/', views.change_password, name='change_password'),
@@ -45,6 +50,4 @@ urlpatterns = [
     path('schemes/', views.schemes, name='schemes'),
 
 
-    path('trend-analysis/', views.trend_analysis, name='trend_analysis'),
-    path('generate_admission_report/', views.generate_admission_report, name='generate_admission_report'),
-]
+    path('trend-analysis/', views.trend_analysis, name='trend_analysis'),]

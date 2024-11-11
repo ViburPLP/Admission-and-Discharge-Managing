@@ -7,6 +7,10 @@ from django.core.exceptions import ValidationError
 import magic
 
 #********************************************************************************
+# Custom file validators for the Scheme model's `policy_document` field.
+# The `extension_validator` ensures that the uploaded file has one of the allowed extensions: .csv, .xlsx, .xls, or .pdf.
+# The `validate_file_mimetype` function checks the MIME type of the uploaded file.
+
 extension_validator = FileExtensionValidator(['.csv', '.xlsx', '.xls', '.pdf'])
 
 def validate_file_mimetype(file):
@@ -62,10 +66,10 @@ class Scheme(models.Model):
     rm_contact=models.CharField(max_length=100, null=True)
     policy_start_date=models.DateField(null=True)
     policy_end_date=models.DateField(null=True)
-    policy_document=models.FileField(
-        upload_to='policy_documents/', 
-        null=True, 
-        validators=[extension_validator, validate_file_mimetype])
+    # policy_document=models.FileField(
+    #     upload_to='policy_documents/', 
+    #     null=True, 
+    #     validators=[extension_validator, validate_file_mimetype])
 
     def __str__(self):
         return self.name
@@ -167,7 +171,3 @@ class Daily_update(models.Model):
 
     def __str__(self):
         return f"Update on {self.date} - Interim Bill: {self.interim_bill}"
-    
-
-    
-
