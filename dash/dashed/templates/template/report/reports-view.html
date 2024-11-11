@@ -171,7 +171,7 @@
                               <div class="adm-hx2">  
                                 <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
                                   <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Scheme:</h5>
-                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.scheme}}</div>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{% if admission.scheme %}{{admission.scheme}}{% else %}{{admission.member.scheme}}{% endif %}</div>
                                 </div> 
                                 <div id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e08-60e898b3" class="maj-min">
                                   <h5 id="w-node-_881b1c03-c093-a72e-ceaa-59a783de9e09-60e898b3" class="major-field">initial balance</h5>
@@ -183,11 +183,11 @@
                                 </div>
                                 <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149571-60e898b3" class="maj-min">
                                   <h5 id="w-node-e5c344fb-00b1-594e-befd-2f9f60149572-60e898b3" class="major-field">admitted by:</h5>
-                                  <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149574-60e898b3" class="minor-field">{{admission.admitted_by}}</div>
+                                  <div id="w-node-e5c344fb-00b1-594e-befd-2f9f60149574-60e898b3" class="minor-field">{% if admission.admited_by %} {{admission.admited_by}} {% else %} {{admission.admitted_by}} {% endif %}</div>
                                 </div>
                                 <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
                                   <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Status at admission:</h5>
-                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.status}}</div>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{% if admission.status %} {{admission.status}} {% else %} {{admission.member.status}} {% endif %}</div>
                                 </div>
                                 <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
                                   <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Amount requested:</h5>
@@ -195,15 +195,15 @@
                                 </div>
                                 <div id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f1-60e898b3" class="maj-min">
                                   <h5 id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f2-60e898b3" class="major-field">ex-Gratia</h5>
-                                  <div id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f4-60e898b3" class="minor-field">{{admission.discharge_notes}}</div>
+                                  <div id="w-node-b9d9dc4f-7027-afa4-bdd8-160167a8d9f4-60e898b3" class="minor-field">{% if admission.discharge_notes %} {{admission.discharge_notes}} {% else %} To be specified at Discharge {% endif %} </div>
                                 </div>
                                 <div id="w-node-_0988439e-ff83-a45d-8b03-aa726183760e-60e898b3" class="maj-min">
                                   <h5 id="w-node-_0988439e-ff83-a45d-8b03-aa726183760f-60e898b3" class="major-field">Discharged by:</h5>
-                                  <div id="w-node-_0988439e-ff83-a45d-8b03-aa7261837611-60e898b3" class="minor-field">{{admission.discharged_by}}</div>
+                                  <div id="w-node-_0988439e-ff83-a45d-8b03-aa7261837611-60e898b3" class="minor-field">Still Admitted</div>
                                 </div>
                                 <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f8-60e898b3" class="maj-min">
                                   <h5 id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4f9-60e898b3" class="major-field">Validity:</h5>
-                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{{admission.validity}}</div>
+                                  <div id="w-node-_3e61d4bc-3975-561b-e981-b336553bd4fb-60e898b3" class="minor-field">{% if admission.validity %}{{admission.validity}} {% else %} {{admission.member.validity}} {% endif %}</div>
                                 </div>
                                 <div id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9571-60e898b3" class="maj-min">
                                   <h5 id="w-node-_0e61f161-e54f-028f-5745-c2627c0a9572-60e898b3" class="major-field">initial LOU</h5>
