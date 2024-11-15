@@ -81,10 +81,10 @@ class Provider(models.Model):
     care_manager=models.CharField(max_length=100, null=True)
     cm_contact=models.CharField(max_length=100, null=True)
     services= models.CharField(max_length=100, null=True)
-    agreed_packages= models.FileField(
-        upload_to='agreed_packages/', 
-        null=True, 
-        validators=[extension_validator, validate_file_mimetype])
+    # agreed_packages= models.FileField(
+    #     upload_to='agreed_packages/', 
+    #     null=True, 
+    #     validators=[extension_validator, validate_file_mimetype])
 
     def __str__(self):
         return self.name
@@ -171,3 +171,6 @@ class Daily_update(models.Model):
 
     def __str__(self):
         return f"Update on {self.date} - Interim Bill: {self.interim_bill}"
+    
+ 
+    

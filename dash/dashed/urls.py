@@ -39,6 +39,9 @@ urlpatterns = [
     path('account/change-password/', views.change_password, name='change_password'),
 
     #schemes and providers management
+    path('schemes/', views.schemes, name='schemes'),
+    path('scheme_detail/<int:scheme_id>/', views.scheme_detail, name='scheme_detail'),
+
     path('manage/', views.manage_schemes_providers, name='manage_schemes_providers'),
     path('edit-scheme/<int:scheme_id>/', views.edit_scheme, name='edit_scheme'),
     path('delete-scheme/<int:scheme_id>/', views.delete_scheme, name='delete_scheme'),
@@ -47,7 +50,9 @@ urlpatterns = [
     path('delete-provider/<int:provider_id>/', views.delete_provider, name='delete_provider'),
     path('view-schemes/<int:provider_id>/', views.view_schemes, name='view_schemes'),
 
-    path('schemes/', views.schemes, name='schemes'),
 
 
-    path('trend-analysis/', views.trend_analysis, name='trend_analysis'),]
+    path('trend-analysis/', views.trend_analysis, name='trend_analysis'),
+            ]
+
+

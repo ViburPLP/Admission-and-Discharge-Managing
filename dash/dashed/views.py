@@ -574,6 +574,8 @@ def export_payer_report(request, payer_name):
         date_of_interim_bill = last_update.date if last_update else None 
         if not is_naive(date_of_interim_bill): #if date_of_interim_bill is not naive-Excel does not support timezones in datetimes
             date_of_interim_bill = make_naive(date_of_interim_bill)
+        else:
+            date_of_interim_bill = date_of_interim_bill
 
     wb = openpyxl.Workbook()
     ws= wb.active
@@ -740,6 +742,13 @@ def schemes(request): #list of schemes.
                   {'schemes': schemes, 
                     'query': query, 
                     'payer_filter': payer_filter})
+
+@login_required
+def scheme_detail(request, scheme_id):
+    scheme = get_object_or_404(Scheme, id=scheme_id)
+    provider = Provider.objects.filter(schemes=scheme)
+
+    return render(request, 'template/schemes/schemes.html', {'scheme': scheme, 'provider': provider})
 
 
 
