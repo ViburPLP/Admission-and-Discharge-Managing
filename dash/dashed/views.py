@@ -572,10 +572,11 @@ def export_payer_report(request, payer_name):
         last_update = update.updates.order_by('-date').first()
         interim_bill = last_update.interim_bill if last_update else None
         date_of_interim_bill = last_update.date if last_update else None 
-        if not is_naive(date_of_interim_bill): #if date_of_interim_bill is not naive-Excel does not support timezones in datetimes
-            date_of_interim_bill = make_naive(date_of_interim_bill)
+        if date_of_interim_bill is not None:
+            if not is_naive(date_of_interim_bill):  # Check if the datetime is naive
+                date_of_interim_bill = make_naive(date_of_interim_bill)
         else:
-            date_of_interim_bill = date_of_interim_bill
+            date_of_interim_bill= " "
 
     wb = openpyxl.Workbook()
     ws= wb.active
@@ -669,11 +670,11 @@ def export_payer_report(request, payer_name):
 
 
 
-        for sheet in [ws, summary_ws]:
-            for col in sheet.columns:
-                max_length = max(len(str(cell.value)) 
-                                 for cell in col if cell.value) + 2
-                sheet.column_dimensions[get_column_letter(col[0].column)].width = max_length
+    for sheet in [ws, summary_ws]:
+        for col in sheet.columns:
+            max_length = max(len(str(cell.value)) 
+                                for cell in col if cell.value) + 2
+            sheet.column_dimensions[get_column_letter(col[0].column)].width = max_length
 
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
