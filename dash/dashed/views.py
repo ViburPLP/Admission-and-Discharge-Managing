@@ -747,9 +747,8 @@ def schemes(request): #list of schemes.
 @login_required
 def scheme_detail(request, scheme_id):
     scheme = get_object_or_404(Scheme, id=scheme_id)
-    provider = Provider.objects.filter(schemes=scheme)
 
-    return render(request, 'template/schemes/schemes.html', {'scheme': scheme, 'provider': provider})
+    return render(request, 'template/schemes/schemes.html', {'scheme': scheme})
 
 
 

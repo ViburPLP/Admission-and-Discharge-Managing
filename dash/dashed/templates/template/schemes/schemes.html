@@ -115,18 +115,25 @@
                   <thead>
                       <tr>
                           <th>Provider</th>
-                          <th></th>
+                          <th>Location</th>
+                          <th>Scope of Service</th>
+                          <th>Care Manager</th>
+                          <th>C-M Contacts</th>
                       </tr>
                   </thead>
                   <tbody>
-                      {% for provider  in provider %}
+                      {% for provider  in scheme.service_provider.all %}
                     <tr class="clickable-row" data-href="{% url 'scheme_detail' scheme.id %}">
                            <td>{{ provider.name }}</td>
-                          <td><input type="checkbox" name="selected_schemes" value="{{ scheme.id }}"></td>
+                           <td>{{ provider.location }}</td>
+                           <td>{{ provider.services }}</td>
+                           <td>{{ provider.care_manager }}</td>
+                           <td>{{ provider.cm_contact }}</td>
+
                       </tr>
                       {% empty %}
                       <tr>
-                          <td colspan="4" style="text-align:center; padding: 20px;">No schemes found.</td>
+                          <td colspan="4" style="text-align:center; padding: 20px;">No providers found.</td>
                       </tr>
                       {% endfor %}
                   </tbody>

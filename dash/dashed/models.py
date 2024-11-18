@@ -66,6 +66,7 @@ class Scheme(models.Model):
     rm_contact=models.CharField(max_length=100, null=True)
     policy_start_date=models.DateField(null=True)
     policy_end_date=models.DateField(null=True)
+    scheme_notes = models.TextField(null=True)
     service_provider= models.ManyToManyField('Provider', related_name='scheme', blank=True)    
     # policy_document=models.FileField(
     #     upload_to='policy_documents/', 
@@ -82,6 +83,7 @@ class Provider(models.Model):
     care_manager=models.CharField(max_length=100, null=True)
     cm_contact=models.CharField(max_length=100, null=True)
     services= models.CharField(max_length=100, null=True)
+    provider_notes = models.TextField(null=True)
     # agreed_packages= models.FileField(
     #     upload_to='agreed_packages/', 
     #     null=True, 
