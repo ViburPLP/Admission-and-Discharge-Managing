@@ -20,21 +20,10 @@ class ProviderInline(admin.TabularInline):
     model = Provider.schemes.through  # Specify the through model
     extra = 1  # Number of extra empty forms to display
 
-@admin.register(Scheme)
 class SchemeAdmin(admin.ModelAdmin):
     list_display = ['name', 'payer']
+    search_fields = ['name', 'payer']
     filter_horizontal = [ 'service_provider']
-
-    class Media:
-        js = ('scheme_admin.js',)
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        if form.cleaned_data.get('provider_panels'):
-            selected_providers = Provider.objects.filter(
-                panels__in=form.cleaned_data['provider_panels']
-            ).distinct()
-            obj.providers.add(*selected_providers)
 
     def get_urls(self):
         urls = super().get_urls()
@@ -57,12 +46,18 @@ class SchemeAdmin(admin.ModelAdmin):
             if len(row)>= 2:
               name = row[0]. strip()
               payer = row[1].strip()
+              rm = row[2].strip()
+              rm_contact = row[3].strip()
+              policy_start_date = row[4].strip()
+              policy_end_date = row[5].strip()
 
               Scheme.objects.create(name=name, payer= payer)
               created_count +=1
           self.message_user(request, f"{created_count} schemes created from csv")
           return HttpResponseRedirect('..')
       return render(request, "admin/dashed/schemes/bulk_create_schemes.html")
+
+admin.site.register(Scheme, SchemeAdmin)
 
 class ProviderAdmin(admin.ModelAdmin):
     inlines = [ProviderInline]
@@ -107,8 +102,12 @@ class ProviderAdmin(admin.ModelAdmin):
                 for row in reader:
                     if row:
                         provider_name = row[0].strip()
+                        location = row[1].strip()
+                        care_manager = row[2].strip()
+                        cm_contact = row[3].strip()
+                        services = row[4].strip()
                         if provider_name:
-                            Provider.objects.create(name=provider_name)
+                            Provider.objects.create(name=provider_name, location=location, care_manager=care_manager, cm_contact=cm_contact, services=services)
                             created_count += 1
                 self.message_user(request, f"{created_count} providers created from CSV.")
                 return HttpResponseRedirect("..")
