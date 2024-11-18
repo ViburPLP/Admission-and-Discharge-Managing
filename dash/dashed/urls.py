@@ -53,6 +53,7 @@ urlpatterns = [
 
 
     path('trend-analysis/', views.trend_analysis, name='trend_analysis'),
-            ]
+            
+    ]
 
 

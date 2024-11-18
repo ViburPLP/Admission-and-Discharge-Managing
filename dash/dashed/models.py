@@ -66,6 +66,7 @@ class Scheme(models.Model):
     rm_contact=models.CharField(max_length=100, null=True)
     policy_start_date=models.DateField(null=True)
     policy_end_date=models.DateField(null=True)
+    service_provider= models.ManyToManyField('Provider', related_name='scheme', blank=True)    
     # policy_document=models.FileField(
     #     upload_to='policy_documents/', 
     #     null=True, 

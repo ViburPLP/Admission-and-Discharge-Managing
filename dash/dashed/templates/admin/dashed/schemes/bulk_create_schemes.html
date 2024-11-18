@@ -1,0 +1,34 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+  <h1>{% trans "Bulk Create Schemes" %}</h1>
+  <p>{% trans "Upload a CSV file to bulk create schemes. The file should have the following columns:" %}</p>
+  <ul>
+    <li><strong>{% trans "Name" %}</strong>: {% trans "The name of the scheme" %}</li>
+    <li><strong>{% trans "Payer" %}</strong>: {% trans "The name of the payer associated with the scheme" %}</li>
+  </ul>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <fieldset>
+      <div>
+        <label for="csv_file"><strong>{% trans "Upload CSV File" %}</strong>:</label>
+        <input type="file" name="csv_file" id="csv_file" accept=".csv" required>
+      </div>
+    </fieldset>
+    <div class="submit-row">
+      <input type="submit" value="{% trans 'Upload and Create Schemes' %}" class="default">
+    </div>
+  </form>
+
+  <div style="margin-top: 20px;">
+    <h3>{% trans "Example CSV Format" %}</h3>
+    <pre>
+Name,Payer
+Scheme A,Payer A
+Scheme B,Payer B
+Scheme C,Payer C
+    </pre>
+  </div>
+{% endblock %}

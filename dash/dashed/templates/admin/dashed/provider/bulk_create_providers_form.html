@@ -1,0 +1,33 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+<!-- Instruction and file upload form -->
+<div class="bulk-create-form">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <h3>Upload a CSV File:</h3>
+            <p class="help-text">Choose a CSV file with provider names in the first column.</p>
+            <input type="file" name="csv_file" required>
+            <button type="submit" class="button">Upload CSV</button>
+        </div>
+    </form>
+</div>
+
+<hr>
+
+<!-- Instruction and manual entry form -->
+<div class="bulk-create-form">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <h3>Enter Provider Names (One per line):</h3>
+            <p class="help-text">Provide one provider name per line. Ensure names are correctly formatted.</p>
+            <textarea name="provider_names" rows="10" cols="40" placeholder="Provider Name 1&#10;Provider Name 2&#10;Provider Name 3" required></textarea>
+            <button type="submit" class="button">Add Providers</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

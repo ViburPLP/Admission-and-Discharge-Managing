@@ -20,3 +20,18 @@ class SchemeForm(forms.Form):
 class ProviderForm(forms.Form):
     providers_csv = forms.FileField()
 
+
+from .models import Provider, Scheme
+
+class SchemeAdminForm(forms.ModelForm):
+    class Meta:
+        model = Scheme
+        fields = ['name', 'payer', 'rm', 'rm_contact', 'policy_start_date', 'policy_end_date'] 
+
+    # Add a custom field for providers
+    providers = forms.ModelMultipleChoiceField(
+        queryset=Scheme.objects.all(),
+        required=False,
+        widget=forms.SelectMultiple,  # Dual-list widget
+    )
+
