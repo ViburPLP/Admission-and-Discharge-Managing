@@ -843,7 +843,10 @@ def providers(request):
                     'query': query, 
                     'provider_filter': provider_filter})
 
-
+@login_required
+def provider_detail(request, provider_id):
+    provider = get_object_or_404(Provider, id=provider_id)
+    return render(request, 'template/providers/providers.html', {'provider': provider})
 
 def view_providers(request, scheme_id):
     scheme = get_object_or_404(Scheme, id=scheme_id)

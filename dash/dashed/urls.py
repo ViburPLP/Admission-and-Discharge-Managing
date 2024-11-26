@@ -51,6 +51,7 @@ urlpatterns = [
     path('view-schemes/<int:provider_id>/', views.view_schemes, name='view_schemes'),
 
     path('providers/', views.providers, name='providers'),
+    path('provider_detail/<int:provider_id>/', views.provider_detail, name='provider_detail'),
 
 
 
