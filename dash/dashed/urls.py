@@ -50,6 +50,8 @@ urlpatterns = [
     path('delete-provider/<int:provider_id>/', views.delete_provider, name='delete_provider'),
     path('view-schemes/<int:provider_id>/', views.view_schemes, name='view_schemes'),
 
+    path('providers/', views.providers, name='providers'),
+
 
 
     path('trend-analysis/', views.trend_analysis, name='trend_analysis'),

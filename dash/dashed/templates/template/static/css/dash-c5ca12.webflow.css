@@ -1737,6 +1737,16 @@ tr.clickable-row:hover {
   border-bottom: 20px solid var(--back);
 }
 
+.data-card2 {
+  color: var(--aliceblue);
+  text-align: center;
+  border-radius: 5px;
+  flex-flow: row;
+  justify-content: space-between;
+  padding: 5px;
+  display: flex;
+}
+
 .dropdown-toggle-4 {
   flex-flow: column;
   justify-content: space-between;
@@ -2250,6 +2260,36 @@ tr.clickable-row:hover {
   justify-content: flex-end;
   align-items: flex-end;
   padding: 4rem 1rem 1rem 16rem;
+  display: flex;
+}
+
+
+.div-block-29 {
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr .5fr 1fr;
+  grid-auto-columns: 1fr;
+  padding: 10px;
+  display: grid;
+}
+
+
+.div-block-30 {
+  border: 2px solid #000;
+  border-radius: 5px;
+  flex-flow: column;
+  padding: 40px 25px 25px;
+  display: flex;
+}
+
+
+.div-block-31 {
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+  text-align: center;
+  flex-flow: column;
+  justify-items: center;
   display: flex;
 }
 

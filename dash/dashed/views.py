@@ -587,7 +587,7 @@ def export_payer_report(request, payer_name):
         "Date of Admission", "Diagnosis", "Admitting Provider", "Ammount Requested", 
         "Initial LOU issued", "Cover Benefits Applied", "Available Cover Balance",
         "Interim Bill", "Date of Interim Bill", 
-        "LOS", "Date of Discharge", "Final Bill", "Final LOU Issued", "Ex-Gratia",
+        "LOS", "Date of Discharge", "Final Bill", "Final LOU Issued", "Status",
         "Admited By", "Discharged By",
     ]
 
@@ -723,7 +723,7 @@ def change_password(request):
     return render(request, 'user_account/change_password.html', {'form': form})
 
 #***************************************************************************
-#Schemes and Providers
+#Schemes
 
 @login_required
 def schemes(request): #list of schemes.
@@ -744,13 +744,29 @@ def schemes(request): #list of schemes.
                     'query': query, 
                     'payer_filter': payer_filter})
 
+from .forms import SchemeAdminForm
+
 @login_required
 def scheme_detail(request, scheme_id):
     scheme = get_object_or_404(Scheme, id=scheme_id)
+    if request.method == 'POST':
+        form = SchemeAdminForm(request.POST, instance=scheme)
+        if form.is_valid():
+            scheme = form.save(commit=False)
+            selected_providers = form.cleaned_data.get('service_provider')
+            messages.success(request, 'Scheme details updated successfully.')
+            scheme.service_provider.add(*selected_providers)
+            messages.success(request, 'Scheme details updated successfully.')
+            return redirect('scheme_detail', scheme_id=scheme_id)
+        else:
+            print(form.errors)
+    else:
+        form = SchemeAdminForm(instance=scheme)
 
-    return render(request, 'template/schemes/schemes.html', {'scheme': scheme})
-
-
+    return render(request, 'template/schemes/schemes.html', {
+        'scheme': scheme,
+        'form': form,
+    })
 
 def manage_schemes_providers(request):
     schemes = Scheme.objects.all()
@@ -806,6 +822,28 @@ def delete_scheme(request, scheme_id):
     scheme = get_object_or_404(Scheme, id=scheme_id)
     scheme.delete()
     return redirect(reverse('manage/manage_schemes_providers'))
+
+#***************************************************************************
+#providers
+@login_required
+def providers(request):
+    query = request.GET.get('q')
+    provider_filter = request.GET.get('provider')
+
+    providers = Provider.objects.all()
+    if query:
+        providers= providers.filter(
+            Q(name__icontains=query))
+    if provider_filter:
+        providers = providers.filter(
+            Q(name__icontains=provider_filter))
+        
+    return render(request, 'template/providers/provider-list.html', 
+                  {'providers': providers, 
+                    'query': query, 
+                    'provider_filter': provider_filter})
+
+
 
 def view_providers(request, scheme_id):
     scheme = get_object_or_404(Scheme, id=scheme_id)

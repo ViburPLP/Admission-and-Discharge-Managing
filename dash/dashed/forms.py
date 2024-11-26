@@ -22,16 +22,27 @@ class ProviderForm(forms.Form):
 
 
 from .models import Provider, Scheme
+from django import forms
+
 
 class SchemeAdminForm(forms.ModelForm):
     class Meta:
         model = Scheme
-        fields = ['name', 'payer', 'rm', 'rm_contact', 'policy_start_date', 'policy_end_date'] 
-
-    # Add a custom field for providers
-    providers = forms.ModelMultipleChoiceField(
-        queryset=Scheme.objects.all(),
-        required=False,
-        widget=forms.SelectMultiple,  # Dual-list widget
+        fields = [ 
+            'service_provider'
+        ]
+        
+    service_provider = forms.ModelMultipleChoiceField(
+        queryset=Provider.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'dual_select'}),
+        required=False
     )
+
+class SchemeAdd (forms.ModelForm):
+    class Meta:
+        model = Scheme
+        fields = '__all__'
+
+        
+
 
