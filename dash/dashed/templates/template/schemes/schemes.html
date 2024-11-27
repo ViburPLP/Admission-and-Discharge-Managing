@@ -184,7 +184,7 @@
                           </thead>
                           <tbody>
                               {% for provider  in scheme.service_provider.all %}
-                            <tr class="clickable-row" data-href="{% url 'scheme_detail' scheme.id %}">
+                            <tr class="clickable-row">
                                    <td>{{ provider.name }}</td>
                                    <td>{{ provider.location }}</td>
                                    <td>{{ provider.services }}</td>

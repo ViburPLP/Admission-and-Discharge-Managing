@@ -26,19 +26,21 @@
         </div>
       </div>
       <div id="user-div" class="user-div">
-        <div id="User-greating" class="user-greetings">
-          <h4 id="UG-text" class="user-greating-text">Good morning {FIRST_NAME}</h4>
-        </div>
-        <div id="User-Icon" class="user-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" alt="" class="image"></div>
+        <a id="user-div" href="../user/user-page.html" class="user-div w-inline-block">
+          <div id="User-greating" class="user-greetings">
+            <h4 id="UG-text" class="user-greating-text">{{ greeting }},&nbsp;  {{ user.first_name }}!</h4>
+          </div>
+          <div id="User-Icon" class="user-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" alt="" class="image"></div>
+        </a>
       </div>
     </div>
   </section>
   <section class="divider-sect"></section>
   <section class="content-sect-1-0">
-    <div id="w-node-_656730b6-7fe7-8434-e232-d1acd4e24abd-36a4b420" class="side-bar">
+    <div id="w-node-fdfe0d76-af7f-df40-bc06-38716c850a09-f837a0a8" class="side-bar">
       <a href="../index.html" class="link-block-2 w-inline-block">
-        <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+        <aside class="sb-item active">
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">admission</h3>
           </div>
@@ -46,15 +48,15 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">Schemes</h3>
           </div>
         </aside>
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
-        <aside class="sb-item active">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+        <aside class="sb-item">
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">Providers</h3>
           </div>
@@ -62,7 +64,7 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">Reporting</h3>
           </div>
@@ -70,12 +72,13 @@
       </a>
       <a href="../index.html" class="link-block-2 w-inline-block">
         <aside class="sb-item">
-          <div class="sb-item-icon"><img src="../images/permanent-job-stroke-rounded.svg" loading="lazy" width="Auto" alt=""></div>
+          <div class="sb-item-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" width="Auto" alt=""></div>
           <div class="sb-item-text">
             <h3 class="sb-item-txt">packages</h3>
           </div>
         </aside>
       </a>
+    </div>
     </div>
     <section class="content-wrapper">
       <div class="content-div-basic">
