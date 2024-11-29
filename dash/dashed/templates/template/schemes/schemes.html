@@ -129,44 +129,6 @@
             <!-- Tab Pane 1 -->
             <div data-w-tab="Totals" class="tab-pane-active w-tab-pane" style="overflow: auto;">
               <div class="adm-state-div table-div report">
-                  <form method="POST">
-                    {% csrf_token %}
-                    <div class="div-block-29">
-                        <div id="unpanelled-providers" class="div-block-30">
-                            <label for="unpanelled-select" class="table-updates">Providers Not On Panel</label>
-                            <select id="unpanelled-select" class="select-field w-select" multiple size="20" name ="unpanelled_providers">
-                                {% for provider in form.fields.service_provider.queryset %}
-                                    {% if provider not in scheme.service_provider.all %}
-                                        <option class="clickable-row" value="{{ provider.id }}">{{ provider.name }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                            <div class="help" id="id_service_provider_helptext">
-                              <div>Hold down “Control”, or “Command” on a Mac, to select more than one.</div>
-                          </div>
-                        </div>
-                        <div id="dual-buttons" class="div-block-31" style="display: flex; justify-content: space-around; ">
-                            <button id="add-selected" type="button" class="button w-button">Add &gt;&gt;&gt;</button>
-                        </div>
-                        <div id="panelled-providers" class="div-block-30">
-                            <label for="panelled-select" class="table-updates">Providers On Panel</label>
-                            <select id="panelled-select" class="select-field w-select" name="service_provider" multiple size="20">
-                                {% for provider in scheme.service_provider.all %}
-                                    <option class="clickable-row" value="{{ provider.id }}">{{ provider.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="div-block-31">
-                      <button type="submit" class="button w-button">Save Changes</button>
-                  </div>                    
-                  </form>
-              </div>
-            </div>            
-            <!-- Tab Pane 2 -->
-            <div data-w-tab="Discharged" class="w-tab-pane" style="overflow: auto;">
-              <div class="adm-state-div table-div report">
                 <div class="component-head table-div">         
                   <div class="adm-state-div table-div">
                     <div class="table-header">
@@ -184,7 +146,7 @@
                           </thead>
                           <tbody>
                               {% for provider  in scheme.service_provider.all %}
-                            <tr class="clickable-row">
+                            <tr class="clickable-row" data-href= "{% url 'provider_detail' provider.id %}">
                                    <td>{{ provider.name }}</td>
                                    <td>{{ provider.location }}</td>
                                    <td>{{ provider.services }}</td>
@@ -202,7 +164,45 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>              
+            </div>            
+            <!-- Tab Pane 2 -->
+            <div data-w-tab="Discharged" class="w-tab-pane" style="overflow: auto;">
+              <div class="adm-state-div table-div report">
+                <form method="POST">
+                  {% csrf_token %}
+                  <div class="div-block-29">
+                      <div id="unpanelled-providers" class="div-block-30">
+                          <label for="unpanelled-select" class="table-updates">Providers Not On Panel</label>
+                          <select id="unpanelled-select" class="select-field w-select" multiple size="20" name ="unpanelled_providers">
+                              {% for provider in form.fields.service_provider.queryset %}
+                                  {% if provider not in scheme.service_provider.all %}
+                                      <option class="clickable-row" value="{{ provider.id }}">{{ provider.name }}</option>
+                                  {% endif %}
+                              {% endfor %}
+                          </select>
+                          <div class="help" id="id_service_provider_helptext">
+                            <div>Hold down “Control”, or “Command” on a Mac, to select more than one.</div>
+                        </div>
+                      </div>
+                      <div id="dual-buttons" class="div-block-31" style="display: flex; justify-content: space-around; ">
+                          <button id="add-selected" type="button" class="button w-button">Add &gt;&gt;&gt;</button>
+                      </div>
+                      <div id="panelled-providers" class="div-block-30">
+                          <label for="panelled-select" class="table-updates">Providers On Panel</label>
+                          <select id="panelled-select" class="select-field w-select" name="service_provider" multiple size="20">
+                              {% for provider in scheme.service_provider.all %}
+                                  <option class="clickable-row" value="{{ provider.id }}">{{ provider.name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+                  
+                  <div class="div-block-31">
+                    <button type="submit" class="button w-button">Save Changes</button>
+                </div>                    
+                </form>
+            </div>
             </div>
           </div>
         </div>
