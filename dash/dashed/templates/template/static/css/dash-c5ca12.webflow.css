@@ -1137,7 +1137,6 @@ tr.clickable-row:hover {
 }
 
 .dx {
-  background-color: var(--back);
   border: 1px #72a0c1;
   border-radius: 5px;
   flex-flow: column;
