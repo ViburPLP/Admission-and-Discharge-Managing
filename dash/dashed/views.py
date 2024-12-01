@@ -28,13 +28,34 @@ from .models import (
     Provider,
     Admission_details,
     Discharge_details,
-    Daily_update
+    Daily_update,
+    Case_manager_update,
 )
+
  #**************************************************************************************************************************************************
  #Admissions Management
 @login_required
 def home(request):
-    return render(request, 'template/index.html')
+    updates = Case_manager_update.objects.all().order_by('-date')
+    current_date = now().date()
+
+    if request.method == 'POST':
+        if 'add_update' in request.POST:
+            update= request.POST.get('update')
+
+            if update:
+                new_update = Case_manager_update.objects.create(
+                    by=request.user,  
+                    date=now(),
+                    update=update
+                )
+                new_update.save()
+                messages.success(request, 'Update added successfully!')
+            else:
+                messages.error(request, 'Both date and update are required.')
+
+            return redirect('home') 
+    return render(request, 'template/index.html' , {'updates': updates, 'current_date': current_date})
 @login_required
 def pending_admissions(request): #list of recently imported, awaiting admission.
     query = request.GET.get('q')
@@ -212,8 +233,9 @@ def discharging_member_detail(request, pk): #page displaying details of the memb
 
     return render(request, 'template/admissions/discharge-page.html', context)
 
+
 @login_required
-def discharge_member(request, pk):
+def add_update(request, pk):
     member = get_object_or_404(Member_Detail, pk=pk)
     admission_details = Admission_details.objects.filter(member=member).first()
     update_form = UpdateForm(request.POST or None)
@@ -226,58 +248,61 @@ def discharge_member(request, pk):
                 update.save()
 
                 return redirect('discharging_member_detail', pk=pk)
+    context = {
+                    'member': member,
+                    'admission_details': admission_details,
+                    'update_form': update_form,
+                    'current_date': timezone.now().date(),
+                }
+    return render(request, 'discharged/discharged_members.html', context)
+@login_required
+def discharge_member(request, pk):
+    member = get_object_or_404(Member_Detail, pk=pk)
+    admission_details = Admission_details.objects.filter(member=member).first()
+    
+    if request.method == 'POST':
+        discharge_details = Discharge_details(
+            provider=admission_details.Provider,
+            admission_date=admission_details.admission_date,
+            admission_diagnosis=admission_details.admission_diagnosis,
+            cover_used=admission_details.cover_used,
+            initial_cover_value=admission_details.initial_cover_value,
+            initial_cover_balance=admission_details.initial_cover_balance,
+            requested_amount=admission_details.requested_amount,
+            lou_issued=admission_details.lou_issued,
+            admitted_by=admission_details.admited_by,
+            relationship=member.relationship,
+            name=member.name,
+            membership_number=member.membership_number,
+            payer=member.payer,
+            scheme=member.scheme,
+            status=member.status,
+            validity=member.validity,
+            discharge_date=request.POST.get('discharge_date'),
+            final_approved_amount=request.POST.get('final_approved_amount', ''),
+            discharge_notes=request.POST.get('discharge_notes', ''),
+            discharged_by=f"{request.user.first_name} {request.user.last_name}"
+        )
+        discharge_details.save()
+
+        context = {
+            'member': member,
+            'admission_details': admission_details,
+            'discharge_details': discharge_details,
+            'updates': Daily_update.objects.filter(admission=admission_details).order_by('-date'),
+            'current_date': timezone.now().date(),
+        }
+
+        html_string = render_to_string('template/admissions/discharge_lou.html', context)
+        pdf_io = io.BytesIO()
+        HTML(string=html_string).write_pdf(target=pdf_io)
+        pdf_io.seek(0)
+
+        response = FileResponse(pdf_io, as_attachment=True, filename=f'Discharge_LOU_of-{member.name}.pdf')
         
-        elif 'discharge_member_form' in request.POST:
-            # Save discharge details
-            discharge_details = Discharge_details(
-                provider=admission_details.Provider,
-                admission_date=admission_details.admission_date,
-                admission_diagnosis=admission_details.admission_diagnosis,
-                cover_used=admission_details.cover_used,
-                initial_cover_value=admission_details.initial_cover_value,
-                initial_cover_balance=admission_details.initial_cover_balance,
-                requested_amount=admission_details.requested_amount,
-                lou_issued=admission_details.lou_issued,
-                admitted_by=admission_details.admited_by,
-                relationship=member.relationship,
-                name=member.name,
-                membership_number=member.membership_number,
-                payer=member.payer,
-                scheme=member.scheme,
-                status=member.status,
-                validity=member.validity,
-                discharge_date=request.POST.get('discharge_date'),
-                final_approved_amount=request.POST.get('final_approved_amount', ''),
-                discharge_notes=request.POST.get('discharge_notes', ''),
-                discharged_by=f"{request.user.first_name} {request.user.last_name}"
-            )
-            
-            discharge_details.save()
+        member.delete()
 
-            # Change member status to discharged
-            member.admission_status = 'discharged'
-            member.save()
-
-            # Generate and save PDF
-            context = {
-                'member': member,
-                'admission_details': admission_details,
-                'discharge_details': discharge_details,
-                'updates': Daily_update.objects.filter(admission=admission_details).order_by('-date'),
-                'current_date': timezone.now().date(),
-            }
-
-            html_string = render_to_string('template/admissions/discharge_lou.html', context)
-            pdf_io = io.BytesIO()
-            HTML(string=html_string).write_pdf(target=pdf_io)
-            pdf_io.seek(0)
-
-            response = FileResponse(pdf_io, as_attachment=True, filename=f'Discharge_Summary_{member.name}.pdf')
-            
-            # Delete related records
-            member.delete()
-
-            return response
+        return response
 
     updates = Daily_update.objects.filter(admission=admission_details).order_by('-date')
 
@@ -285,12 +310,9 @@ def discharge_member(request, pk):
         'member': member,
         'admission_details': admission_details,
         'updates': updates,
-        'update_form': update_form,
         'current_date': timezone.now().date(),
     }
-
     return render(request, 'discharged/discharged_members.html', context)
-
 
 @login_required
 def discharged_members(request): 

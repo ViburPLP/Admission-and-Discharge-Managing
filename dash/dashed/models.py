@@ -176,5 +176,13 @@ class Daily_update(models.Model):
     def __str__(self):
         return f"Update on {self.date} - Interim Bill: {self.interim_bill}"
     
- 
-    
+class Case_manager_update(models.Model):
+    by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cm_updates')
+    date = models.DateTimeField(default=timezone.now)
+    update = models.TextField()
+
+    class meta:
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"Update by {self.by.username} on {self.date.strftime('%Y-%m-%d %H:%M:%S')}"    

@@ -20,6 +20,7 @@ urlpatterns = [
 
         #active-admissions
     path('currently_admitted/', views.current_admissions, name='current_admissions'), #active admissions list.
+    path('add_update/<int:pk>/', views.add_update, name='add_update'), #page displaying details of the active admission- for updates.
     path('discharging_member_detail/<int:pk>/', views.discharging_member_detail, name='discharging_member_detail'), #page displaying details of the active admission- for discharge or updates.
     path('discharge_member<int:pk>/', views.discharge_member, name='discharge_member'), #discharge member 'button'.
 

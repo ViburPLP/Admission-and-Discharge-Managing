@@ -1,11 +1,10 @@
-<!DOCTYPE html><!--  This site was created in Webflow. https://webflow.com  --><!--  Last Published: Sun Oct 27 2024 19:25:57 GMT+0000 (Coordinated Universal Time)  -->
+<!DOCTYPE html>
 <html data-wf-page="67101f23c4dd72e625d98d3b" data-wf-site="67101f23c4dd72e625d98d34">
 <head>
   <meta charset="utf-8">
-  <title>Dash</title>
+  <title>Home Page</title>
   {% load static %}
   <meta content="width=device-width, initial-scale=1" name="viewport">
-  <meta content="Webflow" name="generator">
   <link href="{% static 'css/normalize.css' %}" rel="stylesheet" type="text/css">
   <link href="{% static 'css/webflow.css' %}" rel="stylesheet" type="text/css">
   <link href="{% static 'css/dash-c5ca12.webflow.css' %}" rel="stylesheet" type="text/css">
@@ -22,18 +21,21 @@
     <div class="div-block-20">
       <h1 data-w-id="6a031e40-fcc7-6181-4c5a-a0036311eef0" class="x">X</h1>
     </div>
+    <form method="post" action="{% url 'home'%}">
+      {% csrf_token %}
     <div class="rprt-wrapper">
       <h2 class="modal-title">add update</h2>
       <div id="w-node-_5cec4b1c-4bdf-0efc-4177-4e14d0ae5137-25d98d3b" class="div-block-24">
         <div id="w-node-_5cec4b1c-4bdf-0efc-4177-4e14d0ae5138-25d98d3b" class="div-block-25 update">
-          <p id="w-node-_5cec4b1c-4bdf-0efc-4177-4e14d0ae5139-25d98d3b" class="paragraph update">{Date of update}</p>
-          <p id="w-node-_5cec4b1c-4bdf-0efc-4177-4e14d0ae513b-25d98d3b" class="paragraph update">{notes}</p>
+          <p id="w-node-_5cec4b1c-4bdf-0efc-4177-4e14d0ae5139-25d98d3b" class="paragraph update"name="date">{{ current_date }} <br> <span style="font-style: italic; font-size: 0.8em;"> Updating as {{ user.first_name }}</span></p>
+          <textarea id="w-node-_5cec4b1c-4bdf-0efc-4177-4e14d0ae513b-25d98d3b" name="update"class="paragraph update" name="update" rows="3" placeholder="Write your update here"></textarea>
         </div>
       </div>
       <div class="div-block-27">
-        <a href="#" class="button w-button">Save update</a>
+        <button type="submit" class="button w-button" name="add_update">Save update</button>
       </div>
     </div>
+  </form>
   </section>
   <section class="section">
     <div class="header">
@@ -42,10 +44,13 @@
       </div>
       <div id="user-div" class="user-div">
         <a id="user-div" href="{% url 'user_account' %}" class="user-div w-inline-block">
-          <div id="User-greating" class="user-greetings">
-            <h4 id="UG-text" class="user-greating-text">{{ greeting }},&nbsp;  {{ user.first_name }}!</h4>
+          <div id="User-greating" class="user-greetings" >
+            <h4 id="UG-text" class="user-greating-text" style="margin-bottom: 0px;" >{{ greeting }},&nbsp;  {{ user.first_name }}</h4>
           </div>
-          <div id="User-Icon" class="user-icon"><img src="{% static 'images/permanent-job-stroke-rounded.svg' %}" loading="lazy" alt="" class="image"></div>
+          <div id="User-Icon" class="user-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" color="#f8f8f8"width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
         </a>
       </div>
     </div>
@@ -58,12 +63,12 @@
           <h1 id="w-node-_21539e34-2c67-b20d-3b22-ec5770d9e1dc-25d98d3b" class="page-title log _1">Admissions management</h1>
         </div>
       </a>
-      <a id="w-node-c96cca7b-8a90-ccd3-923d-542be9a4bb04-25d98d3b" href="#" class="link-block w-inline-block">
+      <a id="w-node-c96cca7b-8a90-ccd3-923d-542be9a4bb04-25d98d3b" href="{% url 'schemes' %}" class="link-block w-inline-block">
         <div id="w-node-a42497e0-6d14-6a1e-72fb-c6596ec95904-25d98d3b" class="landing-card _3">
           <h1 id="w-node-a42497e0-6d14-6a1e-72fb-c6596ec95905-25d98d3b" class="page-title log _1">scheme management</h1>
         </div>
       </a>
-      <a id="w-node-edaafb13-7c29-9857-cc53-62d9bf79748e-25d98d3b" href="#" class="link-block w-inline-block">
+      <a id="w-node-edaafb13-7c29-9857-cc53-62d9bf79748e-25d98d3b" href="{% url 'reports' %}" class="link-block w-inline-block">
         <div id="w-node-_508913c2-69d5-2db9-b821-64ae74ba124b-25d98d3b" class="landing-card _4">
           <h1 id="w-node-_508913c2-69d5-2db9-b821-64ae74ba124c-25d98d3b" class="page-title log _1">reports and analytics</h1>
         </div>
@@ -73,39 +78,37 @@
           <h1 id="w-node-e5e8af22-61fa-d612-c789-0e4e06250dad-25d98d3b" class="page-title log _1">Packages management</h1>
         </div>
       </a>
-      <a id="w-node-e2ebce31-f806-fa67-659e-6474e8133081-25d98d3b" href="#" class="link-block w-inline-block">
+      <a id="w-node-e2ebce31-f806-fa67-659e-6474e8133081-25d98d3b" href="{% url 'providers' %}" class="link-block w-inline-block">
         <div id="w-node-d5d418cc-2275-bb79-e6df-071873a989bf-25d98d3b" class="landing-card _6">
           <h1 id="w-node-d5d418cc-2275-bb79-e6df-071873a989c0-25d98d3b" class="page-title log _1">Provider management</h1>
         </div>
       </a>
       <div id="w-node-_997dd80d-2f2f-a0c3-c69a-0ddf9127f2f6-25d98d3b" class="div-block-26">
         <h1 class="page-title log">case management updates</h1>
-        <div id="w-node-aad463ab-b45f-5324-6fe5-5868488dafeb-25d98d3b" class="div-block-24">
-          <div id="w-node-d85bf397-df60-b9f7-b03e-8c41180a5154-25d98d3b" class="div-block-25">
-            <p id="w-node-e29992cf-7ecb-fac8-8405-85d2d58daa42-25d98d3b">{Date of update}</p>
-            <p id="w-node-_6f9f23f9-b567-22ee-95a6-5f363bd341ab-25d98d3b">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
-          </div>
-          <div id="w-node-a442ecdb-181f-8cbf-f4ed-97fdfe1184ca-25d98d3b" class="div-block-25">
-            <p id="w-node-a442ecdb-181f-8cbf-f4ed-97fdfe1184cb-25d98d3b">{Date of update}</p>
-            <p id="w-node-a442ecdb-181f-8cbf-f4ed-97fdfe1184cd-25d98d3b">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
-          </div>
-          <div id="w-node-_325899d7-8d57-8106-82d6-ab37a2f410ae-25d98d3b" class="div-block-25">
-            <p id="w-node-_325899d7-8d57-8106-82d6-ab37a2f410af-25d98d3b">{Date of update}</p>
-            <p id="w-node-_325899d7-8d57-8106-82d6-ab37a2f410b1-25d98d3b">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
-          </div>
-          <div id="w-node-ba322a85-8feb-bae9-6805-f0f9cffc47fd-25d98d3b" class="div-block-25">
-            <p id="w-node-ba322a85-8feb-bae9-6805-f0f9cffc47fe-25d98d3b">{Date of update}</p>
-            <p id="w-node-ba322a85-8feb-bae9-6805-f0f9cffc4800-25d98d3b">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
-          </div>
-          <div id="w-node-_845321ad-722b-780e-d0a1-c696c012b132-25d98d3b" class="div-block-25">
-            <p id="w-node-_845321ad-722b-780e-d0a1-c696c012b133-25d98d3b">{Date of update}</p>
-            <p id="w-node-_845321ad-722b-780e-d0a1-c696c012b135-25d98d3b">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
-          </div>
-          <div id="w-node-_8f296de5-e79f-d3e6-0c8d-1ef01d9111b2-25d98d3b" class="div-block-25">
-            <p id="w-node-_8f296de5-e79f-d3e6-0c8d-1ef01d9111b3-25d98d3b">{Date of update}</p>
-            <p id="w-node-_8f296de5-e79f-d3e6-0c8d-1ef01d9111b5-25d98d3b">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet. Nunc ut sem vitae risus tristique posuere.</p>
-          </div>
+        <div id="updates-container" class="div-block-24">
+          <table class="table table-updates">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Update</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for update in updates %}
+              <tr>
+                <td>
+                  {{ update.date }} <br> 
+                  <span style="font-style: italic; font-size: 0.8em;">{{ update.by }}</span>
+                </td>
+                <td style="max-width: 60vw; text-align: left;">
+                  {{ update.update }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
+        
         <a data-w-id="043d2f94-2715-1d9d-731f-b4822bb5f8dc" href="#" class="button w-button">Add update</a>
       </div>
     </div>

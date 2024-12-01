@@ -52,8 +52,8 @@ h2 {
 }
 
 h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   font-size: 14px;
   font-weight: 700;
   line-height: 30px;
@@ -166,7 +166,7 @@ a.w--current {
 }
 
 .adm-state-div.top {
-  grid-column-gap: 16px;
+  grid-column-gap: 0px;
   grid-row-gap: 16px;
   background-color: var(--primary-2);
   -webkit-text-stroke-color: transparent;
@@ -174,6 +174,10 @@ a.w--current {
   grid-template-columns: 1fr 1fr 1fr;
   grid-auto-columns: 1fr;
   display: grid;
+}
+
+.adm-state-div a {
+  border-right: 1px solid var(--white);
 }
 
 .adm-state-div.top.history {
@@ -259,18 +263,20 @@ a.w--current {
   color: #f0f8ff;
   background-color: #0000;
   border: 1px #f0f8ff;
-  border-bottom-style: solid;
   outline: 3px #f0f8ff;
+  scale: 1.1;
+  transition: scale 0.1s;
 }
 
 .sb-item:active {
-  box-shadow: inset 5px 4px 8px 2px #0003;
+  scale: 0.85;
+  transition: scale 0.1s;
 }
 
 .sb-item.active {
-  color: #00308f;
+  color: var(--primary-2);
   text-align: left;
-  background-color: #fff;
+  background-color: var(--light-cyan);
 }
 
 .sb-item-icon {
@@ -288,14 +294,10 @@ a.w--current {
   font-weight: 500;
 }
 
-.sb-item-text:hover {
-  outline-offset: 0px;
-  outline: 3px #f0f8ff;
-}
 
 .user-greetings {
   flex: 0 auto;
-  justify-content: center;
+  justify-content: baseline;
   align-items: center;
   display: flex;
 }
@@ -315,7 +317,7 @@ a.w--current {
   text-transform: capitalize;
   padding-left: 10px;
   padding-right: 10px;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 350;
   line-height: 24px;
 }
@@ -327,7 +329,7 @@ a.w--current {
 
 .sb-item-txt {
   text-transform: capitalize;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 300;
   text-decoration: none;
 }
@@ -405,9 +407,7 @@ a.w--current {
   flex-flow: column;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  margin-left: 20px;
+  margin: 10px;
   padding-top: 60px;
   padding-bottom: 40px;
   display: flex;
@@ -589,13 +589,13 @@ a.w--current {
   border-radius: 5px;
   flex-flow: column;
   flex: 1;
-  margin: 10px 20px 20px 10px;
+  margin: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 0;
   display: flex;
   position: fixed;
-  inset: 80px 0% 0% 260px;
+  inset: 80px 0% 0% 220px;
   overflow: auto;
   box-shadow: 0 2px 5px #0003;
 }
@@ -711,19 +711,13 @@ a.w--current {
   color: #fff;
   text-align: center;
   text-transform: capitalize;
-  border: 1px #fff;
-  border-style: none solid;
   font-weight: 500;
   text-decoration: none;
 }
 
-.adm-state-txt.active {
-  border-style: dotted;
-  border-radius: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-  padding-left: 0;
-}
+/* .adm-state-txt.active {
+  border-right: 1px solid #ffffff;
+} */
 
 .adm-state-txt.x, .adm-state-txt.y {
   border-style: none;
@@ -787,7 +781,7 @@ tr.clickable-row:hover {
 .table-updates th {
   background-color: #ffffff;
   text-align: left;
-  padding: 15px; /* Adjusted padding for updates version */
+  padding: 15px;
   border-bottom: 1px solid #000;
 }
 
@@ -822,6 +816,10 @@ tr.clickable-row:hover {
   margin-bottom: 15px;
   border-bottom: 1px solid #ccc;
   font-size: small;
+  vertical-align: top;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .table-updates tr.clickable-row:hover {
@@ -2329,13 +2327,13 @@ tr.clickable-row:hover {
 .div-block-24 {
   flex-flow: column;
   justify-content: flex-start;
-  align-items: stretch;
   max-width: 85svw;
-  max-height: 20svh;
+  max-height: 40svh;
   margin-bottom: 10px;
-  padding: 10px 40px;
+  padding: 10px 10px;
   display: flex;
   overflow: auto;
+  border-top: 1px solid #000;
 }
 
 .div-block-25 {
@@ -2345,7 +2343,10 @@ tr.clickable-row:hover {
   grid-template-columns: .25fr 1fr;
   grid-auto-columns: 1fr;
   margin-top: 10px;
+  max-width: 80svw;
   display: grid;
+  padding: 10px;
+  border-bottom: 1px dotted #000;
 }
 
 .div-block-25.update {
@@ -2365,7 +2366,7 @@ tr.clickable-row:hover {
 }
 
 .paragraph.update {
-  border: 1px dotted #000;
+  border: 1px solid #000;
   border-radius: 5px;
   padding: 20px;
 }

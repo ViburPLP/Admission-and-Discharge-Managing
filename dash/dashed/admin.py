@@ -6,19 +6,23 @@ from .models import (
     Provider,
     Admission_details,
     Discharge_details,
-    Daily_update
+    Daily_update,
+    Case_manager_update,
+    Provider,
+    Scheme
     )
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path
 import csv
 
-from .models import Provider, Scheme
     
 
 class ProviderInline(admin.TabularInline):
     model = Provider.schemes.through  # Specify the through model
     extra = 1  # Number of extra empty forms to display
+
+admin.site.register(Case_manager_update)
 
 class SchemeAdmin(admin.ModelAdmin):
     list_display = ['name', 'payer']
