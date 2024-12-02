@@ -217,6 +217,7 @@ def current_admissions(request): #active admissions list.
 def discharging_member_detail(request, pk): #page displaying details of the member to be discharged.
     member = get_object_or_404(Member_Detail, pk=pk)
     admission_details = Admission_details.objects.filter(member=member).first()
+    updates= admission_details.updates.all().order_by('-date')
 
      #calculating the number of days since admission
     days_since_admission = None
@@ -230,6 +231,7 @@ def discharging_member_detail(request, pk): #page displaying details of the memb
         'admission_details': admission_details,
         'days_since_admission': days_since_admission,
         'current_date': timezone.now().date(),
+        'updates': updates,
         } #context variables
 
     return render(request, 'template/admissions/discharge-page.html', context)
@@ -753,7 +755,7 @@ def schemes(request): #list of schemes.
     query = request.GET.get('q')
     payer_filter = request.GET.get('payer')
 
-    schemes = Scheme.objects.all()
+    schemes = Scheme.objects.all().order_by('name')
 
     if query:
         schemes = schemes.filter(
@@ -771,25 +773,24 @@ from .forms import SchemeAdminForm
 
 @login_required
 def scheme_detail(request, scheme_id):
-    scheme = get_object_or_404(Scheme, id=scheme_id)
+    scheme = get_object_or_404(Scheme, id=scheme_id) 
     if request.method == 'POST':
         form = SchemeAdminForm(request.POST, instance=scheme)
         if form.is_valid():
-            scheme = form.save(commit=False)
-            selected_providers = form.cleaned_data.get('service_provider')
-            messages.success(request, 'Scheme details updated successfully.')
-            scheme.service_provider.add(*selected_providers)
+            #Saving many to manay relationship
+            form.save()
             messages.success(request, 'Scheme details updated successfully.')
             return redirect('scheme_detail', scheme_id=scheme_id)
         else:
-            print(form.errors)
+            print(form.errors)  # Debugging
     else:
-        form = SchemeAdminForm(instance=scheme)
+        form = SchemeAdminForm(instance=scheme) 
 
     return render(request, 'template/schemes/schemes.html', {
         'scheme': scheme,
         'form': form,
     })
+
 
 def manage_schemes_providers(request):
     schemes = Scheme.objects.all()

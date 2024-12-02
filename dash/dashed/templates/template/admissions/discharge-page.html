@@ -242,11 +242,11 @@
                             </td>
                         </form>
                     </tr>
-                    {% for update in admission_details.updates.all %}
+                    {% for update in updates %}
                     <tr>
                         <td>{{ update.date }}</td>
                         <td>{{ update.interim_bill }}</td>
-                        <td>{{ update.progress_notes }}</td>
+                        <td>{{ update.progress_notes|linebreaks }}</td>
                         <td class="manager-field" style="font-size: 0.8em;">{{ update.care_manager }}</td>
                     </tr>
                     {% empty %}

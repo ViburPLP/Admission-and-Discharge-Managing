@@ -39,10 +39,10 @@
   <section class="divider-sect"></section>
   <section class="content-sect-1-0">
     <div id="w-node-fdfe0d76-af7f-df40-bc06-38716c850a09-f837a0a8" class="side-bar">
-      <a href="#" class="link-block-2 w-inline-block">
-        <aside class="sb-item active">
+      <a href="{% url 'pending_admissions' %}" class="link-block-2 w-inline-block">
+        <aside class="sb-item">
           <div class="sb-item-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#006989" fill="none">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="white" fill="none">
               <path d="M6.5 9H5.5M10.5 9H9.5M6.5 6H5.5M10.5 6H9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
               <path d="M18.5 15H17.5M18.5 11H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
               <path d="M14 8V22H18C19.8856 22 20.8284 22 21.4142 21.4142C22 20.8284 22 19.8856 22 18V12C22 10.1144 22 9.17157 21.4142 8.58579C20.8284 8 19.8856 8 18 8H14ZM14 8C14 5.17157 14 3.75736 13.1213 2.87868C12.2426 2 10.8284 2 8 2C5.17157 2 3.75736 2 2.87868 2.87868C2 3.75736 2 5.17157 2 8V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -56,9 +56,9 @@
         </aside>
       </a>
       <a href="{% url 'schemes' %}" class="link-block-2 w-inline-block">
-        <aside class="sb-item">
+        <aside class="sb-item active">
           <div class="sb-item-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="white" fill="none">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#006989" fill="none">
               <path d="M6.5 9H5.5M10.5 9H9.5M6.5 6H5.5M10.5 6H9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
               <path d="M18.5 15H17.5M18.5 11H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
               <path d="M14 8V22H18C19.8856 22 20.8284 22 21.4142 21.4142C22 20.8284 22 19.8856 22 18V12C22 10.1144 22 9.17157 21.4142 8.58579C20.8284 8 19.8856 8 18 8H14ZM14 8C14 5.17157 14 3.75736 13.1213 2.87868C12.2426 2 10.8284 2 8 2C5.17157 2 3.75736 2 2.87868 2.87868C2 3.75736 2 5.17157 2 8V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -132,15 +132,12 @@
             <dd>Contacts: {{ scheme.rm_contact }}</dd>
             <dt>policy Period : {{ scheme.policy_start_date }} - {{ scheme.policy_end_date }}</dt>
             <dt>Notes :</dt>
-            <dd>{{ scheme.scheme_notes }}</dd>
+            <dd>{{ scheme.scheme_notes|linebreaks }}</dd>
           </dl>
         </div>
         <div id="w-node-_1cc97add-674b-6e90-1546-d07d402624d8-936b9547" class="new-rules schemes">
           <div id="w-node-b9225014-1051-7ec6-677e-55b907eb037b-936b9547" class="div-block-7 scheme">
             <a id="w-node-b9225014-1051-7ec6-677e-55b907eb037c-936b9547" href="#" class="button w-button">Scheme rules</a>
-          </div>
-          <div id="w-node-a35bfb2b-3870-d9b1-2f2a-5d1ba67d0a7f-936b9547" class="div-block-7">
-            <a id="w-node-a35bfb2b-3870-d9b1-2f2a-5d1ba67d0a80-936b9547" href="#" class="button danger w-button">Edit scheme</a>
           </div>
         </div>
       </div>
@@ -171,9 +168,6 @@
             <!-- Tab Pane 1 -->
             <div data-w-tab="Totals" class="tab-pane-active w-tab-pane" style="overflow: auto;">
               <div class="adm-state-div table-div report">
-                <div class="component-head table-div">         
-                  <div class="adm-state-div table-div">
-                    <div class="table-header">
                     <table class="table table-updates">
                       <thead>
                         <tr> <table class="table-updates">
@@ -187,7 +181,7 @@
                               </tr>
                           </thead>
                           <tbody>
-                              {% for provider  in scheme.service_provider.all %}
+                              {% for provider  in scheme.providers.all %}
                             <tr class="clickable-row" data-href= "{% url 'provider_detail' provider.id %}">
                                    <td>{{ provider.name }}</td>
                                    <td>{{ provider.location }}</td>
@@ -203,9 +197,7 @@
                               {% endfor %}
                           </tbody>
                       </table>
-                    </div>
-                  </div>
-                </div>
+                    
               </div>              
             </div>            
             <!-- Tab Pane 2 -->
@@ -214,36 +206,46 @@
                 <form method="POST">
                   {% csrf_token %}
                   <div class="div-block-29">
+                      <!-- Unpanelled Providers -->
                       <div id="unpanelled-providers" class="div-block-30">
                           <label for="unpanelled-select" class="table-updates">Providers Not On Panel</label>
-                          <select id="unpanelled-select" class="select-field w-select" multiple size="20" name ="unpanelled_providers">
-                              {% for provider in form.fields.service_provider.queryset %}
-                                  {% if provider not in scheme.service_provider.all %}
+                          <select id="unpanelled-select" class="select-field w-select" multiple size="20" name="unpanelled_providers">
+                              {% for provider in form.fields.providers.queryset %}
+                                  {% if provider not in scheme.providers.all %}
                                       <option class="clickable-row" value="{{ provider.id }}">{{ provider.name }}</option>
                                   {% endif %}
                               {% endfor %}
                           </select>
-                          <div class="help" id="id_service_provider_helptext">
-                            <div>Hold down “Control”, or “Command” on a Mac, to select more than one.</div>
-                        </div>
+                          <div class="help" id="id_unpanelled_providers_helptext">
+                              <div>Hold down “Control”, or “Command” on a Mac, to select more than one.</div>
+                          </div>
                       </div>
-                      <div id="dual-buttons" class="div-block-31" style="display: flex; justify-content: space-around; ">
+              
+                      <!-- Dual Buttons -->
+                      <div id="dual-buttons" class="div-block-31" style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
                           <button id="add-selected" type="button" class="button w-button">Add &gt;&gt;&gt;</button>
+                          <button id="remove-selected" type="button" class="button w-button">&lt;&lt;&lt; Remove</button>
                       </div>
+              
+                      <!-- Panelled Providers -->
                       <div id="panelled-providers" class="div-block-30">
                           <label for="panelled-select" class="table-updates">Providers On Panel</label>
-                          <select id="panelled-select" class="select-field w-select" name="service_provider" multiple size="20">
-                              {% for provider in scheme.service_provider.all %}
+                          <select id="panelled-select" class="select-field w-select" name="providers" multiple size="20">
+                              {% for provider in scheme.providers.all %}
                                   <option class="clickable-row" value="{{ provider.id }}">{{ provider.name }}</option>
                               {% endfor %}
                           </select>
+                          <div class="help" id="id_providers_helptext">
+                              <div>Hold down “Control”, or “Command” on a Mac, to select more than one.</div>
+                          </div>
                       </div>
                   </div>
                   
                   <div class="div-block-31">
-                    <button type="submit" class="button w-button">Save Changes</button>
-                </div>                    
-                </form>
+                      <button type="submit" class="button w-button">Save Changes</button>
+                  </div>
+              </form>
+              
             </div>
             </div>
           </div>
@@ -261,22 +263,21 @@
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=67101f23c4dd72e625d98d34" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="{% static '/js/webflow.js'%}" type="text/javascript"></script>
   <script>
-    document.getElementById('add-selected').addEventListener('click', function () {
-        moveOptions('unpanelled-select', 'panelled-select');
+    document.getElementById('add-selected').addEventListener('click', function() {
+    const unpanelledSelect = document.getElementById('unpanelled-select');
+    const panelledSelect = document.getElementById('panelled-select');
+    Array.from(unpanelledSelect.selectedOptions).forEach(option => {
+        panelledSelect.appendChild(option);
     });
+});
 
-    document.getElementById('remove-selected').addEventListener('click', function () {
-        moveOptions('panelled-select', 'unpanelled-select');
+document.getElementById('remove-selected').addEventListener('click', function() {
+    const unpanelledSelect = document.getElementById('unpanelled-select');
+    const panelledSelect = document.getElementById('panelled-select');
+    Array.from(panelledSelect.selectedOptions).forEach(option => {
+        unpanelledSelect.appendChild(option);
     });
-
-    function moveOptions(sourceId, targetId) {
-        const source = document.getElementById(sourceId);
-        const target = document.getElementById(targetId);
-        Array.from(source.selectedOptions).forEach(option => {
-            target.appendChild(option);
-        });
-    }
-
+});
   </script>
 </body>
 </html>

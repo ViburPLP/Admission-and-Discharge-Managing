@@ -264,13 +264,13 @@ a.w--current {
   background-color: #0000;
   border: 1px #f0f8ff;
   outline: 3px #f0f8ff;
-  scale: 1.1;
-  transition: scale 0.1s;
+  scale: 1.05;
+  transition: scale 0.05s;
 }
 
 .sb-item:active {
-  scale: 0.85;
-  transition: scale 0.1s;
+  scale: 0.95;
+  transition: scale 0.05s;
 }
 
 .sb-item.active {

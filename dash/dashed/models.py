@@ -166,7 +166,7 @@ class Discharge_details(models.Model):
     def __str__(self):
         return f"{self.name} - {self.discharge_date} - Discharged"
     
-class Daily_update(models.Model):
+class Daily_update(models.Model): #daily inpatient Updates
     admission = models.ForeignKey('Admission_details', on_delete=models.CASCADE, related_name='updates')
     date = models.DateTimeField(default=timezone.now)
     progress_notes = models.TextField()
@@ -176,7 +176,7 @@ class Daily_update(models.Model):
     def __str__(self):
         return f"Update on {self.date} - Interim Bill: {self.interim_bill}"
     
-class Case_manager_update(models.Model):
+class Case_manager_update(models.Model): #news and management announcements
     by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cm_updates')
     date = models.DateTimeField(default=timezone.now)
     update = models.TextField()
