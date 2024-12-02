@@ -126,13 +126,13 @@
       </div>
       <div class="main-details">
         <div id="w-node-_30b4ca85-ab7b-c4c2-a93d-6243679dc030-37072681" class="maj-min">
-          <h5 id="w-node-_30b4ca85-ab7b-c4c2-a93d-6243679dc031-37072681" class="major-field">{{ provider.name}} information</h5>
+          <h5 id="w-node-_30b4ca85-ab7b-c4c2-a93d-6243679dc031-37072681" class="major-field">{{ scheme.name}} information</h5>
           <dl role="list">
-            <dt>Relationship Manager : {{ provider.care_manager }} -  CM Contact : {{ provider.cm_contact }}</dt>
-            <dt>Agent : {{ provider.care_manager }} -  CM Contact : {{ provider.cm_contact }}</dt>
-            <dt>Scope : {{ provider.services }}</dt>
+            <dt>Relationship Manager: {{ scheme.rm }}</dt>
+            <dd>Contacts: {{ scheme.rm_contact }}</dd>
+            <dt>policy Period : {{ scheme.policy_start_date }} - {{ scheme.policy_end_date }}</dt>
             <dt>Notes :</dt>
-            <dd>{{ provider.provider_notes }}</dd>
+            <dd>{{ scheme.scheme_notes }}</dd>
           </dl>
         </div>
         <div id="w-node-_1cc97add-674b-6e90-1546-d07d402624d8-936b9547" class="new-rules schemes">
