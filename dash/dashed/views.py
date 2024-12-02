@@ -19,6 +19,7 @@ from openpyxl.utils import get_column_letter
 import pandas as pd
 import plotly.express as px
 import tempfile
+from django.db.models.functions import Lower, Trim
 
 from .forms import UpdateForm, UserDetailForm, SchemeForm, ProviderForm
 from .models import (
@@ -313,7 +314,7 @@ def discharge_member(request, pk):
         'current_date': timezone.now().date(),
     }
     return render(request, 'discharged/discharged_members.html', context)
-
+    
 @login_required
 def discharged_members(request): 
     query = request.GET.get('q')
@@ -507,7 +508,7 @@ def reports(request):
 
     
     admitted_payer_annotate= Admission_details.objects.annotate(
-        payer_new = F('member__payer')
+        payer_new = (F('member__payer'))
     )
 
     discharges_payer_annotate = Discharge_details.objects.annotate(
@@ -515,7 +516,7 @@ def reports(request):
     )
     
     admitted_payers = admitted_payer_annotate.values('payer_new').distinct()
-    discharged_payers = discharges_payer_annotate.values('payer_new').distinct()
+    discharged_payers = (discharges_payer_annotate.values('payer_new').distinct())
     
     payers = admitted_payers.union (discharged_payers)
 
