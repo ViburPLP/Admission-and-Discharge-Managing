@@ -1,3 +1,5 @@
+About this project/ system- read throuh for a rough idea of how this works. 
+
 HTML Downloader Extension
 Purpose and Functionality: this is designed to download HTML files from a specified folder for later processing by the spider. Its primary purpose is to serve as a pre-processing step, ensuring that the necessary HTML files are available for scraping. 
 
