@@ -11,12 +11,11 @@ import magic
 # The `extension_validator` ensures that the uploaded file has one of the allowed extensions: .csv, .xlsx, .xls, or .pdf.
 # The `validate_file_mimetype` function checks the MIME type of the uploaded file.
 
-# extension_validator = FileExtensionValidator(['.csv', '.xlsx', '.xls', '.pdf'])
+extension_validator = FileExtensionValidator(['.csv', '.xlsx', '.xls', '.pdf'])
 
 def validate_file_mimetype(file):
     accepted_mime_types = [
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         'application/vnd.ms-excel',
         'application/vnd.oasis.opendocument.spreadsheet',
         'text/csv', 
@@ -69,10 +68,10 @@ class Scheme(models.Model):
     policy_end_date=models.DateField(null=True)
     scheme_notes = models.TextField(null=True)
     service_provider= models.ManyToManyField('Provider', related_name='scheme', blank=True)    
-    # policy_document=models.FileField(
-    #     upload_to='policy_documents/', 
-    #     null=True, 
-    #     validators=[extension_validator, validate_file_mimetype])
+    policy_document=models.FileField(
+        upload_to='policy_documents/', 
+        null=True, 
+        validators=[ validate_file_mimetype])
 
     def __str__(self):
         return self.name

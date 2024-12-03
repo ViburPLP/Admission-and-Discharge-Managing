@@ -137,7 +137,9 @@
         </div>
         <div id="w-node-_1cc97add-674b-6e90-1546-d07d402624d8-936b9547" class="new-rules schemes">
           <div id="w-node-b9225014-1051-7ec6-677e-55b907eb037b-936b9547" class="div-block-7 scheme">
-            <a id="w-node-b9225014-1051-7ec6-677e-55b907eb037c-936b9547" href="#" class="button w-button">Scheme rules</a>
+            {% if scheme.policy_document %}
+            <a id="w-node-b9225014-1051-7ec6-677e-55b907eb037c-936b9547" href="{{ scheme.policy_document.url }}" class="button w-button" target="_blank">Policy Document</a>
+              {% endif %}
           </div>
         </div>
       </div>

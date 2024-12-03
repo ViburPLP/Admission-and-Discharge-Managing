@@ -13,8 +13,9 @@ from .models import (
     )
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import path
+from django.urls import path, reverse
 import csv
+
 
     
 
@@ -27,7 +28,8 @@ admin.site.register(Case_manager_update)
 class SchemeAdmin(admin.ModelAdmin):
     list_display = ['name', 'payer']
     search_fields = ['name', 'payer']
-    filter_horizontal = [ 'service_provider']
+    actions_selection_counter = False
+    actions = ['redirect_to_bulk_create']
 
     def get_urls(self):
         urls = super().get_urls()
@@ -60,17 +62,28 @@ class SchemeAdmin(admin.ModelAdmin):
           self.message_user(request, f"{created_count} schemes created from csv")
           return HttpResponseRedirect('..')
       return render(request, "admin/dashed/schemes/bulk_create_schemes.html")
+    
+    def redirect_to_bulk_create(self, request, queryset):
+        """
+        Custom admin action to redirect to the bulk creation page.
+        """
+        return HttpResponseRedirect(reverse('admin:bulk_create_schemes'))
+
+    redirect_to_bulk_create.short_description = "Go to Bulk Create Schemes"
+
 
 admin.site.register(Scheme, SchemeAdmin)
 
-class ProviderAdmin(admin.ModelAdmin):
-    inlines = [ProviderInline]
-    exclude = ('schemes',)  # Hide the 'schemes' field to avoid confusion
+# class ProviderAdmin(admin.ModelAdmin):
+#     inlines = [ProviderInline]
+#     exclude = ('schemes',)  # Hide the 'schemes' field to avoid confusion
 
 class ProviderAdmin(admin.ModelAdmin):
     list_display = ['name']
     search_fields = ['name']
     filter_horizontal = [ 'schemes']
+    actions_selection_counter = False
+    actions = ['redirect_to_bulk_create']
 
     def get_urls(self):
         urls = super().get_urls()
@@ -117,6 +130,14 @@ class ProviderAdmin(admin.ModelAdmin):
                 return HttpResponseRedirect("..")
 
         return render(request, "admin/dashed/provider/bulk_create_providers_form.html", {'title': 'Bulk Create Providers'})
+    
+    def redirect_to_bulk_create(self, request, queryset):
+        """
+        Custom admin action to redirect to the bulk creation page.
+        """
+        return HttpResponseRedirect(reverse('admin:bulk_create_providers'))
+
+    redirect_to_bulk_create.short_description = "Go to Bulk Create Providers"
 
 
 admin.site.register(Provider, ProviderAdmin)
